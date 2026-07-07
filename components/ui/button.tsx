@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import Link from "next/link";
+
 import { cn } from "@/utils/cn";
 
 type ButtonProps = {
@@ -35,6 +37,14 @@ export function Button({
   );
 
   if (href) {
+    if (href.startsWith("/")) {
+      return (
+        <Link className={sharedClassName} href={href}>
+          {children}
+        </Link>
+      );
+    }
+
     return (
       <a className={sharedClassName} href={href}>
         {children}
