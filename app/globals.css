@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --color-background: #fbf8f2;
+  --color-foreground: #23211d;
+  --color-primary: #bf6a2c;
+  --color-secondary: #1e5d55;
+  --color-muted: #6f6a63;
+  --color-border: #e8e1d7;
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+  --muted: var(--color-muted);
+  --line: var(--color-border);
+  --soft: #f4efe6;
+  --panel: #fffdf9;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+body {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia,
+    serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  background: transparent;
+  cursor: pointer;
+}
+
+button,
+a {
+  transition: none;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-primary) 22%, white);
+}
+
+.nsu-kicker {
+  color: var(--color-secondary);
+}
+
+.nsu-panel {
+  background: var(--panel);
+  border-color: var(--color-border);
+}
+
+.nsu-soft {
+  background: var(--soft);
+}
+
+.nsu-border {
+  border-color: var(--color-border);
+}
+
+.nsu-primary-button {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fffdf9;
+}
+
+.nsu-secondary-button {
+  background: transparent;
+  border-color: color-mix(in srgb, var(--color-secondary) 35%, var(--color-border));
+  color: var(--color-secondary);
+}
+
+.nsu-outline-badge {
+  border-color: color-mix(in srgb, var(--color-secondary) 18%, var(--color-border));
+  color: var(--color-secondary);
+}
