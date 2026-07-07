@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "NeuroSports USA | Homepage V1",
-  description: "Premium wireframe prototype for the NeuroSports USA home experience.",
+  title: "NeuroSports USA | Digital Platform",
+  description: "Production-ready frontend architecture for the NeuroSports USA platform.",
 };
 
 export default function RootLayout({

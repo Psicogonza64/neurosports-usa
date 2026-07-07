@@ -31,6 +31,7 @@ body {
 body {
   font-family: "Helvetica Neue", Arial, sans-serif;
   letter-spacing: -0.01em;
+  text-rendering: optimizeLegibility;
 }
 
 * {
@@ -102,4 +103,12 @@ a {
 .nsu-outline-badge {
   border-color: color-mix(in srgb, var(--color-secondary) 18%, var(--color-border));
   color: var(--color-secondary);
+}
+
+.nsu-gradient-line {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-primary) 18%, transparent),
+    color-mix(in srgb, var(--color-secondary) 18%, transparent)
+  );
 }
