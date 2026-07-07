@@ -108,3 +108,89 @@ export const competitiveAdvantages = [
   "International clinical experience",
   "Innovative technology",
 ];
+
+export const whatWeDoClinicalPath = {
+  label: "Clinical Neuroscience",
+  title: "Clinical Neuroscience",
+  description:
+    "Pediatric neuropsychology, adult neuropsychology, cognitive rehabilitation, functional diagnosis, and neurological and psychiatric conditions are addressed as part of one integrated neuroscience model.",
+};
+
+export const whatWeDoPerformancePath = {
+  label: "NeuroPerformance",
+  title: "NeuroPerformance",
+  description:
+    "Soccer, basketball, baseball, tennis, elite athletes, reaction time, decision-making and attention under pressure are developed through the same MNSI framework.",
+};
+
+export const whatWeDoJourneySteps = [
+  {
+    label: "01",
+    title: "Comprehensive Evaluation",
+    description:
+      "The process starts with a broad neuropsychological and functional understanding of the individual.",
+  },
+  {
+    label: "02",
+    title: "Functional Brain Profile",
+    description:
+      "Findings are translated into a clinically relevant map of strengths, vulnerabilities and priorities.",
+  },
+  {
+    label: "03",
+    title: "Personalized MNSI Plan",
+    description:
+      "An individualized intervention strategy is created according to context, goals and brain function profile.",
+  },
+  {
+    label: "04",
+    title: "Sequential Intervention",
+    description:
+      "Regulation, activation, integration and transfer are organized through one coherent neuroscience sequence.",
+  },
+  {
+    label: "05",
+    title: "Clinical or Sport Transfer",
+    description:
+      "The model applies gains to either rehabilitation environments or performance settings without losing scientific continuity.",
+  },
+  {
+    label: "06",
+    title: "Outcome Tracking",
+    description:
+      "Progress is reviewed through functional change, performance behavior and real-world use.",
+  },
+];
+
+export const whatWeDeliverItems = [
+  {
+    title: "Neuropsychological Evaluation",
+    description:
+      "Comprehensive evaluation frameworks for cognitive, behavioral and functional interpretation.",
+  },
+  {
+    title: "Brain Rehabilitation",
+    description:
+      "Structured rehabilitation pathways guided by functional neuroscience and real-world transfer.",
+  },
+  {
+    title: "Cognitive Performance",
+    description:
+      "Targeted programs that support attention, speed, regulation and applied cognitive efficiency.",
+  },
+  {
+    title: "Sport NeuroPerformance",
+    description:
+      "Athlete-focused neurocognitive preparation aligned with pressure, competition and tactical response.",
+  },
+  {
+    title: "Functional Transfer",
+    description:
+      "Interventions designed to move progress beyond tasks and into daily, academic, clinical and sport environments.",
+  },
+  {
+    title: "Institutional Programs",
+    description:
+      "Scalable neuroscience-based structures for clinics, schools, teams and partner organizations.",
+  },
+];
