@@ -10,6 +10,12 @@ export { JourneyCTA } from "@/components/experience/journey-cta";
 export { JourneyFlow } from "@/components/experience/journey-flow";
 export type { JourneyFlowStep } from "@/components/experience/journey-flow";
 export { MNSIPhaseCard } from "@/components/experience/mnsi-phase-card";
+export { MNSIVisualJourney } from "@/components/experience/mnsi-visual-journey";
+export type {
+	MNSICorePhase,
+	MNSIJourneyBranch,
+	MNSIJourneyStage,
+} from "@/components/experience/mnsi-visual-journey";
 export { NeuroHero } from "@/components/experience/neuro-hero";
 export { PageHero } from "@/components/experience/page-hero";
 export { ProcessFlow } from "@/components/experience/process-flow";
