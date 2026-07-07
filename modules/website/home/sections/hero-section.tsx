@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Hero } from "@/components/ui/hero";
+import { NeuroHero } from "@/components/experience";
 
 function HeroVisual() {
   return (
@@ -32,43 +31,16 @@ function HeroVisual() {
 
 export function HeroSection() {
   return (
-    <Hero
-      left={
-        <div className="max-w-2xl space-y-10">
-          <p className="nsu-kicker text-xs font-medium uppercase tracking-[0.3em]">
-            Institutional Brain Care Platform
-          </p>
-          <div className="space-y-7">
-            <h1 className="max-w-2xl text-5xl leading-[0.94] tracking-[-0.03em] text-[var(--color-foreground)] sm:text-6xl lg:text-7xl">
-              Understanding the Brain.
-              <br />
-              Transforming Lives.
-            </h1>
-            <p className="max-w-xl text-base leading-8 text-[var(--color-muted)] sm:text-lg">
-              Clinical neuropsychology, brain rehabilitation, cognitive performance
-              and sports NeuroPerformance for children, adults and athletes.
-            </p>
-            <p className="max-w-lg text-sm leading-7 text-[var(--color-secondary)]/80">
-              Una plataforma institucional para evaluacion integral, rehabilitacion y rendimiento.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Button href="#appointments">
-              <span>Schedule Evaluation</span>
-              <span className="text-[10px] font-normal uppercase tracking-[0.14em] opacity-80">
-                Agendar evaluacion
-              </span>
-            </Button>
-            <Button href="#services" variant="secondary">
-              <span>Explore Services</span>
-              <span className="text-[10px] font-normal uppercase tracking-[0.14em] opacity-80">
-                Explorar servicios
-              </span>
-            </Button>
-          </div>
-        </div>
-      }
-      right={<HeroVisual />}
+    <NeuroHero
+      id="home"
+      eyebrow="NeuroSports USA"
+      title="Understanding the Brain. Transforming Lives."
+      subtitle="One Science. One Model. Two Worlds. Clinical Neuroscience and NeuroPerformance integrated through MNSI."
+      ctaLabel="Schedule Evaluation"
+      ctaHref="#appointments"
+      secondaryCtaLabel="Explore Our Model"
+      secondaryCtaHref="#model"
+      illustration={<HeroVisual />}
     />
   );
 }

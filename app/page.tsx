@@ -1,9 +1,12 @@
 import { SiteShell } from "@/components/layout/site-shell";
 import { CTA } from "@/components/ui/cta";
 import {
-  CorePathwaysSection,
+  ClinicalPerformanceSection,
+  DualPathSection,
+  ExperienceQuoteSection,
   HeroSection,
   IntegratedModelSection,
+  JourneyFlowSection,
   ResearchSection,
   TechnologySection,
   TestimonialsSection,
@@ -15,11 +18,14 @@ export default function Home() {
   return (
     <SiteShell>
       <HeroSection />
+      <ExperienceQuoteSection />
+      <DualPathSection />
+      <ClinicalPerformanceSection />
+      <JourneyFlowSection />
       <WhatWeDoSection />
       <WhoWeHelpSection />
       <IntegratedModelSection />
       <TechnologySection />
-      <CorePathwaysSection />
       <ResearchSection />
       <TestimonialsSection />
       <CTA

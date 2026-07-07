@@ -113,6 +113,48 @@ export const corePathways: FeatureCard[] = [
   },
 ];
 
+export const clinicalNeurosciencePath = {
+  label: "Clinical Neuroscience",
+  title: "Clinical Neuroscience",
+  description:
+    "Children, adults, neurological disorders, psychiatric conditions and brain rehabilitation are addressed through one structured neuroscience model built for evaluation, intervention and functional recovery.",
+};
+
+export const neuroPerformancePath = {
+  label: "NeuroPerformance",
+  title: "NeuroPerformance",
+  description:
+    "Soccer, basketball, baseball, tennis and elite athletes are supported through decision making, reaction time, attention and sport-specific neurocognitive preparation under the same MNSI architecture.",
+};
+
+export const homeJourneySteps = [
+  {
+    title: "Functional Evaluation",
+    description:
+      "Every journey begins with a structured neuropsychological and functional baseline.",
+  },
+  {
+    title: "Brain Network Analysis",
+    description:
+      "Results are translated into a clinically meaningful reading of functional systems and priorities.",
+  },
+  {
+    title: "Personalized MNSI Program",
+    description:
+      "A sequential intervention strategy is organized according to the person, the profile and the goals.",
+  },
+  {
+    title: "Sequential Intervention",
+    description:
+      "Regulation, activation, integration and transfer are structured as one coherent process.",
+  },
+  {
+    title: "Functional Outcomes",
+    description:
+      "Progress is measured by real-world change in performance, recovery and daily function.",
+  },
+];
+
 export const researchPillars: FeatureCard[] = [
   {
     title: "Scientific Publications",

@@ -1,6 +1,10 @@
+export { ClinicalPerformanceSection } from "@/modules/website/home/sections/clinical-performance-section";
 export { CorePathwaysSection } from "@/modules/website/home/sections/core-pathways-section";
+export { DualPathSection } from "@/modules/website/home/sections/dual-path-section";
+export { ExperienceQuoteSection } from "@/modules/website/home/sections/experience-quote-section";
 export { HeroSection } from "@/modules/website/home/sections/hero-section";
 export { IntegratedModelSection } from "@/modules/website/home/sections/integrated-model-section";
+export { JourneyFlowSection } from "@/modules/website/home/sections/journey-flow-section";
 export { ResearchSection } from "@/modules/website/home/sections/research-section";
 export { TechnologySection } from "@/modules/website/home/sections/technology-section";
 export { TestimonialsSection } from "@/modules/website/home/sections/testimonials-section";
