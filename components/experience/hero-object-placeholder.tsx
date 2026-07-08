@@ -84,6 +84,7 @@ function OutcomeIcon() {
 type HeroNodeCardProps = {
   label: string;
   icon: ReactNode;
+  subtitle?: string;
   className?: string;
   emphasis?: "default" | "core";
 };
@@ -91,24 +92,32 @@ type HeroNodeCardProps = {
 function HeroNodeCard({
   label,
   icon,
+  subtitle,
   className,
   emphasis = "default",
 }: HeroNodeCardProps) {
   const emphasisClasses =
     emphasis === "core"
-      ? "border-[color:color-mix(in_srgb,var(--color-primary)_18%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-background)_80%,white)] text-[var(--color-foreground)] shadow-[0_24px_60px_-42px_rgba(35,33,29,0.28)]"
-      : "border-[color:color-mix(in_srgb,var(--color-secondary)_14%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-background)_76%,white)] text-[var(--color-muted)] shadow-[0_18px_44px_-38px_rgba(35,33,29,0.22)]";
+      ? "border-[color:color-mix(in_srgb,var(--color-primary)_18%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-background)_72%,white)] text-[var(--color-foreground)] shadow-[0_22px_54px_-40px_rgba(35,33,29,0.2)]"
+      : "border-[color:color-mix(in_srgb,var(--color-secondary)_14%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-background)_68%,white)] text-[var(--color-muted)] shadow-[0_18px_44px_-38px_rgba(35,33,29,0.16)]";
 
   return (
     <div
       className={cn(
-        "flex items-center gap-3 rounded-[1.3rem] border px-4 py-3 text-[11px] uppercase tracking-[0.18em] backdrop-blur-[2px]",
+        "flex items-start gap-3 rounded-[1.15rem] border px-3.5 py-3 text-[10px] uppercase tracking-[0.18em] backdrop-blur-[8px]",
         emphasisClasses,
         className,
       )}
     >
-      <span className="shrink-0">{icon}</span>
-      <span>{label}</span>
+      <span className="mt-0.5 shrink-0">{icon}</span>
+      <span className="space-y-1">
+        <span className="block leading-none">{label}</span>
+        {subtitle ? (
+          <span className="block text-[9px] font-normal normal-case tracking-[0.01em] text-[var(--color-muted)]/85">
+            {subtitle}
+          </span>
+        ) : null}
+      </span>
     </div>
   );
 }
@@ -117,7 +126,7 @@ function BrainSilhouette() {
   return (
     <svg
       aria-hidden="true"
-      className="absolute inset-[7%] h-[86%] w-[86%] text-[color:color-mix(in_srgb,var(--color-secondary)_16%,var(--color-border))]"
+      className="absolute left-1/2 top-1/2 h-[80%] w-[80%] -translate-x-1/2 -translate-y-1/2 text-[color:color-mix(in_srgb,var(--color-secondary)_11%,var(--color-border))]"
       viewBox="0 0 100 100"
       fill="none"
       preserveAspectRatio="none"
@@ -125,18 +134,18 @@ function BrainSilhouette() {
       <path
         d="M49.8 13.5c-7.3-4.7-17.5-3.1-23.4 3.7-6.9 0-12.6 5.9-12.6 13.2 0 2.8.8 5.4 2.3 7.6-4.1 2.5-6.7 7.1-6.7 12.1 0 6.1 3.9 11.4 9.5 13.2.2 8.8 7.1 15.8 15.7 15.8 3.7 0 7.2-1.3 9.9-3.6 1.6 5.6 6.7 9.8 12.8 9.8 6.2 0 11.5-4.4 12.9-10.1 2.8 2.5 6.5 3.9 10.4 3.9 8.8 0 15.9-7.2 15.9-16.1v-.2c5.1-2.2 8.7-7.3 8.7-13.3 0-5.2-2.7-9.9-7-12.4 1.5-2.1 2.3-4.7 2.3-7.5 0-7.3-5.8-13.2-12.9-13.2-5.9-6.5-15.9-8-23.1-3.3Z"
         stroke="currentColor"
-        strokeWidth="1.2"
+        strokeWidth="1"
       />
       <path
         d="M49.5 17.5c-3.8 4.5-5.8 9.4-5.8 14.8 0 4.8 1.5 8.8 4.3 12.1-2.7 3.1-4.1 6.9-4.1 11.3 0 6.7 2.6 12.6 7.7 17.9"
         stroke="currentColor"
-        strokeWidth="0.9"
+        strokeWidth="0.8"
         strokeLinecap="round"
       />
       <path
         d="M50.4 17.3c3.9 4.6 5.9 9.6 5.9 15 0 4.7-1.4 8.7-4.2 11.9 2.7 3.2 4.1 7 4.1 11.4 0 6.7-2.6 12.8-7.7 18.2"
         stroke="currentColor"
-        strokeWidth="0.9"
+        strokeWidth="0.8"
         strokeLinecap="round"
       />
     </svg>
@@ -149,49 +158,53 @@ function DesktopBlueprint() {
       <BrainSilhouette />
 
       <svg aria-hidden="true" className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" fill="none" preserveAspectRatio="none">
-        <path d="M50 18V30" stroke="color-mix(in srgb, var(--color-secondary) 16%, var(--color-border))" strokeWidth="0.35" />
-        <path d="M50 42V54" stroke="color-mix(in srgb, var(--color-primary) 16%, var(--color-border))" strokeWidth="0.35" />
-        <path d="M50 67C46 70.4 38.8 74.2 28.5 77.5" stroke="color-mix(in srgb, var(--color-secondary) 16%, var(--color-border))" strokeWidth="0.35" strokeLinecap="round" />
-        <path d="M50 67C54 70.4 61.2 74.2 71.5 77.5" stroke="color-mix(in srgb, var(--color-secondary) 16%, var(--color-border))" strokeWidth="0.35" strokeLinecap="round" />
-        <path d="M28.5 81C34 84.8 40.8 87.4 47.5 89" stroke="color-mix(in srgb, var(--color-primary) 16%, var(--color-border))" strokeWidth="0.35" strokeLinecap="round" />
-        <path d="M71.5 81C66 84.8 59.2 87.4 52.5 89" stroke="color-mix(in srgb, var(--color-primary) 16%, var(--color-border))" strokeWidth="0.35" strokeLinecap="round" />
+        <path d="M50 18V28" stroke="color-mix(in srgb, var(--color-secondary) 14%, var(--color-border))" strokeWidth="0.28" />
+        <path d="M50 39V48" stroke="color-mix(in srgb, var(--color-primary) 14%, var(--color-border))" strokeWidth="0.28" />
+        <path d="M50 61C45.5 66.2 37.8 71.4 28.5 75.6" stroke="color-mix(in srgb, var(--color-secondary) 14%, var(--color-border))" strokeWidth="0.28" strokeLinecap="round" />
+        <path d="M50 61C54.5 66.2 62.2 71.4 71.5 75.6" stroke="color-mix(in srgb, var(--color-secondary) 14%, var(--color-border))" strokeWidth="0.28" strokeLinecap="round" />
+        <path d="M28.5 80.4C34.2 84.4 41.5 87.1 48.3 88.8" stroke="color-mix(in srgb, var(--color-primary) 14%, var(--color-border))" strokeWidth="0.28" strokeLinecap="round" />
+        <path d="M71.5 80.4C65.8 84.4 58.5 87.1 51.7 88.8" stroke="color-mix(in srgb, var(--color-primary) 14%, var(--color-border))" strokeWidth="0.28" strokeLinecap="round" />
       </svg>
 
       <HeroNodeCard
         label="Functional Evaluation"
         icon={<AssessmentIcon />}
-        className="absolute left-1/2 top-[8%] w-[13.5rem] -translate-x-1/2"
+        className="absolute left-1/2 top-[9%] w-[11rem] -translate-x-1/2"
       />
 
       <HeroNodeCard
         label="Brain Network Profile"
         icon={<NetworkIcon />}
-        className="absolute left-1/2 top-[27%] w-[14.25rem] -translate-x-1/2"
+        className="absolute left-1/2 top-[30%] w-[11.6rem] -translate-x-1/2"
       />
 
       <HeroNodeCard
         label="MNSI Core"
         icon={<CoreIcon />}
+        subtitle="Integrated Sequential Neurorehabilitation Intelligence"
         emphasis="core"
-        className="absolute left-1/2 top-[47%] min-h-[5.75rem] w-[14.5rem] -translate-x-1/2 justify-center text-center text-xs tracking-[0.22em]"
+        className="absolute left-1/2 top-[50%] min-h-[5.2rem] w-[11.8rem] -translate-x-1/2 justify-center text-center text-[11px] tracking-[0.2em]"
       />
 
       <HeroNodeCard
         label="Clinical Neuroscience"
         icon={<ClinicalIcon />}
-        className="absolute left-[6%] top-[76%] w-[14rem]"
+        subtitle="Assessment · Rehabilitation · Recovery"
+        className="absolute left-[4%] top-[74%] w-[11.2rem]"
       />
 
       <HeroNodeCard
         label="NeuroPerformance"
         icon={<PerformanceIcon />}
-        className="absolute right-[6%] top-[76%] w-[13.75rem]"
+        subtitle="Optimization · Performance · Return to Play"
+        className="absolute right-[4%] top-[74%] w-[11.3rem]"
       />
 
       <HeroNodeCard
         label="Functional Outcomes"
         icon={<OutcomeIcon />}
-        className="absolute bottom-[4%] left-1/2 w-[13.75rem] -translate-x-1/2"
+        subtitle="Better Brain. Better Performance. Better Life."
+        className="absolute bottom-[3%] left-1/2 w-[11.9rem] -translate-x-1/2"
       />
     </div>
   );
@@ -199,16 +212,37 @@ function DesktopBlueprint() {
 
 function MobileBlueprint() {
   return (
-    <div className="relative flex w-full flex-col gap-4 lg:hidden">
-      <div className="absolute inset-x-[10%] top-[3%] bottom-[6%] rounded-[44%] border border-dashed border-[color:color-mix(in_srgb,var(--color-secondary)_14%,var(--color-border))] opacity-60" />
-      <div className="absolute left-1/2 top-[13%] bottom-[14%] w-px -translate-x-1/2 bg-[color:color-mix(in_srgb,var(--color-secondary)_14%,var(--color-border))]" />
+    <div className="relative flex w-full flex-col gap-5 lg:hidden">
+      <div className="absolute inset-x-[10%] top-[2%] bottom-[4%] rounded-[44%] border border-dashed border-[color:color-mix(in_srgb,var(--color-secondary)_12%,var(--color-border))] opacity-45" />
+      <div className="absolute left-1/2 top-[12%] bottom-[12%] w-px -translate-x-1/2 bg-[color:color-mix(in_srgb,var(--color-secondary)_12%,var(--color-border))]" />
 
       <HeroNodeCard label="Functional Evaluation" icon={<AssessmentIcon />} className="relative z-10" />
       <HeroNodeCard label="Brain Network Profile" icon={<NetworkIcon />} className="relative z-10" />
-      <HeroNodeCard label="MNSI Core" icon={<CoreIcon />} emphasis="core" className="relative z-10 min-h-[4.75rem] justify-center" />
-      <HeroNodeCard label="Clinical Neuroscience" icon={<ClinicalIcon />} className="relative z-10" />
-      <HeroNodeCard label="NeuroPerformance" icon={<PerformanceIcon />} className="relative z-10" />
-      <HeroNodeCard label="Functional Outcomes" icon={<OutcomeIcon />} className="relative z-10" />
+      <HeroNodeCard
+        label="MNSI Core"
+        icon={<CoreIcon />}
+        subtitle="Integrated Sequential Neurorehabilitation Intelligence"
+        emphasis="core"
+        className="relative z-10 min-h-[4.75rem] justify-center"
+      />
+      <HeroNodeCard
+        label="Clinical Neuroscience"
+        icon={<ClinicalIcon />}
+        subtitle="Assessment · Rehabilitation · Recovery"
+        className="relative z-10"
+      />
+      <HeroNodeCard
+        label="NeuroPerformance"
+        icon={<PerformanceIcon />}
+        subtitle="Optimization · Performance · Return to Play"
+        className="relative z-10"
+      />
+      <HeroNodeCard
+        label="Functional Outcomes"
+        icon={<OutcomeIcon />}
+        subtitle="Better Brain. Better Performance. Better Life."
+        className="relative z-10"
+      />
     </div>
   );
 }
