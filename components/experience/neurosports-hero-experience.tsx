@@ -1,6 +1,3 @@
-import { existsSync } from "node:fs";
-import path from "node:path";
-
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
@@ -26,36 +23,6 @@ type NodeProps = {
   className?: string;
   emphasis?: "default" | "core" | "outcome";
 };
-
-function BrainSilhouette() {
-  return (
-    <svg
-      aria-hidden="true"
-      className="absolute left-1/2 top-1/2 z-10 h-[84%] w-[82%] -translate-x-1/2 -translate-y-1/2 text-[color:color-mix(in_srgb,var(--color-secondary)_14%,var(--color-border))]"
-      viewBox="0 0 100 100"
-      fill="none"
-      preserveAspectRatio="none"
-    >
-      <path
-        d="M49.8 13.5c-7.3-4.7-17.5-3.1-23.4 3.7-6.9 0-12.6 5.9-12.6 13.2 0 2.8.8 5.4 2.3 7.6-4.1 2.5-6.7 7.1-6.7 12.1 0 6.1 3.9 11.4 9.5 13.2.2 8.8 7.1 15.8 15.7 15.8 3.7 0 7.2-1.3 9.9-3.6 1.6 5.6 6.7 9.8 12.8 9.8 6.2 0 11.5-4.4 12.9-10.1 2.8 2.5 6.5 3.9 10.4 3.9 8.8 0 15.9-7.2 15.9-16.1v-.2c5.1-2.2 8.7-7.3 8.7-13.3 0-5.2-2.7-9.9-7-12.4 1.5-2.1 2.3-4.7 2.3-7.5 0-7.3-5.8-13.2-12.9-13.2-5.9-6.5-15.9-8-23.1-3.3Z"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-      <path
-        d="M49.6 17c-3.8 4.4-5.9 9.5-5.9 14.8 0 4.8 1.6 8.9 4.4 12.1-2.7 3.1-4.2 6.9-4.2 11.2 0 6.8 2.6 12.8 7.7 18"
-        stroke="currentColor"
-        strokeWidth="0.9"
-        strokeLinecap="round"
-      />
-      <path
-        d="M50.5 17c3.8 4.4 5.9 9.5 5.9 14.8 0 4.8-1.6 8.9-4.4 12.1 2.7 3.1 4.2 6.9 4.2 11.2 0 6.8-2.6 12.8-7.7 18"
-        stroke="currentColor"
-        strokeWidth="0.9"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
 
 function GlassNode({ title, subtitle, className, emphasis = "default" }: NodeProps) {
   const emphasisClasses =
@@ -243,13 +210,6 @@ export function NeuroSportsHeroExperience({
   className,
 }: NeuroSportsHeroExperienceProps) {
   const content = getNeuroSportsHeroContent(locale);
-  const brainAssetPath = path.join(
-    process.cwd(),
-    "public",
-    "images",
-    "neurosports-brain-master.webp",
-  );
-  const hasBrainAsset = existsSync(brainAssetPath);
 
   return (
     <section className={cn("border-b nsu-border", className)} id={id}>
@@ -280,17 +240,13 @@ export function NeuroSportsHeroExperience({
                 role="img"
                 aria-label={content.brainAlt}
               >
-                {hasBrainAsset ? (
-                  <Image
-                    src="/images/neurosports-brain-master.webp"
-                    alt={content.brainAlt}
-                    fill
-                    sizes="(min-width: 1024px) 40vw, (min-width: 768px) 45vw, 80vw"
-                    className="absolute left-1/2 top-1/2 z-[11] h-[84%] w-[82%] -translate-x-1/2 -translate-y-1/2 object-contain"
-                  />
-                ) : (
-                  <BrainSilhouette />
-                )}
+                <Image
+                  src="/images/neurosports-brain-master.webp"
+                  alt={content.brainAlt}
+                  fill
+                  sizes="(min-width: 1024px) 40vw, (min-width: 768px) 45vw, 80vw"
+                  className="absolute left-1/2 top-1/2 z-[11] h-[84%] w-[82%] -translate-x-1/2 -translate-y-1/2 object-contain"
+                />
 
                 <div className="hidden md:block">
                   <DesktopTabletJourney
