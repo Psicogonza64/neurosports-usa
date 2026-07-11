@@ -154,8 +154,9 @@ function MnsiSection({ locale }: { locale: IntegratedModelLocale }) {
   const content = getIntegratedModelContent(locale);
 
   return (
-    <section className="border-b nsu-border" id="six-phase-model">
+    <section className="border-b nsu-border" id="mnsi">
       <Container className="py-24 lg:py-28">
+        <div id="six-phase-model" className="h-0 scroll-mt-28" aria-hidden="true" />
         <SectionTitle
           eyebrow={content.mnsi.eyebrow}
           title={content.mnsi.title}
@@ -269,8 +270,9 @@ function OutcomeMonitoringSection({ locale }: { locale: IntegratedModelLocale })
   const content = getIntegratedModelContent(locale);
 
   return (
-    <section className="border-b nsu-border" id="outcome-monitoring">
+    <section className="border-b nsu-border" id="outcomes">
       <Container className="py-24 lg:py-28">
+        <div id="outcome-monitoring" className="h-0 scroll-mt-28" aria-hidden="true" />
         <SectionTitle
           eyebrow={content.outcomeMonitoring.eyebrow}
           title={content.outcomeMonitoring.title}

@@ -71,9 +71,10 @@ function DualPathSection() {
 
 function ClinicalPerformanceSection() {
   return (
-    <section className="border-b nsu-border">
+    <section className="border-b nsu-border" id="clinical-neuroscience">
       <Container>
         <SectionSpacing>
+          <div id="neuroperformance" className="h-0 scroll-mt-28" aria-hidden="true" />
           <JourneyDivider label="Applied Worlds" />
           <SectionHeader
             label="Clinical Neuroscience + NeuroPerformance"
@@ -96,7 +97,7 @@ function JourneyFlowSection({ locale }: { locale: PublicContentLocale }) {
   const content = getNeuroSportsPublicContent(locale);
 
   return (
-    <section className="border-b nsu-border">
+    <section className="border-b nsu-border" id="functional-evaluation">
       <Container>
         <SectionSpacing>
           <JourneyDivider label="Public Process" />
