@@ -18,6 +18,7 @@ export type {
 	MNSIJourneyStage,
 } from "@/components/experience/mnsi-visual-journey";
 export { NeuroHero } from "@/components/experience/neuro-hero";
+export { NeuroSportsHeroExperience } from "@/components/experience/neurosports-hero-experience";
 export { PageHero } from "@/components/experience/page-hero";
 export { ProcessFlow } from "@/components/experience/process-flow";
 export type { ProcessFlowStep } from "@/components/experience/process-flow";
