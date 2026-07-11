@@ -16,7 +16,7 @@ import type {
   ReasonCategory,
 } from "@/types/booking";
 
-const OBJECTIVE_MAX = 600;
+const OBJECTIVE_MAX = 300;
 
 const INITIAL_STATE: BookingFormState = {
   appointmentType: "initial-evaluation",
@@ -48,12 +48,16 @@ const INITIAL_STATE: BookingFormState = {
   googleBookingStatus: "",
 };
 
-type BookingSuccessState = {
-  bookingReference: string;
-  start: string;
-  timezone: string;
-  address: string[];
-  inviteNotice: string;
+type SubmitResponse = {
+  success?: boolean;
+  reference?: string;
+  message?: string;
+};
+
+type SuccessState = {
+  reference: string;
+  requestedDate: string;
+  requestedTimeLabel: string;
 };
 
 function hasValidEmail(value: string) {
@@ -64,25 +68,24 @@ function hasValidPhone(value: string) {
   return /^[0-9()+\-\s]{7,}$/.test(value.trim());
 }
 
-function getContent(locale: BookingAssistantLocale) {
-  return bookingAssistantContent[locale] ?? bookingAssistantContent.en;
-}
-
-function formatSelectedDate(isoStart: string) {
-  if (!isoStart) {
+function formatDateForDisplay(dateIso: string) {
+  if (!dateIso) {
     return "-";
   }
 
+  const [year, month, day] = dateIso.split("-").map(Number);
+  const value = new Date(Date.UTC(year, (month ?? 1) - 1, day ?? 1, 12, 0, 0));
+
   return new Intl.DateTimeFormat("en-US", {
     timeZone: "America/Chicago",
-    year: "numeric",
     month: "long",
     day: "numeric",
-  }).format(new Date(isoStart));
+    year: "numeric",
+  }).format(value);
 }
 
-function formatSelectedTime(isoStart: string) {
-  if (!isoStart) {
+function formatTimeForDisplay(startIso: string) {
+  if (!startIso) {
     return "-";
   }
 
@@ -91,7 +94,7 @@ function formatSelectedTime(isoStart: string) {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
-  }).format(new Date(isoStart));
+  }).format(new Date(startIso));
 }
 
 function validateStep(step: BookingStep, state: BookingFormState, content: ReturnType<typeof getContent>) {
@@ -170,10 +173,8 @@ function validateStep(step: BookingStep, state: BookingFormState, content: Retur
     }
   }
 
-  if (step === 4) {
-    if (!state.previousStudiesStatus) {
-      errors.previousStudiesStatus = content.validationSelectOne;
-    }
+  if (step === 4 && !state.previousStudiesStatus) {
+    errors.previousStudiesStatus = content.validationSelectOne;
   }
 
   if (step === 5 && !state.consentAccepted) {
@@ -183,14 +184,19 @@ function validateStep(step: BookingStep, state: BookingFormState, content: Retur
   return errors;
 }
 
+function getContent(locale: BookingAssistantLocale) {
+  return bookingAssistantContent[locale] ?? bookingAssistantContent.en;
+}
+
 export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantLocale }) {
   const content = getContent(locale);
+
   const [step, setStep] = useState<BookingStep>(1);
   const [state, setState] = useState<BookingFormState>(INITIAL_STATE);
   const [errors, setErrors] = useState<BookingFormErrors>({});
-  const [submitError, setSubmitError] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successState, setSuccessState] = useState<BookingSuccessState | null>(null);
+  const [submitError, setSubmitError] = useState("");
+  const [successState, setSuccessState] = useState<SuccessState | null>(null);
 
   const stepHeadingRef = useRef<HTMLHeadingElement | null>(null);
 
@@ -323,14 +329,13 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
     setStep((current) => (current > 1 ? ((current - 1) as BookingStep) : current));
   };
 
-  const submitBooking = async () => {
+  const submitRequest = async () => {
     if (isSubmitting) {
       return;
     }
 
     const stepErrors = validateStep(5, state, content);
     setErrors(stepErrors);
-
     if (Object.keys(stepErrors).length > 0) {
       return;
     }
@@ -339,16 +344,10 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
     setIsSubmitting(true);
 
     try {
-      const contactEmail =
-        state.appointmentFor === "family-member"
-          ? state.responsibleAdult.email
-          : state.patient.email;
-      const contactPhone =
-        state.appointmentFor === "family-member"
-          ? state.responsibleAdult.mobilePhone
-          : state.patient.mobilePhone;
+      const contactEmail = state.appointmentFor === "family-member" ? state.responsibleAdult.email : state.patient.email;
+      const contactPhone = state.appointmentFor === "family-member" ? state.responsibleAdult.mobilePhone : state.patient.mobilePhone;
 
-      const response = await fetch("/api/calendar/book", {
+      const response = await fetch("/api/booking-request", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -367,52 +366,36 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
             state.appointmentFor === "family-member"
               ? state.responsibleAdult.relationship
               : undefined,
-          selectedStart: state.requestedTime,
+          requestedDate: state.requestedDate,
+          requestedTime: state.requestedTime,
           timezone: "America/Chicago",
           consentAccepted: state.consentAccepted,
           preferredContactMethod: state.contactPreference || undefined,
           reasonCategories: state.reasonCategories,
           previousStudiesStatus: state.previousStudiesStatus || undefined,
           previousStudyTypes: state.previousStudyTypes,
+          appointmentObjective: state.appointmentObjective,
           website: "",
         }),
       });
 
-      const data = (await response.json()) as {
-        message?: string;
-        bookingReference?: string;
-        start?: string;
-        timezone?: string;
-        address?: string[];
-        inviteNotice?: string;
-      };
+      const data = (await response.json()) as SubmitResponse;
 
-      if (response.status === 409) {
-        setSubmitError(
-          data.message || "That appointment time was just booked. Please select another available time.",
-        );
-        setState((current) => ({ ...current, requestedTime: "" }));
-        setStep(2);
-        return;
-      }
-
-      if (!response.ok || !data.bookingReference || !data.start || !data.address || !data.timezone) {
-        setSubmitError(data.message || "Online scheduling is temporarily unavailable. Please try again shortly.");
+      if (!response.ok || !data.success || !data.reference) {
+        setSubmitError(data.message || "Online scheduling is temporarily unavailable while appointment configuration is completed.");
         return;
       }
 
       setSuccessState({
-        bookingReference: data.bookingReference,
-        start: data.start,
-        timezone: data.timezone,
-        address: data.address,
-        inviteNotice: data.inviteNotice || "Please check your email for the calendar invitation.",
+        reference: data.reference,
+        requestedDate: state.requestedDate,
+        requestedTimeLabel: formatTimeForDisplay(state.requestedTime),
       });
 
       setState(INITIAL_STATE);
       setErrors({});
     } catch {
-      setSubmitError("Online scheduling is temporarily unavailable. Please try again shortly.");
+      setSubmitError("Online scheduling is temporarily unavailable while appointment configuration is completed.");
     } finally {
       setIsSubmitting(false);
     }
@@ -429,13 +412,8 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
           <p className="max-w-3xl text-sm leading-7 text-[var(--color-muted)] sm:text-base">{content.pageDescription}</p>
 
           <Card className="p-4 sm:p-6">
-            <div className="space-y-4">
-              <p className="text-sm leading-7 text-[var(--color-muted)]">{content.emergencyNotice}</p>
-              <p className="text-sm leading-7 text-[var(--color-muted)]">{content.privacyNotice}</p>
-              <p className="text-sm leading-7 text-[var(--color-muted)]">
-                {content.objective.studiesHelp}
-              </p>
-            </div>
+            <p className="text-sm leading-7 text-[var(--color-muted)]">{content.emergencyNotice}</p>
+            <p className="mt-3 text-sm leading-7 text-[var(--color-muted)]">{content.privacyNotice}</p>
           </Card>
 
           <Card className="p-4 sm:p-6">
@@ -443,11 +421,7 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
               {content.stepTitles[step]} - {step} {content.progressLabel}
             </div>
 
-            <h2
-              ref={stepHeadingRef}
-              tabIndex={-1}
-              className="mt-2 text-2xl tracking-tight text-[var(--color-foreground)] focus:outline-none"
-            >
+            <h2 ref={stepHeadingRef} tabIndex={-1} className="mt-2 text-2xl tracking-tight text-[var(--color-foreground)] focus:outline-none">
               {step === 1 && content.stepHeadings.appointment}
               {step === 2 && content.stepHeadings.dateTime}
               {step === 3 && content.stepHeadings.patientInfo}
@@ -492,15 +466,10 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
                             className="h-4 w-4 border-[var(--color-border)] text-[var(--color-secondary)]"
                           />
                           <span className="ml-3 flex-1 text-sm font-medium">{option.label}</span>
-                          <span
-                            aria-hidden="true"
-                            className={[
-                              "inline-flex h-5 w-5 items-center justify-center rounded-full border text-[10px]",
-                              checked
-                                ? "border-[var(--color-secondary)] bg-[var(--color-secondary)] text-[var(--ns-charcoal)]"
-                                : "border-[var(--color-border)] text-transparent",
-                            ].join(" ")}
-                          >
+                          <span aria-hidden="true" className={[
+                            "inline-flex h-5 w-5 items-center justify-center rounded-full border text-[10px]",
+                            checked ? "border-[var(--color-secondary)] bg-[var(--color-secondary)] text-[var(--ns-charcoal)]" : "border-[var(--color-border)] text-transparent",
+                          ].join(" ")}>
                             •
                           </span>
                         </label>
@@ -547,7 +516,7 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
                     {content.objective.label}
                     <textarea
                       id="appointment-objective"
-                      rows={5}
+                      rows={4}
                       maxLength={OBJECTIVE_MAX}
                       value={state.appointmentObjective}
                       onChange={(event) => updateField("appointmentObjective", event.target.value)}
@@ -567,11 +536,7 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
                         const checked = state.reasonCategories.includes(option.value);
                         return (
                           <label key={option.value} className="flex min-h-11 items-center gap-2 text-sm">
-                            <input
-                              type="checkbox"
-                              checked={checked}
-                              onChange={() => toggleReasonCategory(option.value)}
-                            />
+                            <input type="checkbox" checked={checked} onChange={() => toggleReasonCategory(option.value)} />
                             <span>{option.label}</span>
                           </label>
                         );
@@ -608,11 +573,7 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
                           const checked = state.previousStudyTypes.includes(study.value);
                           return (
                             <label key={study.value} className="flex min-h-11 items-center gap-2 text-sm">
-                              <input
-                                type="checkbox"
-                                checked={checked}
-                                onChange={() => togglePreviousStudyType(study.value)}
-                              />
+                              <input type="checkbox" checked={checked} onChange={() => togglePreviousStudyType(study.value)} />
                               <span>{study.label}</span>
                             </label>
                           );
@@ -630,11 +591,11 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
                     <dl className="mt-3 grid gap-2 text-sm text-[var(--color-muted)]">
                       <div>
                         <dt className="font-medium text-[var(--color-foreground)]">{content.review.requestedDate}</dt>
-                        <dd>{formatSelectedDate(state.requestedTime)}</dd>
+                        <dd>{formatDateForDisplay(state.requestedDate)}</dd>
                       </div>
                       <div>
                         <dt className="font-medium text-[var(--color-foreground)]">{content.review.requestedTime}</dt>
-                        <dd>{formatSelectedTime(state.requestedTime)}</dd>
+                        <dd>{formatTimeForDisplay(state.requestedTime)}</dd>
                       </div>
                       <div>
                         <dt className="font-medium text-[var(--color-foreground)]">{content.timezoneLabel}</dt>
@@ -653,8 +614,8 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
                   </label>
                   {errors.consentAccepted ? <p className="text-sm text-[var(--color-danger)]">{errors.consentAccepted}</p> : null}
 
-                  <Button type="button" onClick={submitBooking} disabled={isSubmitting}>
-                    {isSubmitting ? "Scheduling your appointment..." : content.submitLabel}
+                  <Button type="button" onClick={submitRequest} disabled={isSubmitting}>
+                    {isSubmitting ? "Submitting request..." : content.submitLabel}
                   </Button>
                 </div>
               ) : null}
@@ -662,24 +623,25 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
               {submitError ? (
                 <Card className="border-dashed p-4">
                   <p className="text-sm text-[var(--color-danger)]">{submitError}</p>
+                  <div className="mt-3 flex gap-3">
+                    <Button type="button" variant="secondary" onClick={submitRequest} disabled={isSubmitting}>
+                      Retry
+                    </Button>
+                    <Button href="/contact" variant="secondary">Go to Contact</Button>
+                  </div>
                 </Card>
               ) : null}
 
               {successState ? (
                 <Card className="border-dashed p-4">
-                  <h3 className="text-base text-[var(--color-foreground)]">Your Initial Evaluation has been scheduled.</h3>
+                  <h3 className="text-base text-[var(--color-foreground)]">Appointment request received.</h3>
                   <p className="mt-2 text-sm text-[var(--color-muted)]">
-                    {formatSelectedDate(successState.start)} at {formatSelectedTime(successState.start)} ({successState.timezone})
+                    {formatDateForDisplay(successState.requestedDate)} at {successState.requestedTimeLabel} (Central Time — Houston)
                   </p>
-                  <div className="mt-2 text-sm text-[var(--color-muted)]">
-                    {successState.address.map((line) => (
-                      <p key={line}>{line}</p>
-                    ))}
-                  </div>
-                  <p className="mt-2 text-sm text-[var(--color-muted)]">
-                    Booking reference: {successState.bookingReference}
+                  <p className="mt-2 text-sm text-[var(--color-muted)]">Reference: {successState.reference}</p>
+                  <p className="mt-1 text-sm text-[var(--color-muted)]">
+                    Thank you. The NeuroSports USA Houston team has been notified. Your appointment is not confirmed until you receive confirmation from our team or Google Calendar.
                   </p>
-                  <p className="mt-1 text-sm text-[var(--color-muted)]">{successState.inviteNotice}</p>
                 </Card>
               ) : null}
             </div>
@@ -692,11 +654,7 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
               ) : null}
 
               {step < 5 ? (
-                <Button
-                  type="button"
-                  onClick={goNext}
-                  disabled={disableNextOnStepTwo}
-                >
+                <Button type="button" onClick={goNext} disabled={disableNextOnStepTwo}>
                   {content.nextLabel}
                 </Button>
               ) : null}

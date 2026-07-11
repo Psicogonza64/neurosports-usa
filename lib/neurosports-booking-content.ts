@@ -167,7 +167,7 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
     selectPlaceholder: "Select",
     selectDateHint: "Select a date to view available times.",
     contactFallbackLabel: "Contact",
-    objectiveMaxError: "Maximum 600 characters.",
+    objectiveMaxError: "Maximum 300 characters.",
     googleStepDescription:
       "Our secure Google Calendar booking page displays current Houston availability and removes times that are already booked.",
     googleStepActionLabel: "View Available Dates and Times",
@@ -253,7 +253,7 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
       heading: "Primary reason for the Initial Evaluation",
       label: "Primary reason for the Initial Evaluation",
       helper:
-        "Briefly describe the main concern or goal. Please do not include extensive medical or confidential information.",
+        "Briefly identify the main goal. Do not include diagnoses, detailed medical history, test results or highly sensitive information.",
       categoriesLabel: "Select applicable categories",
       categories: [
         { value: "attention-or-concentration", label: "Attention or concentration" },
@@ -359,7 +359,7 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
     selectPlaceholder: "Seleccione",
     selectDateHint: "Seleccione una fecha para ver horarios disponibles.",
     contactFallbackLabel: "Contacto",
-    objectiveMaxError: "Maximo 600 caracteres.",
+    objectiveMaxError: "Maximo 300 caracteres.",
     googleStepDescription:
       "Nuestra pagina segura de Google Calendar muestra disponibilidad actual de Houston y elimina horarios que ya fueron reservados.",
     googleStepActionLabel: "Ver fechas y horarios disponibles",
@@ -445,7 +445,7 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
       heading: "Motivo principal de la Evaluacion Inicial",
       label: "Motivo principal de la Evaluacion Inicial",
       helper:
-        "Describa brevemente la principal preocupacion u objetivo. No incluya informacion medica extensa o confidencial.",
+        "Identifique brevemente el objetivo principal. No incluya diagnosticos, historial medico detallado, resultados de pruebas ni informacion altamente sensible.",
       categoriesLabel: "Seleccione categorias aplicables",
       categories: [
         { value: "attention-or-concentration", label: "Atencion o concentracion" },
