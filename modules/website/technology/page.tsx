@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Hero } from "@/components/ui/hero";
 import { SectionTitle } from "@/components/ui/section-title";
+import { ScientificJourneyDiagram } from "@/components/diagrams/ScientificJourneyDiagram";
 import {
   assessmentTools,
   cognitiveTrainingTools,
@@ -12,36 +13,6 @@ import {
   trackingSteps,
   transferSignals,
 } from "@/modules/website/technology/data";
-
-function TechnologyHeroVisual() {
-  return (
-    <div className="nsu-panel flex aspect-[4/5] w-full max-w-2xl flex-col justify-between rounded-[2rem] border p-8 sm:p-10 lg:p-12">
-      <span className="nsu-kicker text-xs font-medium uppercase tracking-[0.24em]">
-        Technology Ecosystem
-      </span>
-      <div className="flex flex-1 items-center justify-center py-8">
-        <div className="grid w-full max-w-lg gap-4 sm:grid-cols-2">
-          {ecosystemAreas.map((area, index) => (
-            <div
-              key={area.title}
-              className="relative rounded-[1.6rem] border border-[color:color-mix(in_srgb,var(--color-secondary)_14%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-background)_64%,white)] p-5"
-            >
-              <span className="text-[11px] uppercase tracking-[0.16em] text-[var(--color-secondary)]/80">
-                0{index + 1}
-              </span>
-              <h3 className="mt-3 text-base font-medium text-[var(--color-foreground)]">
-                {area.title}
-              </h3>
-              <p className="mt-2 text-xs leading-6 text-[var(--color-muted)]">
-                {area.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function HeroSection() {
   return (
@@ -75,7 +46,7 @@ function HeroSection() {
           </div>
         </div>
       }
-      right={<TechnologyHeroVisual />}
+      right={<ScientificJourneyDiagram mode="section" locale="en" />}
     />
   );
 }

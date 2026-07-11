@@ -1,6 +1,4 @@
 export { CalloutPanel } from "@/components/experience/callout-panel";
-export { ClinicalPerformanceCards } from "@/components/experience/clinical-performance-cards";
-export type { ClinicalPerformanceCardContent } from "@/components/experience/clinical-performance-cards";
 export { DualPath } from "@/components/experience/dual-path";
 export type { DualPathBranch } from "@/components/experience/dual-path";
 export { FeatureGrid } from "@/components/experience/feature-grid";

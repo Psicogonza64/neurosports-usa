@@ -109,20 +109,6 @@ export const competitiveAdvantages = [
   "Innovative technology",
 ];
 
-export const whatWeDoClinicalPath = {
-  label: "Clinical Neuroscience",
-  title: "Clinical Neuroscience",
-  description:
-    "Pediatric neuropsychology, adult neuropsychology, cognitive rehabilitation, functional diagnosis, and neurological and psychiatric conditions are addressed as part of one integrated neuroscience model.",
-};
-
-export const whatWeDoPerformancePath = {
-  label: "NeuroPerformance",
-  title: "NeuroPerformance",
-  description:
-    "Soccer, basketball, baseball, tennis, elite athletes, reaction time, decision-making and attention under pressure are developed through the same MNSI framework.",
-};
-
 export const whatWeDoJourneySteps = [
   {
     label: "01",

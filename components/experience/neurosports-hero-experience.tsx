@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
-import { ScientificJourneyDiagram } from "@/components/scientific-journey/ScientificJourneyDiagram";
+import { ScientificJourneyDiagram } from "@/components/diagrams/ScientificJourneyDiagram";
 import { experienceRhythm } from "@/components/experience/section-spacing";
 import {
   getNeuroSportsHeroContent,
@@ -46,7 +46,7 @@ export function NeuroSportsHeroExperience({
 
         <div className="order-1 flex w-full items-center justify-center xl:order-2">
           <div className="nsu-panel w-full max-w-3xl rounded-[2rem] border p-4 sm:p-6 lg:p-7">
-            <ScientificJourneyDiagram locale={locale} mode="hero" />
+            <ScientificJourneyDiagram locale={locale} mode="section" />
           </div>
         </div>
       </Container>

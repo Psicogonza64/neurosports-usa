@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Hero } from "@/components/ui/hero";
 import { SectionTitle } from "@/components/ui/section-title";
+import { ScientificJourneyDiagram } from "@/components/diagrams/ScientificJourneyDiagram";
 import { LocationsExplorer, ProcessExplorer } from "@/components/experience";
 import {
   getIntegratedModelContent,
@@ -10,46 +11,6 @@ import {
 } from "@/modules/website/integrated-model/data";
 import { getNeuroSportsPublicContent } from "@/lib/neurosports-public-content";
 import { getNeuroSportsLocationsContent } from "@/lib/neurosports-locations-content";
-
-function IntegratedModelHeroVisual({ locale }: { locale: IntegratedModelLocale }) {
-  const content = getIntegratedModelContent(locale);
-
-  return (
-    <div className="nsu-panel flex aspect-[4/5] w-full max-w-2xl flex-col justify-between rounded-[2rem] border p-8 sm:p-10 lg:p-12">
-      {/* TODO: Replace with final approved NeuroSports USA visual asset. */}
-      <span className="nsu-kicker text-xs font-medium uppercase tracking-[0.24em]">MNSI Visual Placeholder</span>
-      <div className="flex flex-1 items-center justify-center py-8">
-        <div className="relative grid w-full max-w-lg gap-3">
-          {content.mnsi.phases.map((phase, index) => (
-            <div
-              key={`${phase.title}-${index}`}
-              className="relative rounded-[1.6rem] border border-[color:color-mix(in_srgb,var(--color-secondary)_14%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-background)_64%,white)] px-5 py-4"
-            >
-              <div className="flex items-center gap-4">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[color:color-mix(in_srgb,var(--color-primary)_22%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-primary)_10%,white)] text-xs font-medium tracking-[0.12em] text-[var(--color-primary)]">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <div className="space-y-1">
-                  <h3 className="text-sm font-medium uppercase tracking-[0.08em] text-[var(--color-foreground)]">
-                    {phase.title}
-                  </h3>
-                  <p className="text-xs leading-6 text-[var(--color-muted)]">
-                    {phase.description}
-                  </p>
-                </div>
-              </div>
-              {index < content.mnsi.phases.length - 1 ? (
-                <span className="absolute -bottom-3 left-8 text-sm text-[var(--color-secondary)]/70">
-                  ↓
-                </span>
-              ) : null}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function HeroSection({ locale }: { locale: IntegratedModelLocale }) {
   const content = getIntegratedModelContent(locale);
@@ -79,7 +40,7 @@ function HeroSection({ locale }: { locale: IntegratedModelLocale }) {
           </div>
         </div>
       }
-      right={<IntegratedModelHeroVisual locale={locale} />}
+      right={<ScientificJourneyDiagram mode="section" locale={locale} />}
     />
   );
 }

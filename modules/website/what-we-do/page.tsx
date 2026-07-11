@@ -1,5 +1,4 @@
 import {
-  ClinicalPerformanceCards,
   FeatureGrid,
   HeroObjectPlaceholder,
   JourneyCTA,
@@ -10,7 +9,7 @@ import {
   SectionHeader,
   SectionSpacing,
 } from "@/components/experience";
-import { ScientificJourneyDiagram } from "@/components/scientific-journey/ScientificJourneyDiagram";
+import { ScientificJourneyDiagram } from "@/components/diagrams/ScientificJourneyDiagram";
 import { Container } from "@/components/ui/container";
 import {
   getNeuroSportsPublicContent,
@@ -18,8 +17,6 @@ import {
 } from "@/lib/neurosports-public-content";
 import {
   whatWeDeliverItems,
-  whatWeDoClinicalPath,
-  whatWeDoPerformancePath,
 } from "@/modules/website/what-we-do/data";
 
 function HeroSection() {
@@ -82,10 +79,7 @@ function ClinicalPerformanceSection() {
             subtitle="Both pathways are organized under MNSI so that care, rehabilitation and performance remain part of one institutional framework."
           />
           <div className="mt-14">
-            <ClinicalPerformanceCards
-              clinical={whatWeDoClinicalPath}
-              performance={whatWeDoPerformancePath}
-            />
+            <ScientificJourneyDiagram mode="section" locale="en" />
           </div>
         </SectionSpacing>
       </Container>
