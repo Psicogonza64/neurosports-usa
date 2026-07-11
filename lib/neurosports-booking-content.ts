@@ -34,6 +34,16 @@ export type BookingAssistantContent = {
   selectDateHint: string;
   contactFallbackLabel: string;
   objectiveMaxError: string;
+  googleStepDescription: string;
+  googleStepActionLabel: string;
+  googleStepFallbackMessage: string;
+  googleStepFallbackAction: string;
+  googleCompletionQuestion: string;
+  googleCompletionOptions: LocalizedOption<"booked" | "not-yet" | "need-help">[];
+  googleCompletionBookedTitle: string;
+  googleCompletionBookedText: string;
+  googleCompletionPreparationItems: string[];
+  googleCompletionHelpLabel: string;
   nextLabel: string;
   backLabel: string;
   submitLabel: string;
@@ -76,6 +86,8 @@ export type BookingAssistantContent = {
     responsibleFirstName: string;
     responsibleLastName: string;
     relationship: string;
+    responsibleEmail: string;
+    responsibleMobilePhone: string;
   };
   contactOptions: LocalizedOption<ContactMethod>[];
   relationshipOptions: LocalizedOption<FamilyRelationship>[];
@@ -134,7 +146,7 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
     locale: "en",
     pageTitle: "Schedule an Initial Evaluation",
     pageDescription:
-      "Request an Initial Evaluation at the NeuroSports USA Houston Center and select a preferred appointment date and time.",
+      "Request an Initial Evaluation at the NeuroSports USA Houston Center. Do not upload or include extensive medical records. Our team will provide secure instructions if documents are needed.",
     emergencyNotice:
       "This scheduling form is not monitored for emergencies. If immediate medical assistance is required, contact local emergency services.",
     privacyNotice:
@@ -156,6 +168,27 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
     selectDateHint: "Select a date to view available times.",
     contactFallbackLabel: "Contact",
     objectiveMaxError: "Maximum 600 characters.",
+    googleStepDescription:
+      "Our secure Google Calendar booking page displays current Houston availability and removes times that are already booked.",
+    googleStepActionLabel: "View Available Dates and Times",
+    googleStepFallbackMessage:
+      "Online booking is being configured. Please contact NeuroSports USA to request an Initial Evaluation.",
+    googleStepFallbackAction: "Go to Contact",
+    googleCompletionQuestion: "Have you completed your booking?",
+    googleCompletionOptions: [
+      { value: "booked", label: "Yes, my appointment was booked" },
+      { value: "not-yet", label: "Not yet" },
+      { value: "need-help", label: "I need help" },
+    ],
+    googleCompletionBookedTitle: "Preparation and next steps",
+    googleCompletionBookedText:
+      "Please arrive a few minutes early with your confirmation details. Do not include detailed clinical information in calendar titles or public notes.",
+    googleCompletionPreparationItems: [
+      "Bring a valid ID and your appointment confirmation details.",
+      "Bring a concise summary of your main concern for the Initial Evaluation.",
+      "Wait for secure instructions if additional documents are required.",
+    ],
+    googleCompletionHelpLabel: "Go to Contact",
     nextLabel: "Continue",
     backLabel: "Back",
     submitLabel: "Submit appointment request",
@@ -170,18 +203,18 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
     invalidEmail: "Please enter a valid email address.",
     invalidPhone: "Please enter a valid phone number.",
     stepTitles: {
-      1: "Appointment",
-      2: "Date and Time",
-      3: "Patient Information",
-      4: "Appointment Objective",
-      5: "Review and Submit",
+      1: "Appointment For",
+      2: "Open Availability",
+      3: "Prepare for Evaluation",
+      4: "Previous Studies",
+      5: "Confirmation and Next Steps",
     },
     stepHeadings: {
-      appointment: "Who is this appointment for?",
-      dateTime: "Select an available appointment.",
-      patientInfo: "Tell us who the appointment is for.",
-      objective: "What would you like help with?",
-      review: "Review your appointment request.",
+      appointment: "Who is the appointment for?",
+      dateTime: "Select a real available appointment.",
+      patientInfo: "Prepare for your Initial Evaluation",
+      objective: "Previous studies checklist",
+      review: "Confirmation and next steps",
     },
     appointmentFor: {
       label: "Appointment for",
@@ -201,6 +234,8 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
       responsibleFirstName: "Parent or responsible adult first name",
       responsibleLastName: "Parent or responsible adult last name",
       relationship: "Relationship to the patient",
+      responsibleEmail: "Responsible adult email",
+      responsibleMobilePhone: "Responsible adult mobile phone",
     },
     contactOptions: [
       { value: "email", label: "Email" },
@@ -303,7 +338,7 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
     locale: "es",
     pageTitle: "Agendar una Evaluacion Inicial",
     pageDescription:
-      "Solicite una Evaluacion Inicial en el centro NeuroSports USA Houston y seleccione una fecha y hora preferida.",
+      "Solicite una Evaluacion Inicial en el centro NeuroSports USA Houston. No cargue ni incluya historias clinicas extensas. Nuestro equipo compartira instrucciones seguras si se requieren documentos.",
     emergencyNotice:
       "Este formulario de agenda no se monitorea para emergencias. Si requiere asistencia medica inmediata, contacte servicios de emergencia locales.",
     privacyNotice:
@@ -325,6 +360,27 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
     selectDateHint: "Seleccione una fecha para ver horarios disponibles.",
     contactFallbackLabel: "Contacto",
     objectiveMaxError: "Maximo 600 caracteres.",
+    googleStepDescription:
+      "Nuestra pagina segura de Google Calendar muestra disponibilidad actual de Houston y elimina horarios que ya fueron reservados.",
+    googleStepActionLabel: "Ver fechas y horarios disponibles",
+    googleStepFallbackMessage:
+      "La reserva en linea se esta configurando. Contacte a NeuroSports USA para solicitar una Evaluacion Inicial.",
+    googleStepFallbackAction: "Ir a Contacto",
+    googleCompletionQuestion: "Ha completado su reserva?",
+    googleCompletionOptions: [
+      { value: "booked", label: "Si, mi cita fue reservada" },
+      { value: "not-yet", label: "Aun no" },
+      { value: "need-help", label: "Necesito ayuda" },
+    ],
+    googleCompletionBookedTitle: "Preparacion y siguientes pasos",
+    googleCompletionBookedText:
+      "Por favor llegue unos minutos antes con los datos de confirmacion. No incluya informacion clinica detallada en titulos o notas publicas del calendario.",
+    googleCompletionPreparationItems: [
+      "Lleve una identificacion valida y los datos de confirmacion de la cita.",
+      "Lleve un resumen breve de su principal motivo para la Evaluacion Inicial.",
+      "Espere instrucciones seguras si se requieren documentos adicionales.",
+    ],
+    googleCompletionHelpLabel: "Ir a Contacto",
     nextLabel: "Continuar",
     backLabel: "Atras",
     submitLabel: "Enviar solicitud de cita",
@@ -339,18 +395,18 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
     invalidEmail: "Ingrese un correo electronico valido.",
     invalidPhone: "Ingrese un numero de telefono valido.",
     stepTitles: {
-      1: "Cita",
-      2: "Fecha y Hora",
-      3: "Informacion del Paciente",
-      4: "Objetivo de la Cita",
-      5: "Revisar y Enviar",
+      1: "Para quien",
+      2: "Abrir disponibilidad",
+      3: "Preparacion",
+      4: "Estudios previos",
+      5: "Confirmacion y siguientes pasos",
     },
     stepHeadings: {
-      appointment: "Para quien es esta cita?",
-      dateTime: "Seleccione una cita disponible.",
-      patientInfo: "Indiquenos para quien es la cita.",
-      objective: "En que le gustaria recibir ayuda?",
-      review: "Revise su solicitud de cita.",
+      appointment: "Para quien es la cita?",
+      dateTime: "Seleccione una cita realmente disponible.",
+      patientInfo: "Preparese para su Evaluacion Inicial",
+      objective: "Checklist de estudios previos",
+      review: "Confirmacion y siguientes pasos",
     },
     appointmentFor: {
       label: "Cita para",
@@ -370,6 +426,8 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
       responsibleFirstName: "Nombre del padre o adulto responsable",
       responsibleLastName: "Apellido del padre o adulto responsable",
       relationship: "Relacion con el paciente",
+      responsibleEmail: "Correo del adulto responsable",
+      responsibleMobilePhone: "Telefono movil del adulto responsable",
     },
     contactOptions: [
       { value: "email", label: "Correo" },

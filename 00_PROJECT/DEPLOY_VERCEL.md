@@ -16,26 +16,28 @@ Documentar el proceso recomendado para conectar NeuroSports USA con Vercel y hab
 - Estructura compatible con Next.js App Router.
 - Cuenta de Vercel con acceso al repositorio.
 
-## 2. Variables De Entorno (Futuro)
+## 2. Variables De Entorno
 
-Estado actual:
+Variable publica requerida para la agenda de Houston:
 
-- No hay variables de entorno obligatorias para el prototipo actual.
+- `NEXT_PUBLIC_HOUSTON_GOOGLE_APPOINTMENT_URL`
 
-Estructura recomendada para cuando existan:
+Configuracion por entorno:
 
-- Definir variables en Vercel por entorno:
-  - Development
-  - Preview
-  - Production
-- No versionar secretos en el repositorio.
-- Mantener archivo `.env.local` solo para uso local.
+1. Local development
+  - Copiar `.env.example` a `.env.local`.
+  - Definir `NEXT_PUBLIC_HOUSTON_GOOGLE_APPOINTMENT_URL` con la URL de Google Appointment Schedule.
+  - No versionar `.env.local`.
+2. Vercel Preview
+  - En Vercel, abrir Project Settings -> Environment Variables.
+  - Crear `NEXT_PUBLIC_HOUSTON_GOOGLE_APPOINTMENT_URL` para el entorno `Preview`.
+3. Vercel Production
+  - En Vercel, crear la misma variable para `Production`.
 
-Checklist futuro:
+Reglas:
 
-- TODO: Registrar variables requeridas por modulo.
-- TODO: Definir convenciones de nombres de variables.
-- TODO: Documentar dependencias entre variables y servicios externos.
+- No hardcodear la URL en componentes.
+- Mantener consistencia de valor entre Preview y Production segun calendario aprobado.
 
 ## 3. Flujo GitHub -> Vercel
 

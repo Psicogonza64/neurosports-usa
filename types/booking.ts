@@ -55,7 +55,11 @@ export type ResponsibleAdult = {
   firstName: string;
   lastName: string;
   relationship: FamilyRelationship | "";
+  email: string;
+  mobilePhone: string;
 };
+
+export type GoogleBookingStatus = "booked" | "not-yet" | "need-help";
 
 export type BookingFormState = {
   appointmentType: AppointmentType;
@@ -72,6 +76,7 @@ export type BookingFormState = {
   referralSource: ReferralSource | "";
   additionalNote: string;
   consentAccepted: boolean;
+  googleBookingStatus: GoogleBookingStatus | "";
 };
 
 export type BookingSubmissionPayload = {

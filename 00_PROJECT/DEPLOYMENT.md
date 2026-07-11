@@ -53,11 +53,20 @@ Public URL
 
 ## Variables de entorno publicas
 
-### NEXT_PUBLIC_HOUSTON_BOOKING_URL
+### NEXT_PUBLIC_HOUSTON_GOOGLE_APPOINTMENT_URL
 
-- Proposito: Calendario publico de citas para Evaluacion Inicial en el Centro NeuroSports USA Houston.
-- Ejemplo: `NEXT_PUBLIC_HOUSTON_BOOKING_URL=https://calendar.google.com/calendar/appointments/...`
-- Nota: No incluir credenciales reales ni identificadores privados en control de versiones.
+- Proposito: URL oficial de Google Appointment Schedule para Evaluacion Inicial en el Centro NeuroSports USA Houston.
+- Ejemplo: `NEXT_PUBLIC_HOUSTON_GOOGLE_APPOINTMENT_URL=https://calendar.google.com/calendar/appointments/...`
+- No incluir credenciales reales ni identificadores privados en control de versiones.
+
+Configuracion requerida:
+
+1. Local
+	- Definir en `.env.local` (archivo no versionado).
+2. Vercel Preview
+	- Definir la variable en el entorno `Preview` del proyecto.
+3. Vercel Production
+	- Definir la variable en el entorno `Production` del proyecto.
 
 ## Version History
 

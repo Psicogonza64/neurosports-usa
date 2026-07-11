@@ -56,7 +56,7 @@ export const houstonBookingConfig = {
       ],
     },
   ],
-  bookingUrl: process.env.NEXT_PUBLIC_HOUSTON_BOOKING_URL ?? "",
+  googleAppointmentScheduleUrl: process.env.NEXT_PUBLIC_HOUSTON_GOOGLE_APPOINTMENT_URL ?? "",
   submissionEndpoint: process.env.NEXT_PUBLIC_HOUSTON_BOOKING_REQUEST_ENDPOINT ?? "",
 };
 
