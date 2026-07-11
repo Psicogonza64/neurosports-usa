@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 import Link from "next/link";
 
@@ -14,6 +14,9 @@ type ButtonProps = {
   rel?: string;
   dataCta?: string;
   dataLocation?: string;
+  type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
+  onClick?: ButtonHTMLAttributes<HTMLButtonElement>["onClick"];
+  disabled?: boolean;
 };
 
 const variantClasses = {
@@ -36,6 +39,9 @@ export function Button({
   rel,
   dataCta,
   dataLocation,
+  type = "button",
+  onClick,
+  disabled,
 }: ButtonProps) {
   const sharedClassName = cn(
     "inline-flex min-h-11 flex-col items-center justify-center rounded-full border font-medium leading-tight",
@@ -76,7 +82,14 @@ export function Button({
   }
 
   return (
-    <button className={sharedClassName} data-cta={dataCta} data-location={dataLocation}>
+    <button
+      className={sharedClassName}
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      data-cta={dataCta}
+      data-location={dataLocation}
+    >
       {children}
     </button>
   );
