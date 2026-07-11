@@ -9,6 +9,7 @@ import {
   type IntegratedModelLocale,
 } from "@/modules/website/integrated-model/data";
 import { getNeuroSportsPublicContent } from "@/lib/neurosports-public-content";
+import { getNeuroSportsLocationsContent } from "@/lib/neurosports-locations-content";
 
 function IntegratedModelHeroVisual({ locale }: { locale: IntegratedModelLocale }) {
   const content = getIntegratedModelContent(locale);
@@ -300,20 +301,19 @@ function OutcomeMonitoringSection({ locale }: { locale: IntegratedModelLocale })
 }
 
 function LocationsSection({ locale }: { locale: IntegratedModelLocale }) {
-  const content = getNeuroSportsPublicContent(locale);
+  const content = getNeuroSportsLocationsContent(locale);
 
   return (
     <section className="border-b nsu-border" id="locations">
       <Container className="py-24 lg:py-28">
         <SectionTitle
-          eyebrow={content.locations.eyebrow}
-          title={content.locations.title}
+          eyebrow={content.labels.eyebrow}
+          title={content.labels.title}
         />
 
         <LocationsExplorer
+          locale={locale}
           className="mt-14"
-          items={content.locations.items}
-          disclaimer={content.locations.disclaimer}
         />
       </Container>
     </section>

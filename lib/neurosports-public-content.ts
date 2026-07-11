@@ -13,8 +13,13 @@ export type PublicProcessItem = {
 export type PublicLocationItem = {
   id: string;
   city: string;
+  centerTitle: string;
   organization: string;
   addressLines: string[];
+  imagePath?: string;
+  imageAlt?: string;
+  imageCaption?: string;
+  hasApprovedImage?: boolean;
   viewHref: string;
   directionsHref: string;
   contactHref: string;
@@ -196,12 +201,19 @@ const contentByLocale: Record<PublicContentLocale, PublicContent> = {
         {
           id: "houston",
           city: "HOUSTON",
+          centerTitle: "Houston Center",
           organization: "NeuroSports USA",
           addressLines: [
             "11777 Katy Freeway, Suite 410S",
             "Houston, Texas 77079",
             "United States",
           ],
+          imagePath: "/images/locations/houston/neurosports-houston-team-building.jpg",
+          imageAlt:
+            "NeuroSports USA team outside the Houston center at 11777 Katy Freeway.",
+          imageCaption:
+            "NeuroSports USA clinical and NeuroPerformance team at the Houston center.",
+          hasApprovedImage: false,
           viewHref: "#locations",
           directionsHref: "https://maps.google.com/?q=11777+Katy+Freeway+Suite+410S+Houston+Texas+77079",
           contactHref: "#contact",
@@ -212,10 +224,11 @@ const contentByLocale: Record<PublicContentLocale, PublicContent> = {
         {
           id: "bogota",
           city: "BOGOTA",
+          centerTitle: "Bogota Center",
           organization: "CENPA IPS",
           addressLines: [
             "Carrera 23 No. 87-10",
-            "Bogota D.C.",
+            "Bogotá D.C.",
             "Colombia",
           ],
           viewHref: "#locations",
@@ -228,6 +241,7 @@ const contentByLocale: Record<PublicContentLocale, PublicContent> = {
         {
           id: "bucaramanga",
           city: "BUCARAMANGA",
+          centerTitle: "Bucaramanga Center",
           organization: "CENPA IPS",
           addressLines: [
             "Carrera 35A No. 48-134, Piso 2",
@@ -264,12 +278,19 @@ const contentByLocale: Record<PublicContentLocale, PublicContent> = {
         {
           id: "houston",
           city: "HOUSTON",
+          centerTitle: "Centro Houston",
           organization: "NeuroSports USA",
           addressLines: [
             "11777 Katy Freeway, Suite 410S",
             "Houston, Texas 77079",
             "United States",
           ],
+          imagePath: "/images/locations/houston/neurosports-houston-team-building.jpg",
+          imageAlt:
+            "NeuroSports USA team outside the Houston center at 11777 Katy Freeway.",
+          imageCaption:
+            "NeuroSports USA clinical and NeuroPerformance team at the Houston center.",
+          hasApprovedImage: false,
           viewHref: "#locations",
           directionsHref: "https://maps.google.com/?q=11777+Katy+Freeway+Suite+410S+Houston+Texas+77079",
           contactHref: "#contact",
@@ -280,10 +301,11 @@ const contentByLocale: Record<PublicContentLocale, PublicContent> = {
         {
           id: "bogota",
           city: "BOGOTA",
+          centerTitle: "Centro Bogota",
           organization: "CENPA IPS",
           addressLines: [
             "Carrera 23 No. 87-10",
-            "Bogota D.C.",
+            "Bogotá D.C.",
             "Colombia",
           ],
           viewHref: "#locations",
@@ -296,6 +318,7 @@ const contentByLocale: Record<PublicContentLocale, PublicContent> = {
         {
           id: "bucaramanga",
           city: "BUCARAMANGA",
+          centerTitle: "Centro Bucaramanga",
           organization: "CENPA IPS",
           addressLines: [
             "Carrera 35A No. 48-134, Piso 2",
