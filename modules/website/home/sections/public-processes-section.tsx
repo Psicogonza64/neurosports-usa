@@ -1,25 +1,29 @@
 import { ProcessExplorer } from "@/components/experience/process-explorer";
 import { Container } from "@/components/ui/container";
 import { SectionTitle } from "@/components/ui/section-title";
-import { getNeuroSportsPublicContent } from "@/lib/neurosports-public-content";
+import { getNeuroSportsHomeContent, type HomeLocale } from "@/lib/neurosports-home-content";
 
-export function PublicProcessesSection() {
-  const content = getNeuroSportsPublicContent("en");
+type PublicProcessesSectionProps = {
+  locale?: HomeLocale;
+};
+
+export function PublicProcessesSection({ locale = "en" }: PublicProcessesSectionProps) {
+  const content = getNeuroSportsHomeContent(locale);
 
   return (
-    <section className="border-b nsu-border" id="public-processes">
+    <section className="border-b nsu-border" id="process">
       <Container className="py-24 lg:py-28">
         <SectionTitle
-          eyebrow={content.processExplorer.eyebrow}
-          title={content.processExplorer.title}
-          description={content.processExplorer.description}
+          eyebrow={content.process.eyebrow}
+          title={content.process.title}
+          description={content.process.intro}
         />
 
         <ProcessExplorer
           className="mt-14"
-          items={content.processExplorer.items}
-          mode="summary"
-          sequenceLabel={content.processExplorer.sequenceLabel}
+          items={content.process.items}
+          mode="interactive"
+          sequenceLabel={content.process.sequenceLabel}
         />
       </Container>
     </section>

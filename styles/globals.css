@@ -2,18 +2,28 @@
 
 :root {
   color-scheme: light;
-  --color-background: #fbf8f2;
-  --color-foreground: #23211d;
-  --color-primary: #bf6a2c;
-  --color-secondary: #1e5d55;
-  --color-muted: #6f6a63;
-  --color-border: #e8e1d7;
+  --ns-ivory: #f7f3ec;
+  --ns-bone: #fdfbf7;
+  --ns-charcoal: #2b2a28;
+  --ns-sage: #a8b19c;
+  --ns-sage-dark: #627567;
+  --ns-sand: #d8c4a7;
+  --ns-gold: #c89a4b;
+  --ns-gold-soft: #dec58f;
+  --ns-border: #ded8cc;
+  --ns-muted-text: #6d6962;
+  --color-background: var(--ns-ivory);
+  --color-foreground: var(--ns-charcoal);
+  --color-primary: var(--ns-gold);
+  --color-secondary: var(--ns-sage-dark);
+  --color-muted: var(--ns-muted-text);
+  --color-border: var(--ns-border);
   --background: var(--color-background);
   --foreground: var(--color-foreground);
   --muted: var(--color-muted);
   --line: var(--color-border);
-  --soft: #f4efe6;
-  --panel: #fffdf9;
+  --soft: color-mix(in srgb, var(--ns-sand) 24%, var(--ns-bone));
+  --panel: var(--ns-bone);
 }
 
 html {
@@ -91,7 +101,7 @@ a {
 .nsu-primary-button {
   background: var(--color-primary);
   border-color: var(--color-primary);
-  color: #fffdf9;
+  color: #201f1d;
 }
 
 .nsu-secondary-button {

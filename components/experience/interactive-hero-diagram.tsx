@@ -2,8 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import Image from "next/image";
-
 import {
   getNeuroSportsHeroInteractiveContent,
   type HeroInteractiveLocale,
@@ -14,7 +12,6 @@ import { cn } from "@/utils/cn";
 
 type InteractiveHeroDiagramProps = {
   locale?: HeroInteractiveLocale;
-  brainSrc?: string;
 };
 
 type JourneyPathId =
@@ -29,8 +26,8 @@ const desktopNodePositions: Record<HeroInteractiveNodeId, string> = {
   "functional-evaluation": "left-1/2 top-[8%] -translate-x-1/2",
   rsfn: "left-1/2 top-[25%] -translate-x-1/2",
   "mnsi-core": "left-1/2 top-[42%] -translate-x-1/2",
-  "clinical-neuroscience": "left-[8%] top-[61%]",
-  neuroperformance: "right-[8%] top-[61%]",
+  "clinical-neuroscience": "left-[2%] top-[61%]",
+  neuroperformance: "right-[2%] top-[61%]",
   "functional-outcomes": "left-1/2 top-[81%] -translate-x-1/2",
 };
 
@@ -195,7 +192,6 @@ function DetailPanel({
 
 export function InteractiveHeroDiagram({
   locale = "en",
-  brainSrc = "/images/neurosports-brain-master.png",
 }: InteractiveHeroDiagramProps) {
   const content = getNeuroSportsHeroInteractiveContent(locale);
   const [activeNodeId, setActiveNodeId] = useState<HeroInteractiveNodeId | null>(null);
@@ -220,15 +216,9 @@ export function InteractiveHeroDiagram({
     <div className="w-full">
       <div className="hidden rounded-[1.85rem] border border-[color:color-mix(in_srgb,var(--color-secondary)_10%,var(--color-border))] bg-[linear-gradient(158deg,color-mix(in_srgb,var(--color-background)_76%,white),color-mix(in_srgb,var(--color-background)_62%,white))] p-4 md:block md:p-5 lg:p-6">
         <div className="relative">
-          <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(circle_at_28%_24%,color-mix(in_srgb,var(--color-primary)_8%,transparent),transparent_44%),radial-gradient(circle_at_74%_70%,color-mix(in_srgb,var(--color-secondary)_8%,transparent),transparent_48%)]" />
+          <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(circle_at_32%_30%,color-mix(in_srgb,var(--color-secondary)_14%,transparent),transparent_46%),radial-gradient(circle_at_72%_68%,color-mix(in_srgb,var(--ns-sage)_24%,transparent),transparent_52%)]" />
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[1.5rem]">
-            <Image
-              src={brainSrc}
-              alt={content.brainAlt}
-              fill
-              sizes="(min-width: 1200px) 36vw, (min-width: 768px) 42vw, 80vw"
-              className="pointer-events-none absolute left-1/2 top-1/2 z-[11] h-[84%] w-[82%] -translate-x-1/2 -translate-y-1/2 object-contain"
-            />
+            {/* TODO: Insert final approved transparent NeuroSports USA brain asset during visual-assets phase. */}
 
             <ConnectorPaths activeNodeId={activeNodeId} />
 
@@ -271,14 +261,8 @@ export function InteractiveHeroDiagram({
       </div>
 
       <div className="rounded-[1.85rem] border border-[color:color-mix(in_srgb,var(--color-secondary)_10%,var(--color-border))] bg-[linear-gradient(158deg,color-mix(in_srgb,var(--color-background)_76%,white),color-mix(in_srgb,var(--color-background)_62%,white))] p-4 md:hidden">
-        <div className="relative mb-4 aspect-[4/3] overflow-hidden rounded-[1.35rem] border border-[color:color-mix(in_srgb,var(--color-secondary)_10%,var(--color-border))]">
-          <Image
-            src={brainSrc}
-            alt={content.brainAlt}
-            fill
-            sizes="92vw"
-            className="pointer-events-none absolute left-1/2 top-1/2 z-[11] h-[86%] w-[84%] -translate-x-1/2 -translate-y-1/2 object-contain"
-          />
+        <div className="relative mb-4 aspect-[4/3] overflow-hidden rounded-[1.35rem] border border-[color:color-mix(in_srgb,var(--color-secondary)_10%,var(--color-border))] bg-[radial-gradient(circle_at_50%_45%,color-mix(in_srgb,var(--color-secondary)_12%,transparent),transparent_58%),linear-gradient(160deg,color-mix(in_srgb,var(--color-background)_82%,white),color-mix(in_srgb,var(--color-background)_64%,white))]">
+          {/* TODO: Insert final approved transparent NeuroSports USA brain asset during visual-assets phase. */}
         </div>
 
         <div className="space-y-3">

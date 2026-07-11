@@ -1,23 +1,30 @@
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { SectionTitle } from "@/components/ui/section-title";
-import { technologyItems } from "@/modules/website/home/data";
+import { Button } from "@/components/ui/button";
+import { getNeuroSportsHomeContent, type HomeLocale } from "@/lib/neurosports-home-content";
 
-export function TechnologySection() {
+type TechnologySectionProps = {
+  locale?: HomeLocale;
+};
+
+export function TechnologySection({ locale = "en" }: TechnologySectionProps) {
+  const content = getNeuroSportsHomeContent(locale);
+
   return (
-    <section className="border-b nsu-border" id="technology">
+    <section className="border-b nsu-border" id="technology-preview">
       <Container className="py-20 lg:py-24">
         <SectionTitle
-          eyebrow="Technology"
-          title="A premium technology layer designed to scale across future products and care systems."
-          description="These technology blocks position the platform as an ecosystem where clinical work, tools, and future systems can remain visually and structurally connected."
+          eyebrow={content.technology.eyebrow}
+          title={content.technology.title}
+          description={content.technology.intro}
         />
 
-        <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {technologyItems.map((item) => (
+        <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
+          {content.technology.items.map((item) => (
             <Card
               key={item.title}
-              className="flex min-h-64 flex-col bg-[color:color-mix(in_srgb,var(--color-secondary)_4%,var(--panel))] p-6"
+              className="flex min-h-64 flex-col bg-[color:color-mix(in_srgb,var(--ns-sand)_14%,var(--panel))] p-6"
             >
               <div className="flex h-28 items-center justify-center rounded-[1.25rem] border nsu-border bg-[color:color-mix(in_srgb,var(--color-background)_45%,white)] text-sm text-[var(--color-muted)]">
                 Placeholder
@@ -30,6 +37,14 @@ export function TechnologySection() {
               </div>
             </Card>
           ))}
+        </div>
+
+        {/* TODO: Replace neutral technology placeholders with approved photography and device imagery. */}
+
+        <div className="mt-8">
+          <Button href={content.technology.ctaHref} variant="secondary">
+            <span>{content.technology.ctaLabel}</span>
+          </Button>
         </div>
       </Container>
     </section>

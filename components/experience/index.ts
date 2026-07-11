@@ -11,6 +11,7 @@ export { JourneyCTA } from "@/components/experience/journey-cta";
 export { JourneyFlow } from "@/components/experience/journey-flow";
 export type { JourneyFlowStep } from "@/components/experience/journey-flow";
 export { MNSIPhaseCard } from "@/components/experience/mnsi-phase-card";
+export { MnsiPhaseExplorer } from "@/components/experience/mnsi-phase-explorer";
 export { MNSIVisualJourney } from "@/components/experience/mnsi-visual-journey";
 export type {
 	MNSICorePhase,

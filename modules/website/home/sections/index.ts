@@ -1,13 +1,7 @@
-export { ClinicalPerformanceSection } from "@/modules/website/home/sections/clinical-performance-section";
-export { CorePathwaysSection } from "@/modules/website/home/sections/core-pathways-section";
-export { DualPathSection } from "@/modules/website/home/sections/dual-path-section";
-export { ExperienceQuoteSection } from "@/modules/website/home/sections/experience-quote-section";
+export { ApplicationsSection } from "@/modules/website/home/sections/applications-section";
 export { HeroSection } from "@/modules/website/home/sections/hero-section";
-export { IntegratedModelSection } from "@/modules/website/home/sections/integrated-model-section";
-export { JourneyFlowSection } from "@/modules/website/home/sections/journey-flow-section";
+export { HomeCtaSection } from "@/modules/website/home/sections/home-cta-section";
+export { MnsiJourneySection } from "@/modules/website/home/sections/mnsi-journey-section";
 export { PublicProcessesSection } from "@/modules/website/home/sections/public-processes-section";
 export { ResearchSection } from "@/modules/website/home/sections/research-section";
 export { TechnologySection } from "@/modules/website/home/sections/technology-section";
-export { TestimonialsSection } from "@/modules/website/home/sections/testimonials-section";
-export { WhatWeDoSection } from "@/modules/website/home/sections/what-we-do-section";
-export { WhoWeHelpSection } from "@/modules/website/home/sections/who-we-help-section";
