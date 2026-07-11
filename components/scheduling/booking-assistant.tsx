@@ -2,20 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import Link from "next/link";
-
+import { AppointmentCalendar } from "@/components/scheduling/appointment-calendar";
+import { IntakeForm } from "@/components/scheduling/intake-form";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { IntakeForm } from "@/components/scheduling/intake-form";
 import { bookingAssistantContent } from "@/lib/neurosports-booking-content";
-import { houstonBookingConfig } from "@/lib/neurosports-booking-config";
 import type {
   BookingAssistantLocale,
   BookingFormErrors,
   BookingFormState,
   BookingStep,
-  GoogleBookingStatus,
   PreviousStudyType,
+  ReasonCategory,
 } from "@/types/booking";
 
 const OBJECTIVE_MAX = 600;
@@ -50,6 +48,14 @@ const INITIAL_STATE: BookingFormState = {
   googleBookingStatus: "",
 };
 
+type BookingSuccessState = {
+  bookingReference: string;
+  start: string;
+  timezone: string;
+  address: string[];
+  inviteNotice: string;
+};
+
 function hasValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
@@ -58,11 +64,50 @@ function hasValidPhone(value: string) {
   return /^[0-9()+\-\s]{7,}$/.test(value.trim());
 }
 
+function getContent(locale: BookingAssistantLocale) {
+  return bookingAssistantContent[locale] ?? bookingAssistantContent.en;
+}
+
+function formatSelectedDate(isoStart: string) {
+  if (!isoStart) {
+    return "-";
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(new Date(isoStart));
+}
+
+function formatSelectedTime(isoStart: string) {
+  if (!isoStart) {
+    return "-";
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).format(new Date(isoStart));
+}
+
 function validateStep(step: BookingStep, state: BookingFormState, content: ReturnType<typeof getContent>) {
   const errors: BookingFormErrors = {};
 
   if (step === 1 && !state.appointmentFor) {
     errors.appointmentFor = content.validationSelectOne;
+  }
+
+  if (step === 2) {
+    if (!state.requestedDate) {
+      errors.requestedDate = content.validationRequired;
+    }
+    if (!state.requestedTime) {
+      errors.requestedTime = content.validationRequired;
+    }
   }
 
   if (step === 3) {
@@ -119,6 +164,7 @@ function validateStep(step: BookingStep, state: BookingFormState, content: Retur
     if (!state.appointmentObjective.trim()) {
       errors.appointmentObjective = content.validationRequired;
     }
+
     if (state.appointmentObjective.length > OBJECTIVE_MAX) {
       errors.appointmentObjective = content.objectiveMaxError;
     }
@@ -128,20 +174,13 @@ function validateStep(step: BookingStep, state: BookingFormState, content: Retur
     if (!state.previousStudiesStatus) {
       errors.previousStudiesStatus = content.validationSelectOne;
     }
-    if (state.previousStudiesStatus === "yes" && state.previousStudyTypes.length === 0) {
-      errors.previousStudyTypes = content.validationSelectAtLeastOne;
-    }
   }
 
-  if (step === 5 && !state.googleBookingStatus) {
-    errors.googleBookingStatus = content.validationSelectOne;
+  if (step === 5 && !state.consentAccepted) {
+    errors.consentAccepted = content.validationConsent;
   }
 
   return errors;
-}
-
-function getContent(locale: BookingAssistantLocale) {
-  return bookingAssistantContent[locale] ?? bookingAssistantContent.en;
 }
 
 export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantLocale }) {
@@ -149,9 +188,10 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
   const [step, setStep] = useState<BookingStep>(1);
   const [state, setState] = useState<BookingFormState>(INITIAL_STATE);
   const [errors, setErrors] = useState<BookingFormErrors>({});
+  const [submitError, setSubmitError] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successState, setSuccessState] = useState<BookingSuccessState | null>(null);
 
-  const googleUrl = houstonBookingConfig.googleAppointmentScheduleUrl;
-  const hasGoogleUrl = Boolean(googleUrl);
   const stepHeadingRef = useRef<HTMLHeadingElement | null>(null);
 
   useEffect(() => {
@@ -209,6 +249,16 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
         return draft;
       }
 
+      if (path === "requestedDate") {
+        draft.requestedDate = value;
+        return draft;
+      }
+
+      if (path === "requestedTime") {
+        draft.requestedTime = value;
+        return draft;
+      }
+
       if (path === "contactPreference") {
         draft.contactPreference = value as BookingFormState["contactPreference"];
         return draft;
@@ -227,12 +277,19 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
         return draft;
       }
 
-      if (path === "googleBookingStatus") {
-        draft.googleBookingStatus = value as BookingFormState["googleBookingStatus"];
-        return draft;
-      }
-
       return draft;
+    });
+  };
+
+  const toggleReasonCategory = (value: ReasonCategory) => {
+    setState((current) => {
+      const exists = current.reasonCategories.includes(value);
+      return {
+        ...current,
+        reasonCategories: exists
+          ? current.reasonCategories.filter((item) => item !== value)
+          : [...current.reasonCategories, value],
+      };
     });
   };
 
@@ -256,15 +313,112 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
       return;
     }
 
+    setSubmitError("");
     setStep((current) => (current < 5 ? ((current + 1) as BookingStep) : current));
   };
 
   const goBack = () => {
     setErrors({});
+    setSubmitError("");
     setStep((current) => (current > 1 ? ((current - 1) as BookingStep) : current));
   };
 
-  const bookingStatus = state.googleBookingStatus as GoogleBookingStatus | "";
+  const submitBooking = async () => {
+    if (isSubmitting) {
+      return;
+    }
+
+    const stepErrors = validateStep(5, state, content);
+    setErrors(stepErrors);
+
+    if (Object.keys(stepErrors).length > 0) {
+      return;
+    }
+
+    setSubmitError("");
+    setIsSubmitting(true);
+
+    try {
+      const contactEmail =
+        state.appointmentFor === "family-member"
+          ? state.responsibleAdult.email
+          : state.patient.email;
+      const contactPhone =
+        state.appointmentFor === "family-member"
+          ? state.responsibleAdult.mobilePhone
+          : state.patient.mobilePhone;
+
+      const response = await fetch("/api/calendar/book", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          appointmentFor: state.appointmentFor,
+          patientFirstName: state.patient.firstName,
+          patientLastName: state.patient.lastName,
+          contactEmail,
+          contactPhone,
+          responsibleAdultName:
+            state.appointmentFor === "family-member"
+              ? `${state.responsibleAdult.firstName} ${state.responsibleAdult.lastName}`.trim()
+              : undefined,
+          relationship:
+            state.appointmentFor === "family-member"
+              ? state.responsibleAdult.relationship
+              : undefined,
+          selectedStart: state.requestedTime,
+          timezone: "America/Chicago",
+          consentAccepted: state.consentAccepted,
+          preferredContactMethod: state.contactPreference || undefined,
+          reasonCategories: state.reasonCategories,
+          previousStudiesStatus: state.previousStudiesStatus || undefined,
+          previousStudyTypes: state.previousStudyTypes,
+          website: "",
+        }),
+      });
+
+      const data = (await response.json()) as {
+        message?: string;
+        bookingReference?: string;
+        start?: string;
+        timezone?: string;
+        address?: string[];
+        inviteNotice?: string;
+      };
+
+      if (response.status === 409) {
+        setSubmitError(
+          data.message || "That appointment time was just booked. Please select another available time.",
+        );
+        setState((current) => ({ ...current, requestedTime: "" }));
+        setStep(2);
+        return;
+      }
+
+      if (!response.ok || !data.bookingReference || !data.start || !data.address || !data.timezone) {
+        setSubmitError(data.message || "Online scheduling is temporarily unavailable. Please try again shortly.");
+        return;
+      }
+
+      setSuccessState({
+        bookingReference: data.bookingReference,
+        start: data.start,
+        timezone: data.timezone,
+        address: data.address,
+        inviteNotice: data.inviteNotice || "Please check your email for the calendar invitation.",
+      });
+
+      setState(INITIAL_STATE);
+      setErrors({});
+    } catch {
+      setSubmitError("Online scheduling is temporarily unavailable. Please try again shortly.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const disableNextOnStepTwo = step === 2 && (!state.requestedDate || !state.requestedTime);
 
   return (
     <section className="border-b nsu-border" id="schedule">
@@ -278,13 +432,9 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
             <div className="space-y-4">
               <p className="text-sm leading-7 text-[var(--color-muted)]">{content.emergencyNotice}</p>
               <p className="text-sm leading-7 text-[var(--color-muted)]">{content.privacyNotice}</p>
-              <div className="text-sm text-[var(--color-muted)]">
-                <p>{content.privacyLinksLabel}</p>
-                <div className="flex flex-wrap gap-3">
-                  <span className="rounded-full border px-3 py-1">{content.privacyPolicyLabel}</span>
-                  <span className="rounded-full border px-3 py-1">{content.termsOfUseLabel}</span>
-                </div>
-              </div>
+              <p className="text-sm leading-7 text-[var(--color-muted)]">
+                {content.objective.studiesHelp}
+              </p>
             </div>
           </Card>
 
@@ -333,9 +483,9 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
                             checked={checked}
                             onChange={(event) => {
                               setErrors((current) => {
-                                const nextErrors = { ...current };
-                                delete nextErrors.appointmentFor;
-                                return nextErrors;
+                                const next = { ...current };
+                                delete next.appointmentFor;
+                                return next;
                               });
                               updateField("appointmentFor", event.target.value);
                             }}
@@ -358,38 +508,41 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
                     })}
                   </div>
                   {errors.appointmentFor ? <p className="text-sm text-[var(--color-danger)]">{errors.appointmentFor}</p> : null}
-
-                  <div className="rounded-xl border border-[color:color-mix(in_srgb,var(--color-primary)_22%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-primary)_8%,white)] p-4">
-                    <p className="text-xs uppercase tracking-[0.12em] text-[var(--color-secondary)]/85">{content.appointmentTypeLabel}</p>
-                    <p className="mt-2 text-sm leading-7 text-[var(--color-muted)]">{content.appointmentTypeDescription}</p>
-                  </div>
                 </fieldset>
               ) : null}
 
               {step === 2 ? (
-                <div className="space-y-4 rounded-xl border border-[color:color-mix(in_srgb,var(--color-secondary)_20%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-secondary)_7%,white)] p-5">
-                  <p className="text-sm leading-7 text-[var(--color-muted)]">{content.googleStepDescription}</p>
-                  {hasGoogleUrl ? (
-                    <a
-                      href={googleUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex min-h-11 items-center justify-center rounded-full border border-[var(--color-primary)] bg-[var(--color-primary)] px-6 py-3 text-sm font-medium text-[var(--ns-charcoal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_srgb,var(--color-primary)_46%,white)]"
-                    >
-                      {content.googleStepActionLabel}
-                    </a>
-                  ) : (
-                    <div className="space-y-3">
-                      <p className="text-sm leading-7 text-[var(--color-muted)]">{content.googleStepFallbackMessage}</p>
-                      <Button href="/contact" variant="secondary">{content.googleStepFallbackAction}</Button>
-                    </div>
-                  )}
-                </div>
+                <AppointmentCalendar
+                  content={content}
+                  selectedDate={state.requestedDate}
+                  selectedTime={state.requestedTime}
+                  dateError={errors.requestedDate}
+                  timeError={errors.requestedTime}
+                  onSelectDate={(value) => {
+                    updateField("requestedDate", value);
+                    updateField("requestedTime", "");
+                    setErrors((current) => {
+                      const next = { ...current };
+                      delete next.requestedDate;
+                      delete next.requestedTime;
+                      return next;
+                    });
+                  }}
+                  onSelectTime={(value) => {
+                    updateField("requestedTime", value);
+                    setErrors((current) => {
+                      const next = { ...current };
+                      delete next.requestedTime;
+                      return next;
+                    });
+                  }}
+                />
               ) : null}
 
               {step === 3 ? (
                 <div className="space-y-5">
                   <IntakeForm content={content} state={state} errors={errors} onFieldChange={updateField} />
+
                   <label htmlFor="appointment-objective" className="block text-sm text-[var(--color-foreground)]">
                     {content.objective.label}
                     <textarea
@@ -402,9 +555,29 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
                       className="mt-1 w-full rounded-lg border px-3 py-2"
                     />
                   </label>
+
                   <p className="text-sm text-[var(--color-muted)]">{content.objective.helper}</p>
                   <p className="text-xs text-[var(--color-muted)]">{state.appointmentObjective.length}/{OBJECTIVE_MAX}</p>
                   {errors.appointmentObjective ? <p className="text-sm text-[var(--color-danger)]">{errors.appointmentObjective}</p> : null}
+
+                  <fieldset className="rounded-lg border p-4">
+                    <legend className="px-1 text-sm text-[var(--color-foreground)]">{content.objective.categoriesLabel}</legend>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {content.objective.categories.map((option) => {
+                        const checked = state.reasonCategories.includes(option.value);
+                        return (
+                          <label key={option.value} className="flex min-h-11 items-center gap-2 text-sm">
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={() => toggleReasonCategory(option.value)}
+                            />
+                            <span>{option.label}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </fieldset>
                 </div>
               ) : null}
 
@@ -445,65 +618,69 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
                           );
                         })}
                       </div>
-                      {errors.previousStudyTypes ? <p className="text-sm text-[var(--color-danger)]">{errors.previousStudyTypes}</p> : null}
                     </div>
                   ) : null}
-
-                  <p className="mt-3 text-sm leading-7 text-[var(--color-muted)]">{content.objective.studiesHelp}</p>
                 </fieldset>
               ) : null}
 
               {step === 5 ? (
                 <div className="space-y-5">
-                  <fieldset className="space-y-3 rounded-lg border p-4">
-                    <legend className="px-1 text-sm text-[var(--color-foreground)]">{content.googleCompletionQuestion}</legend>
-                    {content.googleCompletionOptions.map((option) => (
-                      <label key={option.value} className="flex min-h-11 items-center gap-2 text-sm">
-                        <input
-                          type="radio"
-                          name="google-booking-status"
-                          value={option.value}
-                          checked={bookingStatus === option.value}
-                          onChange={(event) => updateField("googleBookingStatus", event.target.value)}
-                        />
-                        <span>{option.label}</span>
-                      </label>
-                    ))}
-                    {errors.googleBookingStatus ? <p className="text-sm text-[var(--color-danger)]">{errors.googleBookingStatus}</p> : null}
-                  </fieldset>
+                  <Card className="p-4">
+                    <p className="text-sm text-[var(--color-foreground)]">{content.review.title}</p>
+                    <dl className="mt-3 grid gap-2 text-sm text-[var(--color-muted)]">
+                      <div>
+                        <dt className="font-medium text-[var(--color-foreground)]">{content.review.requestedDate}</dt>
+                        <dd>{formatSelectedDate(state.requestedTime)}</dd>
+                      </div>
+                      <div>
+                        <dt className="font-medium text-[var(--color-foreground)]">{content.review.requestedTime}</dt>
+                        <dd>{formatSelectedTime(state.requestedTime)}</dd>
+                      </div>
+                      <div>
+                        <dt className="font-medium text-[var(--color-foreground)]">{content.timezoneLabel}</dt>
+                        <dd>{content.timezoneValue}</dd>
+                      </div>
+                    </dl>
+                  </Card>
 
-                  {bookingStatus === "booked" ? (
-                    <Card className="border-dashed p-4">
-                      <p className="text-sm text-[var(--color-foreground)]">{content.googleCompletionBookedTitle}</p>
-                      <p className="mt-2 text-sm leading-7 text-[var(--color-muted)]">{content.googleCompletionBookedText}</p>
-                      <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-[var(--color-muted)]">
-                        {content.googleCompletionPreparationItems.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    </Card>
-                  ) : null}
+                  <label className="flex min-h-11 items-start gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={state.consentAccepted}
+                      onChange={(event) => setState((current) => ({ ...current, consentAccepted: event.target.checked }))}
+                    />
+                    <span>{content.review.consentLabel}</span>
+                  </label>
+                  {errors.consentAccepted ? <p className="text-sm text-[var(--color-danger)]">{errors.consentAccepted}</p> : null}
 
-                  {bookingStatus === "not-yet" && hasGoogleUrl ? (
-                    <a
-                      href={googleUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex min-h-11 items-center justify-center rounded-full border border-[var(--color-primary)] bg-[var(--color-primary)] px-6 py-3 text-sm font-medium text-[var(--ns-charcoal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_srgb,var(--color-primary)_46%,white)]"
-                    >
-                      {content.googleStepActionLabel}
-                    </a>
-                  ) : null}
-
-                  {bookingStatus === "need-help" ? (
-                    <Link
-                      href="/contact"
-                      className="inline-flex min-h-11 items-center justify-center rounded-full border border-[var(--color-secondary)] px-6 py-3 text-sm font-medium text-[var(--color-foreground)]"
-                    >
-                      {content.googleCompletionHelpLabel}
-                    </Link>
-                  ) : null}
+                  <Button type="button" onClick={submitBooking} disabled={isSubmitting}>
+                    {isSubmitting ? "Scheduling your appointment..." : content.submitLabel}
+                  </Button>
                 </div>
+              ) : null}
+
+              {submitError ? (
+                <Card className="border-dashed p-4">
+                  <p className="text-sm text-[var(--color-danger)]">{submitError}</p>
+                </Card>
+              ) : null}
+
+              {successState ? (
+                <Card className="border-dashed p-4">
+                  <h3 className="text-base text-[var(--color-foreground)]">Your Initial Evaluation has been scheduled.</h3>
+                  <p className="mt-2 text-sm text-[var(--color-muted)]">
+                    {formatSelectedDate(successState.start)} at {formatSelectedTime(successState.start)} ({successState.timezone})
+                  </p>
+                  <div className="mt-2 text-sm text-[var(--color-muted)]">
+                    {successState.address.map((line) => (
+                      <p key={line}>{line}</p>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-sm text-[var(--color-muted)]">
+                    Booking reference: {successState.bookingReference}
+                  </p>
+                  <p className="mt-1 text-sm text-[var(--color-muted)]">{successState.inviteNotice}</p>
+                </Card>
               ) : null}
             </div>
 
@@ -515,7 +692,11 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
               ) : null}
 
               {step < 5 ? (
-                <Button type="button" onClick={goNext}>
+                <Button
+                  type="button"
+                  onClick={goNext}
+                  disabled={disableNextOnStepTwo}
+                >
                   {content.nextLabel}
                 </Button>
               ) : null}

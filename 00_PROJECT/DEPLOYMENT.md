@@ -51,22 +51,33 @@ Public URL
 - Publicacion no ejecutada.
 - Proyecto preparado para subir a GitHub y desplegar en Vercel.
 
-## Variables de entorno publicas
+## Variables privadas de entorno
 
-### NEXT_PUBLIC_HOUSTON_GOOGLE_APPOINTMENT_URL
+Para integracion server-side con Google Calendar API:
 
-- Proposito: URL oficial de Google Appointment Schedule para Evaluacion Inicial en el Centro NeuroSports USA Houston.
-- Ejemplo: `NEXT_PUBLIC_HOUSTON_GOOGLE_APPOINTMENT_URL=https://calendar.google.com/calendar/appointments/...`
-- No incluir credenciales reales ni identificadores privados en control de versiones.
+- `GOOGLE_CALENDAR_ID`
+- `GOOGLE_SERVICE_ACCOUNT_EMAIL`
+- `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`
+- `GOOGLE_CALENDAR_TIMEZONE`
+- `INITIAL_EVALUATION_DURATION_MINUTES`
+- `GOOGLE_CALENDAR_LOCATION`
+- `BOOKING_MIN_NOTICE_HOURS`
+- `BOOKING_MAX_ADVANCE_DAYS`
+- `BOOKING_BUFFER_MINUTES`
 
 Configuracion requerida:
 
 1. Local
-	- Definir en `.env.local` (archivo no versionado).
+	- Definir variables en `.env.local` (archivo no versionado).
 2. Vercel Preview
-	- Definir la variable en el entorno `Preview` del proyecto.
+	- Definir todas las variables en el entorno `Preview`.
 3. Vercel Production
-	- Definir la variable en el entorno `Production` del proyecto.
+	- Definir todas las variables en el entorno `Production` con valores independientes.
+
+Reglas de seguridad:
+
+- No usar prefijo `NEXT_PUBLIC_` para credenciales Google.
+- No publicar llaves privadas, archivos JSON de servicio o IDs privados del calendario.
 
 ## Version History
 

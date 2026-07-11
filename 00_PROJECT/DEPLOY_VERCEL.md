@@ -18,26 +18,35 @@ Documentar el proceso recomendado para conectar NeuroSports USA con Vercel y hab
 
 ## 2. Variables De Entorno
 
-Variable publica requerida para la agenda de Houston:
+Variables privadas requeridas para integracion Google Calendar API:
 
-- `NEXT_PUBLIC_HOUSTON_GOOGLE_APPOINTMENT_URL`
+- `GOOGLE_CALENDAR_ID`
+- `GOOGLE_SERVICE_ACCOUNT_EMAIL`
+- `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`
+- `GOOGLE_CALENDAR_TIMEZONE`
+- `INITIAL_EVALUATION_DURATION_MINUTES`
+- `GOOGLE_CALENDAR_LOCATION`
+- `BOOKING_MIN_NOTICE_HOURS`
+- `BOOKING_MAX_ADVANCE_DAYS`
+- `BOOKING_BUFFER_MINUTES`
 
 Configuracion por entorno:
 
 1. Local development
   - Copiar `.env.example` a `.env.local`.
-  - Definir `NEXT_PUBLIC_HOUSTON_GOOGLE_APPOINTMENT_URL` con la URL de Google Appointment Schedule.
+  - Definir todas las variables anteriores con valores de entorno local.
   - No versionar `.env.local`.
 2. Vercel Preview
   - En Vercel, abrir Project Settings -> Environment Variables.
-  - Crear `NEXT_PUBLIC_HOUSTON_GOOGLE_APPOINTMENT_URL` para el entorno `Preview`.
+  - Definir todas las variables para el entorno `Preview`.
 3. Vercel Production
-  - En Vercel, crear la misma variable para `Production`.
+  - Definir todas las variables para el entorno `Production` de forma separada.
 
 Reglas:
 
-- No hardcodear la URL en componentes.
-- Mantener consistencia de valor entre Preview y Production segun calendario aprobado.
+- No usar `NEXT_PUBLIC_` para credenciales de Google Calendar.
+- No hardcodear IDs ni llaves en componentes cliente.
+- No declarar Production como conectada hasta validar credenciales reales y pruebas de agenda.
 
 ## 3. Flujo GitHub -> Vercel
 

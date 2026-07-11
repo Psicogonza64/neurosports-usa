@@ -12,8 +12,6 @@ export type BookingDay =
 export const houstonBookingConfig = {
   center: "NeuroSports USA — Houston Center",
   timezone: "America/Chicago",
-  // TODO: Confirm official Initial Evaluation duration.
-  slotIntervalMinutes: 30,
   appointmentTypes: [
     {
       id: "initial-evaluation",
@@ -56,8 +54,6 @@ export const houstonBookingConfig = {
       ],
     },
   ],
-  googleAppointmentScheduleUrl: process.env.NEXT_PUBLIC_HOUSTON_GOOGLE_APPOINTMENT_URL ?? "",
-  submissionEndpoint: process.env.NEXT_PUBLIC_HOUSTON_BOOKING_REQUEST_ENDPOINT ?? "",
 };
 
 export const bookingPageContent: Record<

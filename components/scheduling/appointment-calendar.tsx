@@ -1,10 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { houstonBookingConfig, type BookingDay } from "@/lib/neurosports-booking-config";
 import type { BookingAssistantContent } from "@/lib/neurosports-booking-content";
+
+type Slot = {
+  start: string;
+  label: string;
+};
 
 type AppointmentCalendarProps = {
   content: BookingAssistantContent;
@@ -15,16 +20,6 @@ type AppointmentCalendarProps = {
   onSelectDate: (value: string) => void;
   onSelectTime: (value: string) => void;
 };
-
-const WEEKDAY_KEYS: BookingDay[] = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
 
 function toISODate(value: Date) {
   return `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, "0")}-${String(value.getDate()).padStart(2, "0")}`;
@@ -47,57 +42,6 @@ function buildDayGrid(value: Date) {
   });
 }
 
-function isHoustonAvailableDay(value: Date) {
-  const dayName = WEEKDAY_KEYS[value.getDay()];
-  return houstonBookingConfig.weeklyAvailability.some((rule) => rule.days.includes(dayName));
-}
-
-function buildTimeSlotsForDate(dateIso: string) {
-  if (!dateIso) {
-    return [] as string[];
-  }
-
-  const selected = new Date(`${dateIso}T00:00:00`);
-  const dayName = WEEKDAY_KEYS[selected.getDay()];
-  const rule = houstonBookingConfig.weeklyAvailability.find((item) => item.days.includes(dayName));
-
-  if (!rule) {
-    return [] as string[];
-  }
-
-  const slots: string[] = [];
-
-  for (const window of rule.windows) {
-    const [startHour, startMinute] = window.start.split(":").map(Number);
-    const [endHour, endMinute] = window.end.split(":").map(Number);
-
-    let total = startHour * 60 + startMinute;
-    const end = endHour * 60 + endMinute;
-
-    // TODO: Confirm official Initial Evaluation duration.
-    while (total < end) {
-      const hours = Math.floor(total / 60);
-      const minutes = total % 60;
-      slots.push(`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`);
-      total += houstonBookingConfig.slotIntervalMinutes;
-    }
-  }
-
-  return slots;
-}
-
-function formatTime(value: string, locale: "en" | "es") {
-  const [hours, minutes] = value.split(":").map(Number);
-  const period = hours >= 12 ? "PM" : "AM";
-  const hour12 = hours % 12 === 0 ? 12 : hours % 12;
-
-  if (locale === "es") {
-    return `${hour12}:${String(minutes).padStart(2, "0")} ${period === "AM" ? "a. m." : "p. m."}`;
-  }
-
-  return `${hour12}:${String(minutes).padStart(2, "0")} ${period}`;
-}
-
 export function AppointmentCalendar({
   content,
   selectedDate,
@@ -109,9 +53,72 @@ export function AppointmentCalendar({
 }: AppointmentCalendarProps) {
   const now = new Date();
   const [visibleMonth, setVisibleMonth] = useState(getStartOfMonth(now));
+  const [isLoading, setIsLoading] = useState(false);
+  const [slots, setSlots] = useState<Slot[]>([]);
+  const [availabilityError, setAvailabilityError] = useState<string>("");
+  const onSelectTimeRef = useRef(onSelectTime);
+
+  useEffect(() => {
+    onSelectTimeRef.current = onSelectTime;
+  }, [onSelectTime]);
 
   const dayGrid = useMemo(() => buildDayGrid(visibleMonth), [visibleMonth]);
-  const slots = useMemo(() => buildTimeSlotsForDate(selectedDate), [selectedDate]);
+
+  useEffect(() => {
+    if (!selectedDate) {
+      return;
+    }
+
+    const controller = new AbortController();
+
+    const fetchAvailability = async () => {
+      setIsLoading(true);
+      setAvailabilityError("");
+
+      try {
+        const response = await fetch(`/api/calendar/availability?date=${encodeURIComponent(selectedDate)}`, {
+          method: "GET",
+          cache: "no-store",
+          signal: controller.signal,
+        });
+
+        const data = (await response.json()) as {
+          slots?: Slot[];
+          message?: string;
+        };
+
+        if (!response.ok) {
+          setSlots([]);
+          onSelectTimeRef.current("");
+          setAvailabilityError(
+            data.message || "Online scheduling is temporarily unavailable while appointment configuration is completed.",
+          );
+          return;
+        }
+
+        const nextSlots = data.slots ?? [];
+        setSlots(nextSlots);
+
+        const stillValidSelection = nextSlots.some((slot) => slot.start === selectedTime);
+        if (!stillValidSelection) {
+          onSelectTimeRef.current("");
+        }
+      } catch {
+        setSlots([]);
+        onSelectTimeRef.current("");
+        setAvailabilityError("Online scheduling is temporarily unavailable while appointment configuration is completed.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void fetchAvailability();
+
+    return () => controller.abort();
+  }, [selectedDate, selectedTime]);
+
+  const displayedSlots = selectedDate ? slots : [];
+  const displayedAvailabilityError = selectedDate ? availabilityError : "";
 
   return (
     <div className="grid gap-5 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
@@ -120,7 +127,7 @@ export function AppointmentCalendar({
           <p className="text-xs uppercase tracking-[0.16em] text-[var(--color-secondary)]/80">
             {content.requestedTimeLabel}
           </p>
-          {/* TODO: Connect live Houston calendar availability before enabling automatic confirmation. */}
+
           <div className="flex items-center justify-between gap-3">
             <button
               type="button"
@@ -157,7 +164,8 @@ export function AppointmentCalendar({
             {dayGrid.map((day) => {
               const iso = toISODate(day);
               const isCurrentMonth = day.getMonth() === visibleMonth.getMonth();
-              const selectable = isCurrentMonth && isHoustonAvailableDay(day) && day >= new Date(now.getFullYear(), now.getMonth(), now.getDate());
+              const isFutureOrToday = day >= new Date(now.getFullYear(), now.getMonth(), now.getDate());
+              const selectable = isCurrentMonth && isFutureOrToday;
               const isSelected = selectedDate === iso;
 
               return (
@@ -165,58 +173,70 @@ export function AppointmentCalendar({
                   key={iso}
                   type="button"
                   disabled={!selectable}
-                  onClick={() => {
-                    onSelectDate(iso);
-                    onSelectTime("");
-                  }}
+                  onClick={() => onSelectDate(iso)}
                   aria-pressed={isSelected}
-                  className="min-h-11 rounded-lg border text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_srgb,var(--color-primary)_36%,white)] disabled:cursor-not-allowed disabled:opacity-40"
+                  className={[
+                    "min-h-11 rounded-lg border text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_srgb,var(--color-primary)_36%,white)] disabled:cursor-not-allowed disabled:opacity-40",
+                    isSelected
+                      ? "border-[var(--color-secondary)] bg-[color:color-mix(in_srgb,var(--color-secondary)_12%,white)]"
+                      : "border-[var(--color-border)]",
+                  ].join(" ")}
                 >
                   {day.getDate()}
                 </button>
               );
             })}
           </div>
-          {dateError ? (
-            <p className="text-sm text-[var(--color-danger)]" role="alert">{dateError}</p>
-          ) : null}
-          <p className="text-xs text-[var(--color-muted)]">{content.unavailableSundayLabel}</p>
+
+          {dateError ? <p className="text-sm text-[var(--color-danger)]">{dateError}</p> : null}
+
+          <p className="text-xs text-[var(--color-muted)]">{content.timezoneValue}</p>
         </div>
       </Card>
 
       <Card className="p-4 sm:p-5">
         <div className="space-y-4">
-          <h3 className="text-base text-[var(--color-foreground)]">{content.stepTitles[2]}</h3>
-          <div className="grid gap-2" role="radiogroup" aria-label={content.requestedTimeLabel}>
-            {slots.map((slot) => {
-              const checked = selectedTime === slot;
-              return (
-                <button
-                  key={slot}
-                  type="button"
-                  role="radio"
-                  aria-checked={checked}
-                  onClick={() => onSelectTime(slot)}
-                  className="min-h-11 rounded-lg border px-3 py-2 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_srgb,var(--color-primary)_36%,white)]"
-                >
-                  {formatTime(slot, content.locale)}
-                </button>
-              );
-            })}
-            {slots.length === 0 ? (
-              <p className="text-sm text-[var(--color-muted)]">{content.selectDateHint}</p>
-            ) : null}
-          </div>
-          {timeError ? (
-            <p className="text-sm text-[var(--color-danger)]" role="alert">{timeError}</p>
+          <h3 className="text-base text-[var(--color-foreground)]">{content.stepHeadings.dateTime}</h3>
+
+          {isLoading ? <p className="text-sm text-[var(--color-muted)]">Loading available times...</p> : null}
+
+          {displayedAvailabilityError ? (
+            <div className="space-y-3 rounded-lg border border-[var(--color-border)] p-3">
+              <p className="text-sm text-[var(--color-muted)]">{displayedAvailabilityError}</p>
+              <Button href="/contact" variant="secondary">Go to Contact</Button>
+            </div>
           ) : null}
 
-          <div className="rounded-xl border border-[color:color-mix(in_srgb,var(--color-secondary)_16%,var(--color-border))] p-3 text-sm">
-            <p><strong>{content.requestedTimeLabel}:</strong></p>
-            <p>{selectedDate || "-"}</p>
-            <p>{selectedTime ? formatTime(selectedTime, content.locale) : "-"}</p>
-            <p>{content.timezoneValue}</p>
-          </div>
+          {!isLoading && !displayedAvailabilityError ? (
+            <div className="grid gap-2" role="radiogroup" aria-label={content.requestedTimeLabel}>
+              {displayedSlots.map((slot) => {
+                const checked = selectedTime === slot.start;
+                return (
+                  <button
+                    key={slot.start}
+                    type="button"
+                    role="radio"
+                    aria-checked={checked}
+                    onClick={() => onSelectTime(slot.start)}
+                    className={[
+                      "min-h-11 rounded-lg border px-3 py-2 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_srgb,var(--color-primary)_36%,white)]",
+                      checked
+                        ? "border-[var(--color-secondary)] bg-[color:color-mix(in_srgb,var(--color-secondary)_12%,white)]"
+                        : "border-[var(--color-border)]",
+                    ].join(" ")}
+                  >
+                    {slot.label}
+                  </button>
+                );
+              })}
+
+              {displayedSlots.length === 0 ? (
+                <p className="text-sm text-[var(--color-muted)]">No available times were returned for this date.</p>
+              ) : null}
+            </div>
+          ) : null}
+
+          {timeError ? <p className="text-sm text-[var(--color-danger)]">{timeError}</p> : null}
         </div>
       </Card>
     </div>
