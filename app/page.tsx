@@ -5,6 +5,7 @@ import {
   DualPathSection,
   ExperienceQuoteSection,
   HeroSection,
+  PublicProcessesSection,
   IntegratedModelSection,
   JourneyFlowSection,
   ResearchSection,
@@ -18,6 +19,7 @@ export default function Home() {
   return (
     <SiteShell>
       <HeroSection />
+      <PublicProcessesSection />
       <ExperienceQuoteSection />
       <DualPathSection />
       <ClinicalPerformanceSection />

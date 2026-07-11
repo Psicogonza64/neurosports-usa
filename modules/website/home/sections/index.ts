@@ -5,6 +5,7 @@ export { ExperienceQuoteSection } from "@/modules/website/home/sections/experien
 export { HeroSection } from "@/modules/website/home/sections/hero-section";
 export { IntegratedModelSection } from "@/modules/website/home/sections/integrated-model-section";
 export { JourneyFlowSection } from "@/modules/website/home/sections/journey-flow-section";
+export { PublicProcessesSection } from "@/modules/website/home/sections/public-processes-section";
 export { ResearchSection } from "@/modules/website/home/sections/research-section";
 export { TechnologySection } from "@/modules/website/home/sections/technology-section";
 export { TestimonialsSection } from "@/modules/website/home/sections/testimonials-section";

@@ -5,7 +5,7 @@ import {
   HeroObjectPlaceholder,
   JourneyCTA,
   JourneyDivider,
-  JourneyFlow,
+  ProcessExplorer,
   NeuroHero,
   ScientificQuote,
   SectionHeader,
@@ -13,9 +13,12 @@ import {
 } from "@/components/experience";
 import { Container } from "@/components/ui/container";
 import {
+  getNeuroSportsPublicContent,
+  type PublicContentLocale,
+} from "@/lib/neurosports-public-content";
+import {
   whatWeDeliverItems,
   whatWeDoClinicalPath,
-  whatWeDoJourneySteps,
   whatWeDoPerformancePath,
 } from "@/modules/website/what-we-do/data";
 
@@ -89,19 +92,25 @@ function ClinicalPerformanceSection() {
   );
 }
 
-function JourneyFlowSection() {
+function JourneyFlowSection({ locale }: { locale: PublicContentLocale }) {
+  const content = getNeuroSportsPublicContent(locale);
+
   return (
     <section className="border-b nsu-border">
       <Container>
         <SectionSpacing>
-          <JourneyDivider label="Journey" />
+          <JourneyDivider label="Public Process" />
           <SectionHeader
-            label="From Evaluation to Functional Outcomes"
-            title="A sequential route from understanding the brain to applying change."
-            subtitle="The What We Do page describes a process, not a menu of disconnected services."
+            label={content.processExplorer.eyebrow}
+            title={content.processExplorer.title}
+            subtitle={content.processExplorer.description}
           />
           <div className="mt-14">
-            <JourneyFlow steps={whatWeDoJourneySteps} />
+            <ProcessExplorer
+              items={content.processExplorer.items}
+              mode="interactive"
+              sequenceLabel={content.processExplorer.sequenceLabel}
+            />
           </div>
         </SectionSpacing>
       </Container>
@@ -146,14 +155,14 @@ function FinalCtaSection() {
   );
 }
 
-export function WhatWeDoPage() {
+export function WhatWeDoPage({ locale = "en" }: { locale?: PublicContentLocale }) {
   return (
     <>
       <HeroSection />
       <ScientificQuoteSection />
       <DualPathSection />
       <ClinicalPerformanceSection />
-      <JourneyFlowSection />
+      <JourneyFlowSection locale={locale} />
       <WhatWeDeliverSection />
       <FinalCtaSection />
     </>

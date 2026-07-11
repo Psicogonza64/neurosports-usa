@@ -22,6 +22,8 @@ export { NeuroSportsHeroExperience } from "@/components/experience/neurosports-h
 export { PageHero } from "@/components/experience/page-hero";
 export { ProcessFlow } from "@/components/experience/process-flow";
 export type { ProcessFlowStep } from "@/components/experience/process-flow";
+export { ProcessExplorer } from "@/components/experience/process-explorer";
+export { LocationsExplorer } from "@/components/experience/locations-explorer";
 export { ResearchHighlight } from "@/components/experience/research-highlight";
 export { ScientificQuote } from "@/components/experience/scientific-quote";
 export { ScientificSection } from "@/components/experience/scientific-section";

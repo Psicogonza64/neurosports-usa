@@ -3,11 +3,12 @@ import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Hero } from "@/components/ui/hero";
 import { SectionTitle } from "@/components/ui/section-title";
-import { JourneyFlow } from "@/components/experience/journey-flow";
+import { LocationsExplorer, ProcessExplorer } from "@/components/experience";
 import {
   getIntegratedModelContent,
   type IntegratedModelLocale,
 } from "@/modules/website/integrated-model/data";
+import { getNeuroSportsPublicContent } from "@/lib/neurosports-public-content";
 
 function IntegratedModelHeroVisual({ locale }: { locale: IntegratedModelLocale }) {
   const content = getIntegratedModelContent(locale);
@@ -83,18 +84,23 @@ function HeroSection({ locale }: { locale: IntegratedModelLocale }) {
 }
 
 function ScientificFoundationSection({ locale }: { locale: IntegratedModelLocale }) {
-  const content = getIntegratedModelContent(locale);
+  const content = getNeuroSportsPublicContent(locale);
 
   return (
     <section className="border-b nsu-border" id="scientific-foundation">
       <Container className="py-24 lg:py-28">
         <SectionTitle
-          eyebrow={content.scientificFoundation.eyebrow}
-          title={content.scientificFoundation.title}
-          description={content.scientificFoundation.description}
+          eyebrow={content.processExplorer.eyebrow}
+          title={content.processExplorer.title}
+          description={content.processExplorer.description}
         />
 
-        <JourneyFlow className="mt-14" steps={content.scientificFoundation.sequence} />
+        <ProcessExplorer
+          className="mt-14"
+          items={content.processExplorer.items}
+          mode="interactive"
+          sequenceLabel={content.processExplorer.sequenceLabel}
+        />
       </Container>
     </section>
   );
@@ -292,7 +298,7 @@ function OutcomeMonitoringSection({ locale }: { locale: IntegratedModelLocale })
 }
 
 function LocationsSection({ locale }: { locale: IntegratedModelLocale }) {
-  const content = getIntegratedModelContent(locale);
+  const content = getNeuroSportsPublicContent(locale);
 
   return (
     <section className="border-b nsu-border" id="locations">
@@ -302,24 +308,11 @@ function LocationsSection({ locale }: { locale: IntegratedModelLocale }) {
           title={content.locations.title}
         />
 
-        <div className="mt-14 grid gap-5 md:grid-cols-3">
-          {content.locations.centers.map((center) => (
-            <Card key={`${center.city}-${center.organization}`} className="p-6 sm:p-7">
-              <div className="space-y-2">
-                <h3 className="text-xl text-[var(--color-foreground)]">{center.city}</h3>
-                <p className="text-sm leading-7 text-[var(--color-muted)] sm:text-base">
-                  {center.organization}
-                </p>
-              </div>
-            </Card>
-          ))}
-        </div>
-
-        <Card className="mt-5 p-6 sm:p-7">
-          <p className="text-sm leading-7 text-[var(--color-muted)] sm:text-base">
-            {content.locations.note}
-          </p>
-        </Card>
+        <LocationsExplorer
+          className="mt-14"
+          items={content.locations.items}
+          disclaimer={content.locations.disclaimer}
+        />
       </Container>
     </section>
   );
