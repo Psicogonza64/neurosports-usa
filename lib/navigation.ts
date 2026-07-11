@@ -6,5 +6,6 @@ export const navigationItems: NavigationItem[] = [
   { label: "Integrated Model", href: "/integrated-model" },
   { label: "Technology", href: "/technology" },
   { label: "Research", href: "/research" },
+  { label: "Locations", href: "/#locations" },
   { label: "Contact", href: "/contact" },
 ];
