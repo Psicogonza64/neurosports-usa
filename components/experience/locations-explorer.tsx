@@ -132,10 +132,25 @@ function ExpandedLocationPanel({
           >
             {content.labels.getDirections}
           </a>
-          <Button href="#contact" className="min-h-11">
+          <Button
+            href="/schedule"
+            className="min-h-11"
+            dataCta="schedule-evaluation"
+            dataLocation={item.id === "houston" ? "houston-location" : undefined}
+          >
             <span>{content.labels.scheduleEvaluation}</span>
           </Button>
         </div>
+
+        {item.id === "houston" ? (
+          <div className="rounded-[1rem] border border-[color:color-mix(in_srgb,var(--color-secondary)_12%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-background)_66%,white)] p-4">
+            <p className="text-xs uppercase tracking-[0.16em] text-[var(--color-secondary)]/80">Public Appointment Windows</p>
+            <p className="mt-2 text-sm leading-7 text-[var(--color-muted)]">8:00 AM-12:00 PM</p>
+            <p className="text-sm leading-7 text-[var(--color-muted)]">2:00 PM-4:00 PM</p>
+            <p className="text-sm leading-7 text-[var(--color-muted)]">Central Time</p>
+            {/* TODO: Add officially confirmed Houston appointment days. */}
+          </div>
+        ) : null}
 
         <div className="rounded-[1rem] border border-[color:color-mix(in_srgb,var(--color-secondary)_12%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-background)_66%,white)] p-4">
           <p className="text-xs uppercase tracking-[0.16em] text-[var(--color-secondary)]/80">{content.labels.centerGallery}</p>

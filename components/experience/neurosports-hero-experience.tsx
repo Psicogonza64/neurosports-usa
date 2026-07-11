@@ -35,7 +35,7 @@ export function NeuroSportsHeroExperience({
             <p className={experienceRhythm.heroBody}>{content.subtitle}</p>
           </div>
           <div className={experienceRhythm.buttonGroup}>
-            <Button href={ctaHref}>
+            <Button href={ctaHref} dataCta="schedule-evaluation" dataLocation="hero">
               <span>{content.primaryCTA}</span>
             </Button>
             <Button href={secondaryCtaHref} variant="secondary">

@@ -148,7 +148,8 @@ function FinalCtaSection() {
             title="Start with a Functional Brain Evaluation"
             text="Every clinical and performance journey begins by understanding how the brain is functioning today."
             ctaLabel="Schedule an Evaluation"
-            ctaHref="/contact"
+            ctaHref="/schedule"
+            ctaDataLocation="what-we-do"
           />
         </SectionSpacing>
       </Container>

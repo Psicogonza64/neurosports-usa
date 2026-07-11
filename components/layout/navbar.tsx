@@ -27,7 +27,7 @@ export function Navbar() {
           ))}
         </nav>
 
-        <Button href="/contact" size="sm">
+        <Button href="/schedule" size="sm" dataCta="schedule-evaluation" dataLocation="header">
           Schedule Evaluation
         </Button>
       </Container>

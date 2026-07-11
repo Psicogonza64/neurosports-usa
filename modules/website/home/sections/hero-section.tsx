@@ -5,7 +5,7 @@ export function HeroSection() {
     <NeuroSportsHeroExperience
       id="hero"
       locale="en"
-      ctaHref="#contact"
+      ctaHref="/schedule"
       secondaryCtaHref="/integrated-model#mnsi"
     />
   );

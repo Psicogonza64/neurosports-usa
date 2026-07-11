@@ -51,6 +51,14 @@ Public URL
 - Publicacion no ejecutada.
 - Proyecto preparado para subir a GitHub y desplegar en Vercel.
 
+## Variables de entorno publicas
+
+### NEXT_PUBLIC_HOUSTON_BOOKING_URL
+
+- Proposito: URL publica de agenda de citas para el Centro NeuroSports USA Houston.
+- Ejemplo: `NEXT_PUBLIC_HOUSTON_BOOKING_URL=https://calendar.google.com/calendar/appointments/...`
+- Nota: No incluir credenciales reales ni identificadores privados en control de versiones.
+
 ## Version History
 
 | Version | Fecha | Descripcion | Autor |

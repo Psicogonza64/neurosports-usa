@@ -8,6 +8,7 @@ type JourneyCtaProps = {
   text: string;
   ctaLabel: string;
   ctaHref: string;
+  ctaDataLocation?: string;
   className?: string;
 };
 
@@ -16,6 +17,7 @@ export function JourneyCTA({
   text,
   ctaLabel,
   ctaHref,
+  ctaDataLocation,
   className,
 }: JourneyCtaProps) {
   return (
@@ -30,7 +32,12 @@ export function JourneyCTA({
         <p className="text-sm leading-7 text-[var(--color-muted)] sm:text-base">
           {text}
         </p>
-        <Button href={ctaHref} className="mx-auto">
+        <Button
+          href={ctaHref}
+          className="mx-auto"
+          dataCta="schedule-evaluation"
+          dataLocation={ctaDataLocation}
+        >
           <span>{ctaLabel}</span>
         </Button>
       </div>

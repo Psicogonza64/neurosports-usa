@@ -27,9 +27,14 @@ export function ResearchSection({ locale = "en" }: ResearchSectionProps) {
                 Institutional research communication remains focused on public educational themes and transparent scientific direction.
               </p>
               <div>
-                <Button href={content.research.ctaHref} variant="secondary">
-                  <span>{content.research.ctaLabel}</span>
-                </Button>
+                <div className="flex flex-wrap gap-3">
+                  <Button href={content.research.ctaHref} variant="secondary">
+                    <span>{content.research.ctaLabel}</span>
+                  </Button>
+                  <Button href="/schedule" dataCta="schedule-evaluation" dataLocation="research">
+                    <span>Schedule Evaluation</span>
+                  </Button>
+                </div>
               </div>
             </div>
           </Card>

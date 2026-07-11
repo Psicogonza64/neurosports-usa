@@ -360,7 +360,12 @@ function FinalCtaSection() {
               Every tool is selected according to the patient&apos;s evaluation
               profile, functional goals and intervention plan.
             </p>
-            <Button href="#contact" className="mx-auto">
+            <Button
+              href="/schedule"
+              className="mx-auto"
+              dataCta="schedule-evaluation"
+              dataLocation="technology"
+            >
               <span>Schedule an Evaluation</span>
             </Button>
           </div>
