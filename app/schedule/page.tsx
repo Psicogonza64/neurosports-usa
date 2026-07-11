@@ -11,9 +11,19 @@ import {
 } from "@/lib/neurosports-booking-config";
 
 export const metadata: Metadata = {
-  title: "Schedule a Functional Evaluation | NeuroSports USA Houston",
+  title: "Schedule an Initial Evaluation | NeuroSports USA Houston",
   description:
-    "Schedule a functional neuropsychological or NeuroPerformance evaluation at the NeuroSports USA Houston Center.",
+    "Schedule an Initial Evaluation at the NeuroSports USA Houston Center. Public appointment hours are available Monday through Saturday.",
+};
+
+const dayLabels: Record<string, { en: string; es: string }> = {
+  Monday: { en: "Monday", es: "Lunes" },
+  Tuesday: { en: "Tuesday", es: "Martes" },
+  Wednesday: { en: "Wednesday", es: "Miercoles" },
+  Thursday: { en: "Thursday", es: "Jueves" },
+  Friday: { en: "Friday", es: "Viernes" },
+  Saturday: { en: "Saturday", es: "Sabado" },
+  Sunday: { en: "Sunday", es: "Domingo" },
 };
 
 function formatWindow(value: string, locale: BookingLocale) {
@@ -51,6 +61,22 @@ function SchedulePageContent({ locale = "en" }: { locale?: BookingLocale }) {
 
           <Card className="p-6 sm:p-8">
             <div className="space-y-6">
+              {/* TODO: Add future appointment types only after official approval. */}
+              <div className="space-y-2">
+                <p className="text-xs uppercase tracking-[0.16em] text-[var(--color-secondary)]/80">
+                  Appointment Type
+                </p>
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked="true"
+                  className="w-full rounded-[1rem] border border-[var(--color-primary)] bg-[color:color-mix(in_srgb,var(--color-primary)_11%,white)] px-4 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_srgb,var(--color-primary)_46%,white)]"
+                >
+                  <p className="text-base font-medium text-[var(--color-foreground)]">{content.appointmentTypeLabel}</p>
+                  <p className="mt-1 text-sm leading-7 text-[var(--color-muted)]">{content.appointmentTypeDescription}</p>
+                </button>
+              </div>
+
               <div className="space-y-2">
                 <p className="text-xs uppercase tracking-[0.16em] text-[var(--color-secondary)]/80">
                   {content.centerLabel}
@@ -66,24 +92,32 @@ function SchedulePageContent({ locale = "en" }: { locale?: BookingLocale }) {
 
               <div className="space-y-2">
                 <p className="text-xs uppercase tracking-[0.16em] text-[var(--color-secondary)]/80">
-                  {content.windowsLabel}
+                  {content.availabilityHeading}
                 </p>
-                <ul className="space-y-2 text-sm leading-7 text-[var(--color-muted)] sm:text-base">
-                  {houstonBookingConfig.availabilityWindows.map((window) => (
-                    <li key={`${window.start}-${window.end}`}>
-                      {formatWindow(window.start, locale)}-{formatWindow(window.end, locale)}
-                    </li>
-                  ))}
-                </ul>
+                <div className="space-y-4 text-sm leading-7 text-[var(--color-muted)] sm:text-base">
+                  {houstonBookingConfig.weeklyAvailability.map((rule) => {
+                    const isWeekdayRule = rule.days.length === 5 && rule.days.includes("Monday") && rule.days.includes("Friday");
+                    const daysLabel = isWeekdayRule
+                      ? content.mondayToFridayLabel
+                      : rule.days.map((day) => dayLabels[day]?.[locale] ?? day).join(", ");
+
+                    return (
+                      <div key={`${rule.days.join("-")}-${rule.windows.map((w) => `${w.start}-${w.end}`).join("-")}`}>
+                        <p className="text-[var(--color-foreground)]">{daysLabel}</p>
+                        {rule.windows.map((window) => (
+                          <p key={`${window.start}-${window.end}`}>
+                            {formatWindow(window.start, locale)}-{formatWindow(window.end, locale)}
+                          </p>
+                        ))}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
               <p className="text-sm leading-7 text-[var(--color-muted)] sm:text-base">
                 <span className="text-[var(--color-foreground)]">{content.timezoneLabel}: </span>
                 {content.timezoneValue}
-              </p>
-
-              <p className="text-sm leading-7 text-[var(--color-muted)] sm:text-base">
-                {content.schedulingNote}
               </p>
 
               <div className="flex flex-wrap items-center gap-3">
@@ -92,7 +126,7 @@ function SchedulePageContent({ locale = "en" }: { locale?: BookingLocale }) {
                     href={houstonBookingConfig.bookingUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    data-cta="schedule-evaluation"
+                    data-cta="schedule-initial-evaluation"
                     data-location="schedule"
                     className="inline-flex min-h-11 items-center justify-center rounded-full border border-[var(--color-primary)] bg-[var(--color-primary)] px-6 py-3 text-sm font-medium leading-tight text-[var(--ns-charcoal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_srgb,var(--color-primary)_46%,white)]"
                   >
@@ -106,7 +140,7 @@ function SchedulePageContent({ locale = "en" }: { locale?: BookingLocale }) {
                     <p className="w-full text-sm leading-7 text-[var(--color-muted)] sm:text-base">
                       {content.fallbackMessage}
                     </p>
-                    <Button href="/contact" dataCta="schedule-evaluation" dataLocation="schedule-fallback">
+                    <Button href="/contact" dataCta="schedule-initial-evaluation" dataLocation="schedule-fallback">
                       <span>{content.fallbackActionLabel}</span>
                     </Button>
                   </>
@@ -119,6 +153,9 @@ function SchedulePageContent({ locale = "en" }: { locale?: BookingLocale }) {
 
               <p className="text-sm leading-7 text-[var(--color-muted)] sm:text-base">
                 {content.trustNote}
+              </p>
+              <p className="text-sm leading-7 text-[var(--color-muted)] sm:text-base">
+                {content.disclaimer}
               </p>
             </div>
           </Card>

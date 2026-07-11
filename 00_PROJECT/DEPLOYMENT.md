@@ -55,7 +55,7 @@ Public URL
 
 ### NEXT_PUBLIC_HOUSTON_BOOKING_URL
 
-- Proposito: URL publica de agenda de citas para el Centro NeuroSports USA Houston.
+- Proposito: Calendario publico de citas para Evaluacion Inicial en el Centro NeuroSports USA Houston.
 - Ejemplo: `NEXT_PUBLIC_HOUSTON_BOOKING_URL=https://calendar.google.com/calendar/appointments/...`
 - Nota: No incluir credenciales reales ni identificadores privados en control de versiones.
 

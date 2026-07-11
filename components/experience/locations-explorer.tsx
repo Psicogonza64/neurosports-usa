@@ -6,6 +6,12 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
+  bookingPageContent,
+  houstonBookingConfig,
+  type BookingDay,
+  type BookingLocale,
+} from "@/lib/neurosports-booking-config";
+import {
   getGoogleMapsDirectionsUrl,
   getGoogleMapsEmbedUrl,
   getNeuroSportsLocationsContent,
@@ -18,6 +24,37 @@ type LocationsExplorerProps = {
   locale?: LocationsLocale;
   className?: string;
 };
+
+function formatWindow(value: string, locale: BookingLocale) {
+  const [hours, minutes] = value.split(":").map(Number);
+  const period = hours >= 12 ? "PM" : "AM";
+  const hour12 = hours % 12 === 0 ? 12 : hours % 12;
+
+  if (locale === "es") {
+    const periodEs = period === "AM" ? "a. m." : "p. m.";
+    return `${hour12}:${String(minutes).padStart(2, "0")} ${periodEs}`;
+  }
+
+  return `${hour12}:${String(minutes).padStart(2, "0")} ${period}`;
+}
+
+function mapDayLabel(day: BookingDay, locale: BookingLocale) {
+  if (locale === "es") {
+    const labels: Record<BookingDay, string> = {
+      Monday: "Lunes",
+      Tuesday: "Martes",
+      Wednesday: "Miercoles",
+      Thursday: "Jueves",
+      Friday: "Viernes",
+      Saturday: "Sabado",
+      Sunday: "Domingo",
+    };
+
+    return labels[day] ?? day;
+  }
+
+  return day;
+}
 
 function LocationImage({
   item,
@@ -81,6 +118,7 @@ function ExpandedLocationPanel({
   onClose: () => void;
 }) {
   const content = getNeuroSportsLocationsContent(locale);
+  const bookingContent = bookingPageContent[locale] ?? bookingPageContent.en;
   const directionsUrl = getGoogleMapsDirectionsUrl(item.mapQuery);
   const mapEmbedUrl = getGoogleMapsEmbedUrl(item.mapQuery);
 
@@ -135,7 +173,7 @@ function ExpandedLocationPanel({
           <Button
             href="/schedule"
             className="min-h-11"
-            dataCta="schedule-evaluation"
+            dataCta="schedule-initial-evaluation"
             dataLocation={item.id === "houston" ? "houston-location" : undefined}
           >
             <span>{content.labels.scheduleEvaluation}</span>
@@ -144,11 +182,28 @@ function ExpandedLocationPanel({
 
         {item.id === "houston" ? (
           <div className="rounded-[1rem] border border-[color:color-mix(in_srgb,var(--color-secondary)_12%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-background)_66%,white)] p-4">
-            <p className="text-xs uppercase tracking-[0.16em] text-[var(--color-secondary)]/80">Public Appointment Windows</p>
-            <p className="mt-2 text-sm leading-7 text-[var(--color-muted)]">8:00 AM-12:00 PM</p>
-            <p className="text-sm leading-7 text-[var(--color-muted)]">2:00 PM-4:00 PM</p>
-            <p className="text-sm leading-7 text-[var(--color-muted)]">Central Time</p>
-            {/* TODO: Add officially confirmed Houston appointment days. */}
+            <p className="text-xs uppercase tracking-[0.16em] text-[var(--color-secondary)]/80">Initial Evaluation appointments</p>
+            <p className="mt-2 text-xs uppercase tracking-[0.16em] text-[var(--color-secondary)]/80">{bookingContent.availabilityHeading}</p>
+            <div className="mt-2 space-y-3 text-sm leading-7 text-[var(--color-muted)]">
+              {houstonBookingConfig.weeklyAvailability.map((rule) => {
+                const weekdayRule = rule.days.length === 5 && rule.days.includes("Monday") && rule.days.includes("Friday");
+                const daysLabel = weekdayRule
+                  ? bookingContent.mondayToFridayLabel
+                  : rule.days.map((day) => mapDayLabel(day, locale)).join(", ");
+
+                return (
+                  <div key={`${rule.days.join("-")}-${rule.windows.map((w) => `${w.start}-${w.end}`).join("-")}`}>
+                    <p className="text-[var(--color-foreground)]">{daysLabel}</p>
+                    {rule.windows.map((window) => (
+                      <p key={`${window.start}-${window.end}`}>
+                        {formatWindow(window.start, locale)}-{formatWindow(window.end, locale)}
+                      </p>
+                    ))}
+                  </div>
+                );
+              })}
+              <p>{bookingContent.timezoneValue}</p>
+            </div>
           </div>
         ) : null}
 

@@ -31,7 +31,7 @@ export function ResearchSection({ locale = "en" }: ResearchSectionProps) {
                   <Button href={content.research.ctaHref} variant="secondary">
                     <span>{content.research.ctaLabel}</span>
                   </Button>
-                  <Button href="/schedule" dataCta="schedule-evaluation" dataLocation="research">
+                  <Button href="/schedule" dataCta="schedule-initial-evaluation" dataLocation="research">
                     <span>Schedule Evaluation</span>
                   </Button>
                 </div>

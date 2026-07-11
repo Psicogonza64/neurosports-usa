@@ -35,7 +35,7 @@ export function JourneyCTA({
         <Button
           href={ctaHref}
           className="mx-auto"
-          dataCta="schedule-evaluation"
+          dataCta="schedule-initial-evaluation"
           dataLocation={ctaDataLocation}
         >
           <span>{ctaLabel}</span>

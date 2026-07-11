@@ -8,22 +8,11 @@ export type { FeatureGridItem } from "@/components/experience/feature-grid";
 export { HeroObjectPlaceholder } from "@/components/experience/hero-object-placeholder";
 export { JourneyDivider } from "@/components/experience/journey-divider";
 export { JourneyCTA } from "@/components/experience/journey-cta";
-export { JourneyFlow } from "@/components/experience/journey-flow";
-export type { JourneyFlowStep } from "@/components/experience/journey-flow";
 export { MNSIPhaseCard } from "@/components/experience/mnsi-phase-card";
 export { MnsiPhaseExplorer } from "@/components/experience/mnsi-phase-explorer";
-export { MNSIVisualJourney } from "@/components/experience/mnsi-visual-journey";
-export type {
-	MNSICorePhase,
-	MNSIJourneyBranch,
-	MNSIJourneyStage,
-} from "@/components/experience/mnsi-visual-journey";
 export { NeuroHero } from "@/components/experience/neuro-hero";
 export { NeuroSportsHeroExperience } from "@/components/experience/neurosports-hero-experience";
-export { InteractiveHeroDiagram } from "@/components/experience/interactive-hero-diagram";
 export { PageHero } from "@/components/experience/page-hero";
-export { ProcessFlow } from "@/components/experience/process-flow";
-export type { ProcessFlowStep } from "@/components/experience/process-flow";
 export { ProcessExplorer } from "@/components/experience/process-explorer";
 export { LocationsExplorer } from "@/components/experience/locations-explorer";
 export { ResearchHighlight } from "@/components/experience/research-highlight";

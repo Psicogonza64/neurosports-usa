@@ -19,7 +19,11 @@ export function HomeCtaSection({ locale = "en" }: HomeCtaSectionProps) {
             <h2 className="text-3xl tracking-tight text-[var(--color-foreground)] sm:text-4xl">{content.finalCta.title}</h2>
             <p className="text-sm leading-7 text-[var(--color-muted)] sm:text-base">{content.finalCta.description}</p>
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <Button href={content.finalCta.primaryHref} dataCta="schedule-evaluation" dataLocation="final-cta">
+              <Button
+                href={content.finalCta.primaryHref}
+                dataCta="schedule-initial-evaluation"
+                dataLocation="home-final-cta"
+              >
                 <span>{content.finalCta.primaryLabel}</span>
               </Button>
               <Button href={content.finalCta.secondaryHref} variant="secondary">

@@ -70,7 +70,7 @@ function HeroSection({ locale }: { locale: IntegratedModelLocale }) {
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Button href="/schedule" dataCta="schedule-evaluation" dataLocation="integrated-model">
+            <Button href="/schedule" dataCta="schedule-initial-evaluation" dataLocation="integrated-model">
               <span>{content.hero.ctaLabel}</span>
             </Button>
             <Button href="#six-phase-model" variant="secondary">
@@ -340,7 +340,7 @@ function FinalCtaSection({ locale }: { locale: IntegratedModelLocale }) {
             <Button
               href="/schedule"
               className="mx-auto"
-              dataCta="schedule-evaluation"
+              dataCta="schedule-initial-evaluation"
               dataLocation="integrated-model"
             >
               <span>{content.finalCta.buttonLabel}</span>
