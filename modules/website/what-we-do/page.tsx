@@ -1,6 +1,5 @@
 import {
   ClinicalPerformanceCards,
-  DualPath,
   FeatureGrid,
   HeroObjectPlaceholder,
   JourneyCTA,
@@ -11,6 +10,7 @@ import {
   SectionHeader,
   SectionSpacing,
 } from "@/components/experience";
+import { ScientificJourneyDiagram } from "@/components/scientific-journey/ScientificJourneyDiagram";
 import { Container } from "@/components/ui/container";
 import {
   getNeuroSportsPublicContent,
@@ -61,7 +61,7 @@ function DualPathSection() {
             subtitle="What We Do is not a list of services. It is the practical application of one neuroscience architecture across clinical and athletic environments."
           />
           <div className="mt-14">
-            <DualPath />
+            <ScientificJourneyDiagram mode="section" locale="en" />
           </div>
         </SectionSpacing>
       </Container>
