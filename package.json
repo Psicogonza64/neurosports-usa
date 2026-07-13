@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:calendar": "node --experimental-strip-types --experimental-specifier-resolution=node --test tests/google-calendar.test.ts"
   },
   "dependencies": {
     "googleapis": "^173.0.0",

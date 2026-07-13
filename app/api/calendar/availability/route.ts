@@ -1,20 +1,23 @@
 import { NextResponse } from "next/server";
 
 import {
-  BOOKING_CONFIG_UNAVAILABLE_MESSAGE,
   calculateAvailableSlots,
+  getConfigPublicMessage,
   getBusyPeriods,
   getGoogleCalendarClient,
   getRuntimeBookingConfig,
   getWorkingWindowsForDate,
+  isValidCalendarDateInput,
   isDateWithinAdvanceWindow,
   isSunday,
   localDateTimeToUtc,
+  toCalendarPublicError,
 } from "@/lib/server/google-calendar";
 import { runGoogleCalendarDeterministicChecks } from "@/lib/server/google-calendar-deterministic-checks";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+export const runtime = "nodejs";
 
 function noStoreJson(data: unknown, status = 200) {
   return NextResponse.json(data, {
@@ -25,15 +28,6 @@ function noStoreJson(data: unknown, status = 200) {
   });
 }
 
-function isValidDate(value: string) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return false;
-  }
-
-  const parsed = new Date(`${value}T00:00:00Z`);
-  return !Number.isNaN(parsed.getTime());
-}
-
 export async function GET(request: Request) {
   const configResult = getRuntimeBookingConfig();
   const search = new URL(request.url).searchParams;
@@ -41,7 +35,7 @@ export async function GET(request: Request) {
 
   const timezone = configResult.ok ? configResult.config.timezone : "America/Chicago";
 
-  if (!isValidDate(date)) {
+  if (!isValidCalendarDateInput(date)) {
     return noStoreJson({ message: "Invalid date. Use YYYY-MM-DD." }, 400);
   }
 
@@ -51,7 +45,7 @@ export async function GET(request: Request) {
         date,
         timezone,
         slots: [],
-        message: BOOKING_CONFIG_UNAVAILABLE_MESSAGE,
+        message: getConfigPublicMessage(configResult.issues),
       },
       503,
     );
@@ -107,15 +101,16 @@ export async function GET(request: Request) {
     });
 
     return noStoreJson({ date, timezone: config.timezone, slots });
-  } catch {
+  } catch (error) {
+    const publicError = toCalendarPublicError(error);
     return noStoreJson(
       {
         date,
         timezone: configResult.config.timezone,
         slots: [],
-        message: BOOKING_CONFIG_UNAVAILABLE_MESSAGE,
+        message: publicError.message,
       },
-      503,
+      publicError.status,
     );
   }
 }

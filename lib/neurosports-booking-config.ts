@@ -1,3 +1,5 @@
+import { houstonBookingConfigShared } from "./neurosports-booking-config-shared.js";
+
 export type BookingLocale = "en" | "es";
 
 export type BookingDay =
@@ -9,9 +11,31 @@ export type BookingDay =
   | "Saturday"
   | "Sunday";
 
-export const houstonBookingConfig = {
-  center: "NeuroSports USA — Houston Center",
-  timezone: "America/Chicago",
+type BookingWindow = {
+  start: string;
+  end: string;
+};
+
+type WeeklyAvailabilityRule = {
+  days: BookingDay[];
+  windows: BookingWindow[];
+};
+
+type HoustonBookingConfig = {
+  center: string;
+  timezone: string;
+  appointmentTypes: Array<{
+    id: string;
+    label: Record<BookingLocale, string>;
+    description: Record<BookingLocale, string>;
+  }>;
+  address: string[];
+  weeklyAvailability: WeeklyAvailabilityRule[];
+};
+
+export const houstonBookingConfig: HoustonBookingConfig = {
+  center: houstonBookingConfigShared.center,
+  timezone: houstonBookingConfigShared.timezone,
   appointmentTypes: [
     {
       id: "initial-evaluation",
@@ -25,35 +49,11 @@ export const houstonBookingConfig = {
       },
     },
   ],
-  address: [
-    "11777 Katy Freeway, Suite 410S",
-    "Houston, Texas 77079",
-    "United States",
-  ],
-  weeklyAvailability: [
-    {
-      days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] as BookingDay[],
-      windows: [
-        {
-          start: "08:00",
-          end: "12:00",
-        },
-        {
-          start: "14:00",
-          end: "16:00",
-        },
-      ],
-    },
-    {
-      days: ["Saturday"] as BookingDay[],
-      windows: [
-        {
-          start: "09:00",
-          end: "12:30",
-        },
-      ],
-    },
-  ],
+  address: houstonBookingConfigShared.address,
+  weeklyAvailability: houstonBookingConfigShared.weeklyAvailability.map((entry) => ({
+    days: entry.days as BookingDay[],
+    windows: entry.windows,
+  })),
 };
 
 export const bookingPageContent: Record<

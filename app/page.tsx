@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/container";
 import { SectionTitle } from "@/components/ui/section-title";
 import {
   ApplicationsSection,
+  ContactSection,
   HomeCtaSection,
   HeroSection,
   MnsiJourneySection,
@@ -35,6 +36,7 @@ export default function Home() {
         </Container>
       </section>
       <HomeCtaSection />
+      <ContactSection />
     </SiteShell>
   );
 }

@@ -1,4 +1,5 @@
 export { ApplicationsSection } from "@/modules/website/home/sections/applications-section";
+export { ContactSection } from "@/modules/website/home/sections/contact-section";
 export { HeroSection } from "@/modules/website/home/sections/hero-section";
 export { HomeCtaSection } from "@/modules/website/home/sections/home-cta-section";
 export { MnsiJourneySection } from "@/modules/website/home/sections/mnsi-journey-section";

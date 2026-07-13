@@ -49,15 +49,21 @@ const INITIAL_STATE: BookingFormState = {
 };
 
 type SubmitResponse = {
-  success?: boolean;
-  reference?: string;
+  bookingReference?: string;
   message?: string;
+  start?: string;
+  timezone?: string;
+  address?: string[];
+  inviteNotice?: string;
 };
 
 type SuccessState = {
   reference: string;
   requestedDate: string;
   requestedTimeLabel: string;
+  timezone: string;
+  address: string[];
+  inviteNotice: string;
 };
 
 function hasValidEmail(value: string) {
@@ -347,7 +353,7 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
       const contactEmail = state.appointmentFor === "family-member" ? state.responsibleAdult.email : state.patient.email;
       const contactPhone = state.appointmentFor === "family-member" ? state.responsibleAdult.mobilePhone : state.patient.mobilePhone;
 
-      const response = await fetch("/api/booking-request", {
+      const response = await fetch("/api/calendar/book", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -366,30 +372,42 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
             state.appointmentFor === "family-member"
               ? state.responsibleAdult.relationship
               : undefined,
-          requestedDate: state.requestedDate,
-          requestedTime: state.requestedTime,
+          selectedStart: state.requestedTime,
           timezone: "America/Chicago",
           consentAccepted: state.consentAccepted,
           preferredContactMethod: state.contactPreference || undefined,
           reasonCategories: state.reasonCategories,
           previousStudiesStatus: state.previousStudiesStatus || undefined,
           previousStudyTypes: state.previousStudyTypes,
-          appointmentObjective: state.appointmentObjective,
           website: "",
         }),
       });
 
       const data = (await response.json()) as SubmitResponse;
 
-      if (!response.ok || !data.success || !data.reference) {
+      if (response.status === 409) {
+        updateField("requestedTime", "");
+        setStep(2);
+        setSubmitError(data.message || "That appointment time was just booked. Please select another available time.");
+        return;
+      }
+
+      if (!response.ok || !data.bookingReference || !data.start) {
         setSubmitError(data.message || "Online scheduling is temporarily unavailable while appointment configuration is completed.");
         return;
       }
 
       setSuccessState({
-        reference: data.reference,
+        reference: data.bookingReference,
         requestedDate: state.requestedDate,
-        requestedTimeLabel: formatTimeForDisplay(state.requestedTime),
+        requestedTimeLabel: formatTimeForDisplay(data.start),
+        timezone: data.timezone || "Central Time — Houston",
+        address: data.address || [
+          "11777 Katy Freeway, Suite 410S",
+          "Houston, Texas 77079",
+          "United States",
+        ],
+        inviteNotice: data.inviteNotice || "Please check your email for the calendar invitation.",
       });
 
       setState(INITIAL_STATE);
@@ -615,7 +633,7 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
                   {errors.consentAccepted ? <p className="text-sm text-[var(--color-danger)]">{errors.consentAccepted}</p> : null}
 
                   <Button type="button" onClick={submitRequest} disabled={isSubmitting}>
-                    {isSubmitting ? "Submitting request..." : content.submitLabel}
+                    {isSubmitting ? "Scheduling your appointment..." : content.submitLabel}
                   </Button>
                 </div>
               ) : null}
@@ -627,20 +645,25 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
                     <Button type="button" variant="secondary" onClick={submitRequest} disabled={isSubmitting}>
                       Retry
                     </Button>
-                    <Button href="/contact" variant="secondary">Go to Contact</Button>
+                    <Button href="/#contact" variant="secondary">Go to Contact</Button>
                   </div>
                 </Card>
               ) : null}
 
               {successState ? (
                 <Card className="border-dashed p-4">
-                  <h3 className="text-base text-[var(--color-foreground)]">Appointment request received.</h3>
+                  <h3 className="text-base text-[var(--color-foreground)]">Your Initial Evaluation has been scheduled.</h3>
                   <p className="mt-2 text-sm text-[var(--color-muted)]">
-                    {formatDateForDisplay(successState.requestedDate)} at {successState.requestedTimeLabel} (Central Time — Houston)
+                    {formatDateForDisplay(successState.requestedDate)} at {successState.requestedTimeLabel} ({successState.timezone})
                   </p>
                   <p className="mt-2 text-sm text-[var(--color-muted)]">Reference: {successState.reference}</p>
+                  <div className="mt-2 text-sm text-[var(--color-muted)]">
+                    {successState.address.map((line) => (
+                      <p key={line}>{line}</p>
+                    ))}
+                  </div>
                   <p className="mt-1 text-sm text-[var(--color-muted)]">
-                    Thank you. The NeuroSports USA Houston team has been notified. Your appointment is not confirmed until you receive confirmation from our team or Google Calendar.
+                    {successState.inviteNotice}
                   </p>
                 </Card>
               ) : null}

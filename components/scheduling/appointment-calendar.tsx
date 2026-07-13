@@ -203,7 +203,7 @@ export function AppointmentCalendar({
           {displayedAvailabilityError ? (
             <div className="space-y-3 rounded-lg border border-[var(--color-border)] p-3">
               <p className="text-sm text-[var(--color-muted)]">{displayedAvailabilityError}</p>
-              <Button href="/contact" variant="secondary">Go to Contact</Button>
+              <Button href="/#contact" variant="secondary">Go to Contact</Button>
             </div>
           ) : null}
 

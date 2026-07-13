@@ -1,17 +1,19 @@
 import { NextResponse } from "next/server";
 
 import {
-  BOOKING_CONFIG_UNAVAILABLE_MESSAGE,
   createInitialEvaluationEvent,
+  getConfigPublicMessage,
   getGoogleCalendarClient,
   getRuntimeBookingConfig,
   getWorkingWindowsForDate,
   isStartInsideWindows,
   recheckSlotAvailability,
+  toCalendarPublicError,
 } from "@/lib/server/google-calendar";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+export const runtime = "nodejs";
 
 type BookingRequestBody = {
   appointmentFor?: "self" | "family-member";
@@ -68,7 +70,7 @@ export async function POST(request: Request) {
 
   const configResult = getRuntimeBookingConfig();
   if (!configResult.ok) {
-    return noStoreJson({ message: BOOKING_CONFIG_UNAVAILABLE_MESSAGE }, 503);
+    return noStoreJson({ message: getConfigPublicMessage(configResult.issues) }, 503);
   }
 
   let body: BookingRequestBody;
@@ -191,7 +193,8 @@ export async function POST(request: Request) {
       ],
       inviteNotice: "Please check your email for the calendar invitation.",
     });
-  } catch {
-    return noStoreJson({ message: "Online scheduling is temporarily unavailable. Please try again shortly." }, 502);
+  } catch (error) {
+    const publicError = toCalendarPublicError(error);
+    return noStoreJson({ message: publicError.message }, publicError.status);
   }
 }

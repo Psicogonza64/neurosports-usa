@@ -7,5 +7,5 @@ export const navigationItems: NavigationItem[] = [
   { label: "Technology", href: "/technology" },
   { label: "Research", href: "/research" },
   { label: "Locations", href: "/#locations" },
-  { label: "Contact", href: "/contact" },
+  { label: "Contact", href: "/#contact" },
 ];
