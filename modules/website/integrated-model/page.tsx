@@ -7,6 +7,7 @@ import {
   ProprietaryMethodsSection,
   ProcessExplorer,
   ScientificCard,
+  ScientificEcosystemSection,
   SectionHeader,
 } from "@/components/experience";
 import {
@@ -155,6 +156,73 @@ function ProprietaryMethodsModelSection({ locale }: { locale: IntegratedModelLoc
             "Functional neuroscience applied to attention, decision-making, reaction time and transfer.",
           ctaLabel: neuroPerformance?.ctaLabel ?? "Explore NeuroPerformance",
           ctaHref: neuroPerformance?.ctaHref ?? "/what-we-do#neuroperformance",
+        },
+      ]}
+    />
+  );
+}
+
+function ScientificEcosystemModelSection({ locale }: { locale: IntegratedModelLocale }) {
+  const isEs = locale === "es";
+
+  return (
+    <ScientificEcosystemSection
+      id="ecosystem-architecture"
+      label={isEs ? "ARQUITECTURA DE ECOSISTEMA" : "ECOSYSTEM ARCHITECTURE"}
+      title={isEs
+        ? "NeuroSports USA como plataforma institucional central."
+        : "NeuroSports USA as a central institutional platform."}
+      description={isEs
+        ? "Esta vista organiza metodos y aplicaciones institucionales sin exponer plataformas clinicas o cientificas independientes."
+        : "This view organizes institutional methods and applications without exposing independent clinical or scientific platforms."}
+      platformName="NeuroSports USA"
+      platformPurpose={isEs
+        ? "Plataforma publica para comunicar estructura cientifica institucional, modelos y aplicaciones bajo gobernanza profesional."
+        : "Public platform to communicate institutional scientific architecture, models and applications under professional governance."}
+      nodes={[
+        {
+          id: "rsfn",
+          name: "RSFN",
+          purpose: isEs
+            ? "Metodologia cientifica de interpretacion funcional."
+            : "Scientific methodology for functional interpretation.",
+          relation: isEs
+            ? "Base cientifica institucional"
+            : "Institutional scientific foundation",
+          status: "Institutional method",
+        },
+        {
+          id: "mnsi",
+          name: "MNSI",
+          purpose: isEs
+            ? "Modelo clinico de intervencion secuencial."
+            : "Clinical sequential intervention model.",
+          relation: isEs
+            ? "Implementacion institucional supervisada"
+            : "Institutional supervised implementation",
+          status: "Clinical intervention model",
+        },
+        {
+          id: "neuroperformance",
+          name: "NeuroPerformance",
+          purpose: isEs
+            ? "Aplicacion deportiva orientada a transferencia funcional."
+            : "Sport application focused on functional transfer.",
+          relation: isEs
+            ? "Aplicacion del marco institucional"
+            : "Application of the institutional framework",
+          status: "Applied performance pathway",
+        },
+        {
+          id: "neuroscanner",
+          name: "NeuroScanner",
+          purpose: isEs
+            ? "Herramienta especializada futura en desarrollo institucional."
+            : "Future specialized tool in institutional development.",
+          relation: isEs
+            ? "Componente futuro del ecosistema"
+            : "Future ecosystem component",
+          status: "Future tool - pending validation",
         },
       ]}
     />
@@ -374,6 +442,7 @@ export function IntegratedModelPage({ locale = "en" }: { locale?: IntegratedMode
       <OutcomeMonitoringSection locale={locale} />
       <LocationsSection locale={locale} />
       <ProprietaryMethodsModelSection locale={locale} />
+      <ScientificEcosystemModelSection locale={locale} />
       <FinalCtaSection locale={locale} />
     </>
   );

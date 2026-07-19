@@ -6,4 +6,6 @@ export { MnsiJourneySection } from "@/modules/website/home/sections/mnsi-journey
 export { ProprietaryMethodsHomeSection } from "@/modules/website/home/sections/proprietary-methods-section";
 export { PublicProcessesSection } from "@/modules/website/home/sections/public-processes-section";
 export { ResearchSection } from "@/modules/website/home/sections/research-section";
+export { ScientificEcosystemHomeSection } from "@/modules/website/home/sections/scientific-ecosystem-section";
+export { ScientificKnowledgeHubHomeSection } from "@/modules/website/home/sections/scientific-knowledge-hub-section";
 export { TechnologySection } from "@/modules/website/home/sections/technology-section";
