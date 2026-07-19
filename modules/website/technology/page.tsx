@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Hero } from "@/components/ui/hero";
-import { SectionTitle } from "@/components/ui/section-title";
+import { ScientificCard, SectionHeader } from "@/components/experience";
 import { ScientificJourneyDiagram } from "@/components/diagrams/ScientificJourneyDiagram";
 import {
   assessmentTools,
@@ -55,13 +54,13 @@ function TechnologyOverviewSection() {
   return (
     <section className="border-b nsu-border" id="technology-overview">
       <Container className="grid gap-10 py-24 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:py-28">
-        <SectionTitle
-          eyebrow="Technology Overview"
+        <SectionHeader
+          label="Technology Overview"
           title="A Multimodal Technology Ecosystem"
-          description="Our technology ecosystem supports the complete intervention process: assessment, brain-state preparation, neuromodulation, digital cognitive activation, sensorimotor consolidation and progress tracking."
+          subtitle="Our technology ecosystem supports the complete intervention process: assessment, brain-state preparation, neuromodulation, digital cognitive activation, sensorimotor consolidation and progress tracking."
         />
 
-        <Card className="bg-[color:color-mix(in_srgb,var(--color-secondary)_5%,var(--panel))] p-6 sm:p-8 lg:p-10">
+        <ScientificCard className="bg-[color:color-mix(in_srgb,var(--color-secondary)_5%,var(--panel))] p-6 sm:p-8 lg:p-10">
           <div className="space-y-8">
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {ecosystemAreas.map((area) => (
@@ -97,7 +96,7 @@ function TechnologyOverviewSection() {
               </div>
             </div>
           </div>
-        </Card>
+        </ScientificCard>
       </Container>
     </section>
   );
@@ -107,15 +106,15 @@ function AssessmentSection() {
   return (
     <section className="border-b nsu-border" id="assessment-tools">
       <Container className="py-24 lg:py-28">
-        <SectionTitle
-          eyebrow="Neuropsychological Assessment"
+        <SectionHeader
+          label="Neuropsychological Assessment"
           title="Institutional tools that support precise and functional evaluation."
-          description="Assessment technology is used to strengthen the clarity, consistency and interpretive value of the neuropsychological process."
+          subtitle="Assessment technology is used to strengthen the clarity, consistency and interpretive value of the neuropsychological process."
         />
 
         <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {assessmentTools.map((tool) => (
-            <Card key={tool.title} className="min-h-64 p-6">
+            <ScientificCard key={tool.title} interactive className="min-h-64 p-6">
               <div className="space-y-4">
                 <span className="inline-flex rounded-full border nsu-outline-badge px-3 py-1 text-xs font-medium uppercase tracking-[0.16em]">
                   Assessment
@@ -127,7 +126,7 @@ function AssessmentSection() {
                   {tool.description}
                 </p>
               </div>
-            </Card>
+            </ScientificCard>
           ))}
         </div>
       </Container>
@@ -139,22 +138,22 @@ function NeuromodulationSection() {
   return (
     <section className="border-b nsu-border" id="neuromodulation">
       <Container className="grid gap-10 py-24 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:py-28">
-        <SectionTitle
-          eyebrow="Neuromodulation"
+        <SectionHeader
+          label="Neuromodulation"
           title="Neuromodulation and Brain-State Preparation"
-          description="Technology may be selected to support regulation, prepare target systems and guide the individual into a more effective intervention state."
+          subtitle="Technology may be selected to support regulation, prepare target systems and guide the individual into a more effective intervention state."
         />
 
         <div className="grid gap-5">
           {neuromodulationTools.map((item) => (
-            <Card key={item.title} className="p-6 sm:p-7">
+            <ScientificCard key={item.title} interactive className="p-6 sm:p-7">
               <div className="space-y-3">
                 <h3 className="text-xl text-[var(--color-foreground)]">{item.title}</h3>
                 <p className="text-sm leading-7 text-[var(--color-muted)] sm:text-base">
                   {item.description}
                 </p>
               </div>
-            </Card>
+            </ScientificCard>
           ))}
         </div>
       </Container>
@@ -166,15 +165,15 @@ function DigitalTrainingSection() {
   return (
     <section className="border-b nsu-border" id="digital-training">
       <Container className="py-24 lg:py-28">
-        <SectionTitle
-          eyebrow="Digital Cognitive Training"
+        <SectionHeader
+          label="Digital Cognitive Training"
           title="Structured digital activation designed to support specific cognitive functions."
-          description="Computerized training is used as part of a larger intervention sequence, with targets, pacing and challenge level aligned to clinical priorities."
+          subtitle="Computerized training is used as part of a larger intervention sequence, with targets, pacing and challenge level aligned to clinical priorities."
         />
 
         <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {cognitiveTrainingTools.map((tool) => (
-            <Card key={tool.title} className="min-h-64 p-6">
+            <ScientificCard key={tool.title} interactive className="min-h-64 p-6">
               <div className="space-y-4">
                 <div className="nsu-gradient-line h-px w-16" />
                 <h3 className="text-2xl tracking-tight text-[var(--color-foreground)]">
@@ -184,7 +183,7 @@ function DigitalTrainingSection() {
                   {tool.description}
                 </p>
               </div>
-            </Card>
+            </ScientificCard>
           ))}
         </div>
       </Container>
@@ -196,15 +195,15 @@ function TransferSection() {
   return (
     <section className="border-b nsu-border" id="functional-transfer">
       <Container className="py-24 lg:py-28">
-        <SectionTitle
-          eyebrow="Sensorimotor and Functional Transfer"
+        <SectionHeader
+          label="Sensorimotor and Functional Transfer"
           title="Technology becomes clinically meaningful when it connects cognition to action and daily performance."
-          description="Intervention tools are organized to support how neurocognitive gains move into response quality, motor planning and real-life use."
+          subtitle="Intervention tools are organized to support how neurocognitive gains move into response quality, motor planning and real-life use."
         />
 
         <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {transferSignals.map((signal) => (
-            <Card key={signal.title} className="min-h-56 p-6">
+            <ScientificCard key={signal.title} interactive className="min-h-56 p-6">
               <div className="space-y-4">
                 <span className="inline-flex rounded-full border nsu-outline-badge px-3 py-1 text-xs font-medium uppercase tracking-[0.16em]">
                   Transfer
@@ -214,7 +213,7 @@ function TransferSection() {
                   {signal.description}
                 </p>
               </div>
-            </Card>
+            </ScientificCard>
           ))}
         </div>
       </Container>
@@ -226,13 +225,13 @@ function NeuroPerformanceSection() {
   return (
     <section className="border-b nsu-border" id="neuroperformance-technology">
       <Container className="grid gap-10 py-24 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:py-28">
-        <SectionTitle
-          eyebrow="NeuroPerformance Technology"
+        <SectionHeader
+          label="NeuroPerformance Technology"
           title="Athlete-focused systems designed to connect brain efficiency with competitive transfer."
-          description="For athletes, technology is selected to support rapid perception, decision quality, sustained attention and measurable sport-specific performance progression."
+          subtitle="For athletes, technology is selected to support rapid perception, decision quality, sustained attention and measurable sport-specific performance progression."
         />
 
-        <Card className="bg-[color:color-mix(in_srgb,var(--color-secondary)_5%,var(--panel))] p-6 sm:p-8 lg:p-10">
+        <ScientificCard className="bg-[color:color-mix(in_srgb,var(--color-secondary)_5%,var(--panel))] p-6 sm:p-8 lg:p-10">
           <div className="grid gap-4 sm:grid-cols-2">
             {neuroPerformanceSignals.map((signal) => (
               <div
@@ -246,7 +245,7 @@ function NeuroPerformanceSection() {
               </div>
             ))}
           </div>
-        </Card>
+        </ScientificCard>
       </Container>
     </section>
   );
@@ -256,15 +255,15 @@ function TrackingSection() {
   return (
     <section className="border-b nsu-border" id="tracking-functional-change">
       <Container className="py-24 lg:py-28">
-        <SectionTitle
-          eyebrow="Data and Progress Tracking"
+        <SectionHeader
+          label="Data and Progress Tracking"
           title="Tracking Functional Change"
-          description="Technology can support a more visible intervention pathway by helping teams monitor progression from baseline through functional outcomes."
+          subtitle="Technology can support a more visible intervention pathway by helping teams monitor progression from baseline through functional outcomes."
         />
 
         <div className="mt-14 grid gap-4 lg:grid-cols-5">
           {trackingSteps.map((step, index) => (
-            <Card key={step.title} className="relative min-h-56 p-6">
+            <ScientificCard key={step.title} interactive className="relative min-h-56 p-6">
               <div className="space-y-4">
                 <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[color:color-mix(in_srgb,var(--color-primary)_25%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-primary)_10%,white)] text-xs font-medium text-[var(--color-primary)]">
                   {index + 1}
@@ -279,7 +278,7 @@ function TrackingSection() {
                   →
                 </span>
               ) : null}
-            </Card>
+            </ScientificCard>
           ))}
         </div>
       </Container>
@@ -291,13 +290,13 @@ function ResponsibleUseSection() {
   return (
     <section className="border-b nsu-border" id="responsible-use">
       <Container className="grid gap-10 py-24 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:py-28">
-        <SectionTitle
-          eyebrow="Responsible Use"
+        <SectionHeader
+          label="Responsible Use"
           title="Technology Guided by Clinical Judgment"
-          description="Technology is not used as a replacement for clinical reasoning. It is integrated into a professional neuropsychological model and individualized intervention plan."
+          subtitle="Technology is not used as a replacement for clinical reasoning. It is integrated into a professional neuropsychological model and individualized intervention plan."
         />
 
-        <Card className="border-[color:color-mix(in_srgb,var(--color-secondary)_20%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-secondary)_7%,var(--panel))] p-6 sm:p-8">
+        <ScientificCard className="border-[color:color-mix(in_srgb,var(--color-secondary)_20%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-secondary)_7%,var(--panel))] p-6 sm:p-8">
           <div className="space-y-4">
             <span className="inline-flex rounded-full border nsu-outline-badge px-3 py-1 text-xs font-medium uppercase tracking-[0.16em]">
               Clinical Direction
@@ -309,7 +308,7 @@ function ResponsibleUseSection() {
               intervention is most appropriate.
             </p>
           </div>
-        </Card>
+        </ScientificCard>
       </Container>
     </section>
   );
@@ -319,7 +318,7 @@ function FinalCtaSection() {
   return (
     <section className="border-b nsu-border" id="appointments">
       <Container className="py-24 lg:py-28">
-        <Card className="border-[color:color-mix(in_srgb,var(--color-secondary)_24%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-secondary)_8%,var(--panel))] px-6 py-14 text-center sm:px-10 lg:px-16">
+        <ScientificCard className="border-[color:color-mix(in_srgb,var(--color-secondary)_24%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-secondary)_8%,var(--panel))] px-6 py-14 text-center sm:px-10 lg:px-16">
           <div className="mx-auto max-w-3xl space-y-7">
             <p className="nsu-kicker text-xs font-medium uppercase tracking-[0.26em]">
               Final CTA
@@ -340,7 +339,7 @@ function FinalCtaSection() {
               <span>Schedule an Evaluation</span>
             </Button>
           </div>
-        </Card>
+        </ScientificCard>
       </Container>
     </section>
   );

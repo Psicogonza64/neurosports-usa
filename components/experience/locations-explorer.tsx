@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { ScientificCard } from "@/components/experience/scientific-card";
 import {
   bookingPageContent,
   houstonBookingConfig,
@@ -123,7 +123,7 @@ function ExpandedLocationPanel({
   const mapEmbedUrl = getGoogleMapsEmbedUrl(item.mapQuery);
 
   return (
-    <Card className="min-w-0 w-full max-w-full overflow-hidden p-0">
+    <ScientificCard className="min-w-0 w-full max-w-full overflow-hidden p-0">
       <LocationImage item={item} />
 
       <div id={`location-panel-${item.id}`} className="space-y-5 p-6 sm:p-7">
@@ -212,7 +212,7 @@ function ExpandedLocationPanel({
           <p className="mt-2 text-sm leading-7 text-[var(--color-muted)]">{content.labels.photographyComingSoon}</p>
         </div>
       </div>
-    </Card>
+    </ScientificCard>
   );
 }
 
@@ -244,7 +244,7 @@ export function LocationsExplorer({ locale = "en", className }: LocationsExplore
             const directionsUrl = getGoogleMapsDirectionsUrl(item.mapQuery);
 
             return (
-              <Card key={item.id} className="min-w-0 w-full max-w-full overflow-hidden p-0">
+              <ScientificCard key={item.id} interactive className="min-w-0 w-full max-w-full overflow-hidden p-0">
                 <LocationImage item={item} />
                 <div className="space-y-4 p-5">
                   <div className="space-y-1">
@@ -273,7 +273,7 @@ export function LocationsExplorer({ locale = "en", className }: LocationsExplore
                     </a>
                   </div>
                 </div>
-              </Card>
+              </ScientificCard>
             );
           })}
         </div>
@@ -296,7 +296,7 @@ export function LocationsExplorer({ locale = "en", className }: LocationsExplore
 
           return (
             <div key={item.id} className="min-w-0 w-full max-w-full space-y-3">
-              <Card className="min-w-0 w-full max-w-full overflow-hidden p-0">
+              <ScientificCard className="min-w-0 w-full max-w-full overflow-hidden p-0">
                 <LocationImage item={item} mobile />
                 <div className="space-y-4 p-4">
                   <div className="space-y-1">
@@ -325,7 +325,7 @@ export function LocationsExplorer({ locale = "en", className }: LocationsExplore
                     </a>
                   </div>
                 </div>
-              </Card>
+              </ScientificCard>
 
               {isActive ? (
                 <div id={`mobile-location-panel-${item.id}`}>
@@ -341,9 +341,9 @@ export function LocationsExplorer({ locale = "en", className }: LocationsExplore
         })}
       </div>
 
-      <Card className="p-6 sm:p-7">
+      <ScientificCard className="p-6 sm:p-7">
         <p className="text-sm leading-7 text-[var(--color-muted)] sm:text-base">{content.legalNote}</p>
-      </Card>
+      </ScientificCard>
     </div>
   );
 }

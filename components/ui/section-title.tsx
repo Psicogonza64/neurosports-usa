@@ -13,19 +13,19 @@ export function SectionTitle({
 }: SectionTitleProps) {
   return (
     <div className="max-w-3xl space-y-4">
-      <p className="nsu-kicker text-xs font-medium uppercase tracking-[0.26em]">
+      <p className="nsu-kicker nsu-eyebrow">
         {eyebrow}
       </p>
-      <h2 className="text-3xl tracking-tight text-[var(--color-foreground)] sm:text-4xl">
+      <h2 className="nsu-h2">
         {title}
       </h2>
       {description ? (
-        <p className="max-w-2xl text-sm leading-7 text-[var(--color-muted)] sm:text-base">
+        <p className="max-w-2xl nsu-body">
           {description}
         </p>
       ) : null}
       {supportText ? (
-        <p className="text-sm leading-6 text-[var(--color-secondary)]/80">{supportText}</p>
+        <p className="text-sm leading-7 text-[var(--color-secondary)]/80">{supportText}</p>
       ) : null}
     </div>
   );

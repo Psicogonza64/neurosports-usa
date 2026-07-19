@@ -1,10 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { Hero } from "@/components/ui/hero";
-import { SectionTitle } from "@/components/ui/section-title";
 import { ScientificJourneyDiagram } from "@/components/diagrams/ScientificJourneyDiagram";
-import { LocationsExplorer, ProcessExplorer } from "@/components/experience";
+import {
+  LocationsExplorer,
+  ProcessExplorer,
+  ScientificCard,
+  SectionHeader,
+} from "@/components/experience";
 import {
   getIntegratedModelContent,
   type IntegratedModelLocale,
@@ -51,10 +54,10 @@ function ScientificFoundationSection({ locale }: { locale: IntegratedModelLocale
   return (
     <section className="border-b nsu-border" id="scientific-foundation">
       <Container className="py-24 lg:py-28">
-        <SectionTitle
-          eyebrow={content.processExplorer.eyebrow}
+        <SectionHeader
+          label={content.processExplorer.eyebrow}
           title={content.processExplorer.title}
-          description={content.processExplorer.description}
+          subtitle={content.processExplorer.description}
         />
 
         <ProcessExplorer
@@ -74,14 +77,14 @@ function RsfnSection({ locale }: { locale: IntegratedModelLocale }) {
   return (
     <section className="border-b nsu-border" id="rsfn">
       <Container className="py-24 lg:py-28">
-        <SectionTitle
-          eyebrow={content.rsfn.eyebrow}
+        <SectionHeader
+          label={content.rsfn.eyebrow}
           title={content.rsfn.title}
-          description={content.rsfn.description}
+          subtitle={content.rsfn.description}
         />
 
         <div className="mt-14 grid gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-          <Card className="p-6 sm:p-7">
+          <ScientificCard interactive className="p-6 sm:p-7">
             <div className="space-y-4">
               <h3 className="text-xl text-[var(--color-foreground)]">{content.rsfn.supportsLabel}</h3>
               <ul className="space-y-2 text-sm leading-7 text-[var(--color-muted)] sm:text-base">
@@ -92,9 +95,9 @@ function RsfnSection({ locale }: { locale: IntegratedModelLocale }) {
                 ))}
               </ul>
             </div>
-          </Card>
+          </ScientificCard>
 
-          <Card className="p-6 sm:p-7">
+          <ScientificCard interactive className="p-6 sm:p-7">
             <div className="space-y-6">
               <p className="text-sm leading-7 text-[var(--color-muted)] sm:text-base">
                 {content.rsfn.note}
@@ -105,7 +108,7 @@ function RsfnSection({ locale }: { locale: IntegratedModelLocale }) {
                 </Button>
               </div>
             </div>
-          </Card>
+          </ScientificCard>
         </div>
       </Container>
     </section>
@@ -119,15 +122,15 @@ function MnsiSection({ locale }: { locale: IntegratedModelLocale }) {
     <section className="border-b nsu-border" id="mnsi">
       <Container className="py-24 lg:py-28">
         <div id="six-phase-model" className="h-0 scroll-mt-28" aria-hidden="true" />
-        <SectionTitle
-          eyebrow={content.mnsi.eyebrow}
+        <SectionHeader
+          label={content.mnsi.eyebrow}
           title={content.mnsi.title}
-          description={content.mnsi.description}
+          subtitle={content.mnsi.description}
         />
 
         <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {content.mnsi.phases.map((phase, index) => (
-            <Card key={phase.title} className="min-h-64 p-6">
+            <ScientificCard key={phase.title} interactive className="min-h-64 p-6">
               <div className="space-y-4">
                 <span className="inline-flex rounded-full border nsu-outline-badge px-3 py-1 text-xs font-medium uppercase tracking-[0.16em]">
                   Phase {String(index + 1).padStart(2, "0")}
@@ -137,7 +140,7 @@ function MnsiSection({ locale }: { locale: IntegratedModelLocale }) {
                   {phase.description}
                 </p>
               </div>
-            </Card>
+            </ScientificCard>
           ))}
         </div>
       </Container>
@@ -151,14 +154,14 @@ function ApplicationsSection({ locale }: { locale: IntegratedModelLocale }) {
   return (
     <section className="border-b nsu-border" id="applications">
       <Container className="py-24 lg:py-28">
-        <SectionTitle
-          eyebrow={content.applications.eyebrow}
+        <SectionHeader
+          label={content.applications.eyebrow}
           title={content.applications.title}
-          description={content.applications.description}
+          subtitle={content.applications.description}
         />
 
         <div className="mt-14 grid gap-5 lg:grid-cols-2">
-          <Card className="p-6 sm:p-7">
+          <ScientificCard interactive className="p-6 sm:p-7">
             <div className="space-y-4">
               <h3 className="text-2xl tracking-tight text-[var(--color-foreground)]">{content.applications.leftTitle}</h3>
               <ul className="space-y-2 text-sm leading-7 text-[var(--color-muted)] sm:text-base">
@@ -169,9 +172,9 @@ function ApplicationsSection({ locale }: { locale: IntegratedModelLocale }) {
                 ))}
               </ul>
             </div>
-          </Card>
+          </ScientificCard>
 
-          <Card className="p-6 sm:p-7">
+          <ScientificCard interactive className="p-6 sm:p-7">
             <div className="space-y-4">
               <h3 className="text-2xl tracking-tight text-[var(--color-foreground)]">{content.applications.rightTitle}</h3>
               <ul className="space-y-2 text-sm leading-7 text-[var(--color-muted)] sm:text-base">
@@ -182,14 +185,14 @@ function ApplicationsSection({ locale }: { locale: IntegratedModelLocale }) {
                 ))}
               </ul>
             </div>
-          </Card>
+          </ScientificCard>
         </div>
 
-        <Card className="mt-5 p-6 sm:p-7">
+        <ScientificCard className="mt-5 p-6 sm:p-7">
           <p className="text-sm leading-7 text-[var(--color-muted)] sm:text-base">
             {content.applications.sharedNote}
           </p>
-        </Card>
+        </ScientificCard>
       </Container>
     </section>
   );
@@ -201,28 +204,28 @@ function SessionStructureSection({ locale }: { locale: IntegratedModelLocale }) 
   return (
     <section className="border-b nsu-border" id="session-structure">
       <Container className="py-24 lg:py-28">
-        <SectionTitle
-          eyebrow={content.sessionStructure.eyebrow}
+        <SectionHeader
+          label={content.sessionStructure.eyebrow}
           title={content.sessionStructure.title}
-          description={content.sessionStructure.description}
+          subtitle={content.sessionStructure.description}
         />
 
         <div className="mt-14 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {content.sessionStructure.segments.map((segment) => (
-            <Card key={`${segment.duration}-${segment.phase}`} className="p-6">
+            <ScientificCard key={`${segment.duration}-${segment.phase}`} interactive className="p-6">
               <div className="space-y-2">
                 <p className="text-xs uppercase tracking-[0.16em] text-[var(--color-secondary)]/80">{segment.duration}</p>
                 <h3 className="text-xl text-[var(--color-foreground)]">{segment.phase}</h3>
               </div>
-            </Card>
+            </ScientificCard>
           ))}
         </div>
 
-        <Card className="mt-5 p-6 sm:p-7">
+        <ScientificCard className="mt-5 p-6 sm:p-7">
           <p className="text-sm leading-7 text-[var(--color-muted)] sm:text-base">
             {content.sessionStructure.note}
           </p>
-        </Card>
+        </ScientificCard>
       </Container>
     </section>
   );
@@ -235,13 +238,13 @@ function OutcomeMonitoringSection({ locale }: { locale: IntegratedModelLocale })
     <section className="border-b nsu-border" id="outcomes">
       <Container className="py-24 lg:py-28">
         <div id="outcome-monitoring" className="h-0 scroll-mt-28" aria-hidden="true" />
-        <SectionTitle
-          eyebrow={content.outcomeMonitoring.eyebrow}
+        <SectionHeader
+          label={content.outcomeMonitoring.eyebrow}
           title={content.outcomeMonitoring.title}
-          description={content.outcomeMonitoring.description}
+          subtitle={content.outcomeMonitoring.description}
         />
 
-        <Card className="mt-14 p-6 sm:p-7">
+        <ScientificCard className="mt-14 p-6 sm:p-7">
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {content.outcomeMonitoring.points.map((point) => (
               <div
@@ -255,7 +258,7 @@ function OutcomeMonitoringSection({ locale }: { locale: IntegratedModelLocale })
           <p className="mt-5 text-sm leading-7 text-[var(--color-muted)] sm:text-base">
             {content.outcomeMonitoring.note}
           </p>
-        </Card>
+        </ScientificCard>
       </Container>
     </section>
   );
@@ -267,8 +270,8 @@ function LocationsSection({ locale }: { locale: IntegratedModelLocale }) {
   return (
     <section className="border-b nsu-border" id="locations">
       <Container className="py-24 lg:py-28">
-        <SectionTitle
-          eyebrow={content.labels.eyebrow}
+        <SectionHeader
+          label={content.labels.eyebrow}
           title={content.labels.title}
         />
 
@@ -287,7 +290,7 @@ function FinalCtaSection({ locale }: { locale: IntegratedModelLocale }) {
   return (
     <section className="border-b nsu-border" id="appointments">
       <Container className="py-24 lg:py-28">
-        <Card className="border-[color:color-mix(in_srgb,var(--color-secondary)_24%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-secondary)_8%,var(--panel))] px-6 py-14 text-center sm:px-10 lg:px-16">
+        <ScientificCard className="border-[color:color-mix(in_srgb,var(--color-secondary)_24%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-secondary)_8%,var(--panel))] px-6 py-14 text-center sm:px-10 lg:px-16">
           <div className="mx-auto max-w-3xl space-y-7">
             <p className="nsu-kicker text-xs font-medium uppercase tracking-[0.26em]">
               {content.finalCta.eyebrow}
@@ -307,7 +310,7 @@ function FinalCtaSection({ locale }: { locale: IntegratedModelLocale }) {
               <span>{content.finalCta.buttonLabel}</span>
             </Button>
           </div>
-        </Card>
+        </ScientificCard>
       </Container>
     </section>
   );

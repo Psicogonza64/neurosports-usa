@@ -4,16 +4,16 @@ import { cn } from "@/utils/cn";
 
 export const experienceRhythm = {
   container: "mx-auto w-full max-w-7xl px-6 lg:px-10",
-  section: "py-24 lg:py-28",
-  sectionCompact: "py-16 lg:py-20",
-  sectionDense: "py-12 lg:py-16",
+  section: "nsu-section-y",
+  sectionCompact: "py-14 lg:py-18",
+  sectionDense: "py-10 lg:py-14",
   headerStack: "space-y-4",
-  title: "text-3xl tracking-tight text-[var(--color-foreground)] sm:text-4xl lg:text-5xl",
+  title: "nsu-h2",
   heroTitle:
-    "text-5xl leading-[0.94] tracking-[-0.03em] text-[var(--color-foreground)] sm:text-6xl lg:text-7xl",
-  body: "max-w-2xl text-sm leading-7 text-[var(--color-muted)] sm:text-base",
-  heroBody: "max-w-2xl text-base leading-8 text-[var(--color-muted)] sm:text-lg",
-  eyebrow: "nsu-kicker text-xs font-medium uppercase tracking-[0.26em]",
+    "nsu-h1",
+  body: "max-w-2xl nsu-body",
+  heroBody: "max-w-2xl nsu-body-lg",
+  eyebrow: "nsu-kicker nsu-eyebrow",
   cardGrid: "grid gap-5 md:grid-cols-2 xl:grid-cols-3",
   buttonGroup: "flex flex-col gap-3 sm:flex-row sm:items-center",
 } as const;

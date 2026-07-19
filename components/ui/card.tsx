@@ -9,7 +9,7 @@ type CardProps = {
 
 export function Card({ children, className }: CardProps) {
   return (
-    <article className={cn("nsu-panel rounded-[1.75rem] border", className)}>
+    <article className={cn("nsu-panel nsu-card", className)}>
       {children}
     </article>
   );

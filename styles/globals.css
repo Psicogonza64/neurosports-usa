@@ -18,12 +18,28 @@
   --color-secondary: var(--ns-sage-dark);
   --color-muted: var(--ns-muted-text);
   --color-border: var(--ns-border);
+  --color-danger: #a33f33;
   --background: var(--color-background);
   --foreground: var(--color-foreground);
   --muted: var(--color-muted);
   --line: var(--color-border);
   --soft: color-mix(in srgb, var(--ns-sand) 24%, var(--ns-bone));
   --panel: var(--ns-bone);
+  --radius-card: 1.4rem;
+  --radius-panel: 1.75rem;
+  --shadow-soft: 0 12px 30px -26px rgba(43, 42, 40, 0.42);
+  --shadow-card: 0 18px 38px -30px rgba(43, 42, 40, 0.48);
+  --shadow-elevated: 0 24px 44px -34px rgba(43, 42, 40, 0.58);
+  --motion-duration-ui: 220ms;
+  --motion-ease-ui: cubic-bezier(0.22, 1, 0.36, 1);
+  --space-section-y: 5.5rem;
+  --space-section-y-lg: 6.25rem;
+  --type-hero: clamp(2.25rem, 6vw, 4.15rem);
+  --type-h2: clamp(1.9rem, 3.8vw, 3rem);
+  --type-h3: clamp(1.2rem, 2.2vw, 1.55rem);
+  --type-body-lg: clamp(1rem, 1.4vw, 1.12rem);
+  --type-body: clamp(0.97rem, 1.15vw, 1.02rem);
+  --type-caption: 0.8rem;
 }
 
 html {
@@ -41,6 +57,7 @@ body {
 body {
   font-family: "Helvetica Neue", Arial, sans-serif;
   letter-spacing: -0.01em;
+  line-height: 1.55;
   text-rendering: optimizeLegibility;
 }
 
@@ -74,7 +91,11 @@ button {
 
 button,
 a {
-  transition: none;
+  transition: color var(--motion-duration-ui) var(--motion-ease-ui),
+    background-color var(--motion-duration-ui) var(--motion-ease-ui),
+    border-color var(--motion-duration-ui) var(--motion-ease-ui),
+    box-shadow var(--motion-duration-ui) var(--motion-ease-ui),
+    transform var(--motion-duration-ui) var(--motion-ease-ui);
 }
 
 ::selection {
@@ -87,7 +108,8 @@ a {
 
 .nsu-panel {
   background: var(--panel);
-  border-color: var(--color-border);
+  border-color: color-mix(in srgb, var(--color-border) 88%, var(--ns-sage-dark));
+  box-shadow: var(--shadow-soft);
 }
 
 .nsu-soft {
@@ -95,24 +117,159 @@ a {
 }
 
 .nsu-border {
-  border-color: var(--color-border);
+  border-color: color-mix(in srgb, var(--color-border) 90%, var(--ns-sage-dark));
+}
+
+.nsu-card {
+  border-radius: var(--radius-card);
+  border: 1px solid color-mix(in srgb, var(--color-border) 88%, var(--ns-sage-dark));
+  background: color-mix(in srgb, var(--panel) 96%, #fff);
+  box-shadow: var(--shadow-card);
+}
+
+.nsu-scientific-card {
+  border-radius: 1.6rem;
+  border: 1px solid color-mix(in srgb, var(--color-border) 86%, var(--ns-sage-dark));
+  background: color-mix(in srgb, var(--panel) 97%, #fff);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--motion-duration-ui) var(--motion-ease-ui),
+    box-shadow var(--motion-duration-ui) var(--motion-ease-ui),
+    border-color var(--motion-duration-ui) var(--motion-ease-ui),
+    background-color var(--motion-duration-ui) var(--motion-ease-ui);
+}
+
+.nsu-scientific-card-hover:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-primary) 34%, var(--color-border));
+  box-shadow: var(--shadow-elevated);
+}
+
+.nsu-scientific-card-hover:focus-within {
+  border-color: color-mix(in srgb, var(--color-primary) 36%, var(--color-border));
+  box-shadow: var(--shadow-elevated);
+}
+
+.nsu-section-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.nsu-content-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .nsu-section-stack {
+    gap: 3.75rem;
+  }
+}
+
+.nsu-eyebrow {
+  font-size: var(--type-caption);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.nsu-h1 {
+  font-size: var(--type-hero);
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+  color: var(--color-foreground);
+}
+
+.nsu-h2 {
+  font-size: var(--type-h2);
+  line-height: 1.08;
+  letter-spacing: -0.022em;
+  color: var(--color-foreground);
+}
+
+.nsu-h3 {
+  font-size: var(--type-h3);
+  line-height: 1.2;
+  letter-spacing: -0.016em;
+  color: var(--color-foreground);
+}
+
+.nsu-body-lg {
+  font-size: var(--type-body-lg);
+  line-height: 1.72;
+  color: var(--color-muted);
+}
+
+.nsu-body {
+  font-size: var(--type-body);
+  line-height: 1.72;
+  color: var(--color-muted);
+}
+
+.nsu-section-y {
+  padding-block: var(--space-section-y);
+}
+
+@media (min-width: 1024px) {
+  .nsu-section-y {
+    padding-block: var(--space-section-y-lg);
+  }
 }
 
 .nsu-primary-button {
   background: var(--color-primary);
   border-color: var(--color-primary);
   color: #201f1d;
+  box-shadow: 0 12px 24px -20px rgba(43, 42, 40, 0.65);
+}
+
+.nsu-primary-button:hover {
+  background: color-mix(in srgb, var(--color-primary) 86%, #fff);
+  border-color: color-mix(in srgb, var(--color-primary) 82%, var(--ns-sage-dark));
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px -20px rgba(43, 42, 40, 0.72);
+}
+
+.nsu-primary-button:active {
+  transform: translateY(0);
+}
+
+.nsu-primary-button:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 58%, white),
+    0 0 0 5px color-mix(in srgb, var(--ns-sage-dark) 26%, white);
 }
 
 .nsu-secondary-button {
-  background: transparent;
-  border-color: color-mix(in srgb, var(--color-secondary) 35%, var(--color-border));
+  background: color-mix(in srgb, var(--color-background) 92%, white);
+  border-color: color-mix(in srgb, var(--color-secondary) 45%, var(--color-border));
   color: var(--color-secondary);
+}
+
+.nsu-secondary-button:hover {
+  background: color-mix(in srgb, var(--color-secondary) 11%, white);
+  border-color: color-mix(in srgb, var(--color-secondary) 62%, var(--color-border));
+  color: var(--ns-charcoal);
+  transform: translateY(-1px);
+}
+
+.nsu-secondary-button:active {
+  transform: translateY(0);
+}
+
+.nsu-secondary-button:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 42%, white),
+    0 0 0 5px color-mix(in srgb, var(--color-secondary) 22%, white);
 }
 
 .nsu-outline-badge {
   border-color: color-mix(in srgb, var(--color-secondary) 18%, var(--color-border));
   color: var(--color-secondary);
+}
+
+.nsu-icon-tone {
+  color: color-mix(in srgb, var(--color-secondary) 76%, var(--color-foreground));
 }
 
 .nsu-gradient-line {
@@ -143,13 +300,38 @@ a {
   }
 }
 
+@keyframes ns-hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .ns-journey-path {
   stroke-dasharray: 18;
   animation: ns-path-draw 620ms ease-out both;
 }
 
+.ns-hero-enter {
+  animation: ns-hero-enter 360ms ease-out both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ns-journey-path {
     animation: none;
+  }
+
+  .ns-hero-enter {
+    animation: none;
+  }
+
+  .nsu-primary-button:hover,
+  .nsu-secondary-button:hover,
+  .nsu-scientific-card-hover:hover {
+    transform: none;
   }
 }

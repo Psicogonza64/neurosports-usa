@@ -25,7 +25,7 @@ const variantClasses = {
 };
 
 const sizeClasses = {
-  sm: "px-5 py-2.5 text-sm",
+  sm: "px-4.5 py-2.5 text-sm",
   md: "px-6 py-3 text-sm",
 };
 
@@ -44,7 +44,7 @@ export function Button({
   disabled,
 }: ButtonProps) {
   const sharedClassName = cn(
-    "inline-flex min-h-11 flex-col items-center justify-center rounded-full border font-medium leading-tight",
+    "inline-flex min-h-11 flex-col items-center justify-center rounded-full border font-semibold leading-tight tracking-[0.01em]",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_srgb,var(--color-primary)_44%,white)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]",
     variantClasses[variant],
     sizeClasses[size],
