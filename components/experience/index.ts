@@ -22,6 +22,15 @@ export { SectionHeader } from "@/components/experience/section-header";
 export { SectionSpacing, experienceRhythm } from "@/components/experience/section-spacing";
 export { InstitutionalSignalsGrid } from "@/components/experience/institutional-signals-grid";
 export type { InstitutionalSignal } from "@/components/experience/institutional-signals-grid";
+export {
+	CollaborationsBoard,
+	IndicatorsBoard,
+	ProjectsBoard,
+	PublicationsBoard,
+} from "@/components/experience/institutional-evidence-boards";
+export type { InstitutionalEvidenceItem } from "@/components/experience/institutional-evidence-boards";
+export { ProprietaryMethodsSection } from "@/components/experience/proprietary-methods-section";
+export type { ProprietaryMethodItem } from "@/components/experience/proprietary-methods-section";
 export { TechnologyHighlight } from "@/components/experience/technology-highlight";
 export { TimelineSection } from "@/components/experience/timeline-section";
 export type { TimelinePhase } from "@/components/experience/timeline-section";

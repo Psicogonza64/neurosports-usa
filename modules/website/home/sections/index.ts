@@ -3,6 +3,7 @@ export { ContactSection } from "@/modules/website/home/sections/contact-section"
 export { HeroSection } from "@/modules/website/home/sections/hero-section";
 export { HomeCtaSection } from "@/modules/website/home/sections/home-cta-section";
 export { MnsiJourneySection } from "@/modules/website/home/sections/mnsi-journey-section";
+export { ProprietaryMethodsHomeSection } from "@/modules/website/home/sections/proprietary-methods-section";
 export { PublicProcessesSection } from "@/modules/website/home/sections/public-processes-section";
 export { ResearchSection } from "@/modules/website/home/sections/research-section";
 export { TechnologySection } from "@/modules/website/home/sections/technology-section";

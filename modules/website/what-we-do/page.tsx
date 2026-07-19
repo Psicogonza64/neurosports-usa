@@ -3,6 +3,7 @@ import {
   HeroObjectPlaceholder,
   JourneyCTA,
   JourneyDivider,
+  ProprietaryMethodsSection,
   ProcessExplorer,
   NeuroHero,
   ScientificQuote,
@@ -15,6 +16,10 @@ import {
   getNeuroSportsPublicContent,
   type PublicContentLocale,
 } from "@/lib/neurosports-public-content";
+import {
+  getNeuroSportsHomeContent,
+} from "@/lib/neurosports-home-content";
+import { getIntegratedModelContent } from "@/modules/website/integrated-model/data";
 import {
   whatWeDeliverItems,
 } from "@/modules/website/what-we-do/data";
@@ -113,6 +118,51 @@ function JourneyFlowSection({ locale }: { locale: PublicContentLocale }) {
   );
 }
 
+function ProprietaryMethodsBlock({ locale }: { locale: PublicContentLocale }) {
+  const homeContent = getNeuroSportsHomeContent(locale);
+  const integratedContent = getIntegratedModelContent(locale);
+  const neuroPerformance = homeContent.applications.pathways.find(
+    (pathway) => pathway.id === "neuroperformance",
+  );
+
+  return (
+    <ProprietaryMethodsSection
+      id="methodologies"
+      label="Institutional Methodologies"
+      title="Three differentiated methods under one scientific architecture."
+      description="What We Do is expressed through RSFN interpretation, MNSI intervention sequencing and NeuroPerformance transfer logic."
+      methods={[
+        {
+          id: "rsfn",
+          method: "RSFN",
+          title: integratedContent.rsfn.title,
+          description: integratedContent.rsfn.description,
+          ctaLabel: integratedContent.rsfn.ctaLabel,
+          ctaHref: integratedContent.rsfn.ctaHref,
+        },
+        {
+          id: "mnsi",
+          method: "MNSI",
+          title: integratedContent.mnsi.title,
+          description: integratedContent.mnsi.description,
+          ctaLabel: "Explore MNSI",
+          ctaHref: "/integrated-model#mnsi",
+        },
+        {
+          id: "neuroperformance",
+          method: "NEUROPERFORMANCE",
+          title: neuroPerformance?.title ?? "NeuroPerformance",
+          description:
+            neuroPerformance?.description ??
+            "Functional neuroscience applied to attention, decision-making, reaction time and transfer.",
+          ctaLabel: neuroPerformance?.ctaLabel ?? "Explore NeuroPerformance",
+          ctaHref: neuroPerformance?.ctaHref ?? "/what-we-do#neuroperformance",
+        },
+      ]}
+    />
+  );
+}
+
 function WhatWeDeliverSection() {
   return (
     <section className="border-b nsu-border">
@@ -159,6 +209,7 @@ export function WhatWeDoPage({ locale = "en" }: { locale?: PublicContentLocale }
       <DualPathSection />
       <ClinicalPerformanceSection />
       <JourneyFlowSection locale={locale} />
+      <ProprietaryMethodsBlock locale={locale} />
       <WhatWeDeliverSection />
       <FinalCtaSection />
     </>

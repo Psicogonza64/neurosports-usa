@@ -4,6 +4,7 @@ import { Hero } from "@/components/ui/hero";
 import { ScientificJourneyDiagram } from "@/components/diagrams/ScientificJourneyDiagram";
 import {
   LocationsExplorer,
+  ProprietaryMethodsSection,
   ProcessExplorer,
   ScientificCard,
   SectionHeader,
@@ -12,6 +13,7 @@ import {
   getIntegratedModelContent,
   type IntegratedModelLocale,
 } from "@/modules/website/integrated-model/data";
+import { getNeuroSportsHomeContent } from "@/lib/neurosports-home-content";
 import { getNeuroSportsPublicContent } from "@/lib/neurosports-public-content";
 import { getNeuroSportsLocationsContent } from "@/lib/neurosports-locations-content";
 
@@ -96,7 +98,6 @@ function RsfnSection({ locale }: { locale: IntegratedModelLocale }) {
               </ul>
             </div>
           </ScientificCard>
-
           <ScientificCard interactive className="p-6 sm:p-7">
             <div className="space-y-6">
               <p className="text-sm leading-7 text-[var(--color-muted)] sm:text-base">
@@ -112,6 +113,51 @@ function RsfnSection({ locale }: { locale: IntegratedModelLocale }) {
         </div>
       </Container>
     </section>
+  );
+}
+
+function ProprietaryMethodsModelSection({ locale }: { locale: IntegratedModelLocale }) {
+  const modelContent = getIntegratedModelContent(locale);
+  const homeContent = getNeuroSportsHomeContent(locale);
+  const neuroPerformance = homeContent.applications.pathways.find(
+    (pathway) => pathway.id === "neuroperformance",
+  );
+
+  return (
+    <ProprietaryMethodsSection
+      id="institutional-methods"
+      label="INSTITUTIONAL METHODS"
+      title="RSFN, MNSI and NeuroPerformance as differentiated institutional methods."
+      description="The integrated model aligns interpretation, intervention sequencing and transfer-oriented application within one public scientific architecture."
+      methods={[
+        {
+          id: "rsfn",
+          method: "RSFN",
+          title: modelContent.rsfn.title,
+          description: modelContent.rsfn.description,
+          ctaLabel: modelContent.rsfn.ctaLabel,
+          ctaHref: modelContent.rsfn.ctaHref,
+        },
+        {
+          id: "mnsi",
+          method: "MNSI",
+          title: modelContent.mnsi.title,
+          description: modelContent.mnsi.description,
+          ctaLabel: "Explore Six-Phase Model",
+          ctaHref: "/integrated-model#six-phase-model",
+        },
+        {
+          id: "neuroperformance",
+          method: "NEUROPERFORMANCE",
+          title: neuroPerformance?.title ?? "NeuroPerformance",
+          description:
+            neuroPerformance?.description ??
+            "Functional neuroscience applied to attention, decision-making, reaction time and transfer.",
+          ctaLabel: neuroPerformance?.ctaLabel ?? "Explore NeuroPerformance",
+          ctaHref: neuroPerformance?.ctaHref ?? "/what-we-do#neuroperformance",
+        },
+      ]}
+    />
   );
 }
 
@@ -327,6 +373,7 @@ export function IntegratedModelPage({ locale = "en" }: { locale?: IntegratedMode
       <SessionStructureSection locale={locale} />
       <OutcomeMonitoringSection locale={locale} />
       <LocationsSection locale={locale} />
+      <ProprietaryMethodsModelSection locale={locale} />
       <FinalCtaSection locale={locale} />
     </>
   );
