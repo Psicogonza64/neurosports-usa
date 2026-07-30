@@ -19,6 +19,7 @@ export const HOUSTON_TIMEZONE = "America/Chicago";
 export type RuntimeBookingConfig = {
   timezone: string;
   calendarId: string;
+  googleApplicationCredentials: string;
   oauthClientId: string;
   oauthClientSecret: string;
   oauthRefreshToken: string;
@@ -132,6 +133,7 @@ export function getRuntimeBookingConfig(env: NodeJS.ProcessEnv = process.env): R
   const maximumAdvanceBookingDays = parseInteger(env.BOOKING_MAX_ADVANCE_DAYS);
   const bufferMinutes = parseNonNegativeInteger(env.BOOKING_BUFFER_MINUTES);
   const calendarId = env.GOOGLE_CALENDAR_ID?.trim() ?? "";
+  const googleApplicationCredentials = env.GOOGLE_APPLICATION_CREDENTIALS?.trim() ?? "";
   const oauthClientId = env.GOOGLE_OAUTH_CLIENT_ID?.trim() ?? "";
   const oauthClientSecret = env.GOOGLE_OAUTH_CLIENT_SECRET?.trim() ?? "";
   const oauthRefreshToken = env.GOOGLE_OAUTH_REFRESH_TOKEN?.trim() ?? "";
@@ -162,16 +164,20 @@ export function getRuntimeBookingConfig(env: NodeJS.ProcessEnv = process.env): R
     issues.push("GOOGLE_CALENDAR_ID is required.");
   }
 
-  if (!oauthClientId) {
-    issues.push("GOOGLE_OAUTH_CLIENT_ID is required.");
-  }
+  const hasServiceAccountCredentials = Boolean(googleApplicationCredentials);
 
-  if (!oauthClientSecret) {
-    issues.push("GOOGLE_OAUTH_CLIENT_SECRET is required.");
-  }
+  if (!hasServiceAccountCredentials) {
+    if (!oauthClientId) {
+      issues.push("GOOGLE_OAUTH_CLIENT_ID is required when GOOGLE_APPLICATION_CREDENTIALS is not set.");
+    }
 
-  if (!oauthRefreshToken) {
-    issues.push("GOOGLE_OAUTH_REFRESH_TOKEN is required.");
+    if (!oauthClientSecret) {
+      issues.push("GOOGLE_OAUTH_CLIENT_SECRET is required when GOOGLE_APPLICATION_CREDENTIALS is not set.");
+    }
+
+    if (!oauthRefreshToken) {
+      issues.push("GOOGLE_OAUTH_REFRESH_TOKEN is required when GOOGLE_APPLICATION_CREDENTIALS is not set.");
+    }
   }
 
   if (issues.length > 0) {
@@ -187,6 +193,7 @@ export function getRuntimeBookingConfig(env: NodeJS.ProcessEnv = process.env): R
     config: {
       timezone,
       calendarId,
+      googleApplicationCredentials,
       oauthClientId,
       oauthClientSecret,
       oauthRefreshToken,
