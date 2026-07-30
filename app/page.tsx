@@ -1,15 +1,17 @@
 import { SiteShell } from "@/components/layout/site-shell";
 import { LocationsExplorer } from "@/components/experience/locations-explorer";
-import { Container } from "@/components/ui/container";
-import { SectionTitle } from "@/components/ui/section-title";
+import { ScientificSectionBlock } from "@/components/experience";
 import {
   ApplicationsSection,
   ContactSection,
   HomeCtaSection,
   HeroSection,
   MnsiJourneySection,
+  ProprietaryMethodsHomeSection,
   PublicProcessesSection,
   ResearchSection,
+  ScientificEcosystemHomeSection,
+  ScientificKnowledgeHubHomeSection,
   TechnologySection,
 } from "@/modules/website/home/sections";
 import { getNeuroSportsHomeContent } from "@/lib/neurosports-home-content";
@@ -23,18 +25,18 @@ export default function Home() {
       <PublicProcessesSection />
       <ApplicationsSection />
       <MnsiJourneySection />
+      <ProprietaryMethodsHomeSection />
+      <ScientificEcosystemHomeSection />
+      <ScientificKnowledgeHubHomeSection />
       <TechnologySection />
       <ResearchSection />
-      <section className="border-b nsu-border" id="locations">
-        <Container className="py-24 lg:py-28">
-          <SectionTitle
-            eyebrow={content.locations.eyebrow}
-            title={content.locations.title}
-            description={content.locations.intro}
-          />
-          <LocationsExplorer className="mt-14" locale="en" />
-        </Container>
-      </section>
+      <ScientificSectionBlock
+        id="locations"
+        label={content.locations.eyebrow}
+        title={content.locations.title}
+        description={content.locations.intro}
+        content={<LocationsExplorer locale="en" />}
+      />
       <HomeCtaSection />
       <ContactSection />
     </SiteShell>
