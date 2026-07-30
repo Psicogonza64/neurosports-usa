@@ -7,9 +7,9 @@ import {
   getGoogleCalendarClient,
   getRuntimeBookingConfig,
   getWorkingWindowsForDate,
-  isValidCalendarDateInput,
   isDateWithinAdvanceWindow,
   isSunday,
+  isValidCalendarDateInput,
   localDateTimeToUtc,
   toCalendarPublicError,
 } from "@/lib/server/google-calendar";
@@ -19,12 +19,66 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const runtime = "nodejs";
 
+type CalendarStage = "authentication" | "freebusy" | "slots";
+
 function noStoreJson(data: unknown, status = 200) {
   return NextResponse.json(data, {
     status,
     headers: {
       "Cache-Control": "no-store",
     },
+  });
+}
+
+function getSafeErrorDetails(error: unknown) {
+  const details = error as {
+    name?: string;
+    code?: number | string;
+    status?: number | string;
+    message?: string;
+    response?: {
+      status?: number | string;
+      data?: {
+        error?:
+          | string
+          | {
+              error?: string;
+              error_description?: string;
+              message?: string;
+            };
+      };
+    };
+    errors?: Array<{ reason?: string; message?: string }>;
+  };
+
+  const oauthError =
+    typeof details.response?.data?.error === "string"
+      ? details.response.data.error
+      : details.response?.data?.error?.error;
+
+  const oauthDescription =
+    typeof details.response?.data?.error === "object"
+      ? details.response.data.error?.error_description ?? details.response.data.error?.message
+      : undefined;
+
+  return {
+    name: details.name ?? "UnknownError",
+    httpStatus: details.status ?? details.code ?? details.response?.status,
+    oauthError: oauthError ?? details.errors?.[0]?.reason,
+    description: oauthDescription ?? details.message ?? details.errors?.[0]?.message,
+  };
+}
+
+function logCalendarDiagnostics(stage: CalendarStage, error: unknown, context: { date: string }) {
+  const safe = getSafeErrorDetails(error);
+
+  console.error("[calendar-availability] Google Calendar failure", {
+    stage,
+    date: context.date,
+    errorName: safe.name,
+    httpStatus: safe.httpStatus,
+    oauthError: safe.oauthError,
+    description: safe.description,
   });
 }
 
@@ -55,12 +109,14 @@ export async function GET(request: Request) {
     runGoogleCalendarDeterministicChecks();
   }
 
-  if (!isDateWithinAdvanceWindow({
-    date,
-    now: new Date(),
-    timeZone: configResult.config.timezone,
-    maxAdvanceDays: configResult.config.maximumAdvanceBookingDays,
-  })) {
+  if (
+    !isDateWithinAdvanceWindow({
+      date,
+      now: new Date(),
+      timeZone: configResult.config.timezone,
+      maxAdvanceDays: configResult.config.maximumAdvanceBookingDays,
+    })
+  ) {
     return noStoreJson({ message: "Selected date is outside the booking window." }, 400);
   }
 
@@ -81,24 +137,49 @@ export async function GET(request: Request) {
   );
 
   try {
-    const { client, config } = await getGoogleCalendarClient();
-    const busy = await getBusyPeriods({
-      calendar: client,
-      calendarId: config.calendarId,
-      timeMin: firstWindowStart.toISOString(),
-      timeMax: lastWindowEnd.toISOString(),
-    });
+    let client: Awaited<ReturnType<typeof getGoogleCalendarClient>>["client"];
+    let config: Awaited<ReturnType<typeof getGoogleCalendarClient>>["config"];
 
-    const slots = calculateAvailableSlots({
-      date,
-      timeZone: config.timezone,
-      windows,
-      busyPeriods: busy,
-      durationMinutes: config.durationMinutes,
-      bufferMinutes: config.bufferMinutes,
-      minimumBookingNoticeHours: config.minimumBookingNoticeHours,
-      now: new Date(),
-    });
+    try {
+      const calendarClient = await getGoogleCalendarClient();
+      client = calendarClient.client;
+      config = calendarClient.config;
+    } catch (error) {
+      logCalendarDiagnostics("authentication", error, { date });
+      throw error;
+    }
+
+    let busy: Awaited<ReturnType<typeof getBusyPeriods>>;
+
+    try {
+      busy = await getBusyPeriods({
+        calendar: client,
+        calendarId: config.calendarId,
+        timeMin: firstWindowStart.toISOString(),
+        timeMax: lastWindowEnd.toISOString(),
+      });
+    } catch (error) {
+      logCalendarDiagnostics("freebusy", error, { date });
+      throw error;
+    }
+
+    let slots: ReturnType<typeof calculateAvailableSlots>;
+
+    try {
+      slots = calculateAvailableSlots({
+        date,
+        timeZone: config.timezone,
+        windows,
+        busyPeriods: busy,
+        durationMinutes: config.durationMinutes,
+        bufferMinutes: config.bufferMinutes,
+        minimumBookingNoticeHours: config.minimumBookingNoticeHours,
+        now: new Date(),
+      });
+    } catch (error) {
+      logCalendarDiagnostics("slots", error, { date });
+      throw error;
+    }
 
     return noStoreJson({ date, timezone: config.timezone, slots });
   } catch (error) {
