@@ -12,13 +12,15 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b nsu-border bg-[color:color-mix(in_srgb,var(--color-background)_90%,white)]/96 shadow-[0_10px_26px_-24px_rgba(43,42,40,0.7)] backdrop-blur-md">
-      <Container className="flex items-center justify-between gap-6 py-3.5 lg:py-4">
+      <Container className="flex items-center justify-between gap-6 py-4 lg:py-[1.15rem]">
         <Link
           className="rounded-md px-1 py-1 text-[var(--color-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_srgb,var(--color-primary)_42%,white)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
           href="/"
         >
-          <span className="block text-sm font-semibold leading-none tracking-[0.08em]">NeuroSports</span>
-          <span className="block pt-0.5 text-[0.37em] font-medium leading-none tracking-[0.26em] text-[var(--color-muted)]">
+          <span className="block text-[1.06rem] font-semibold leading-[1.02] tracking-[0.04em] sm:text-[1.14rem] lg:text-[1.3rem]">
+            NeuroSports
+          </span>
+          <span className="block pt-1 text-[0.56rem] font-medium leading-none tracking-[0.14em] text-[color:color-mix(in_srgb,var(--color-foreground)_72%,var(--color-muted))] sm:text-[0.6rem] lg:text-[0.64rem]">
             The Brain Matters
           </span>
         </Link>
