@@ -30,7 +30,6 @@ export function NeuroSportsHeroExperience({
       <Container className="grid gap-10 py-12 md:gap-12 md:py-14 lg:py-16 xl:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] xl:items-center xl:gap-14 xl:py-18">
         <div className="order-2 max-w-2xl space-y-8 xl:order-1 xl:pr-2">
           <div className={experienceRhythm.headerStack}>
-            <p className={experienceRhythm.eyebrow}>{content.eyebrow}</p>
             <h1 className={cn(experienceRhythm.heroTitle, "whitespace-pre-line text-balance")}>{content.title}</h1>
             <p className={experienceRhythm.heroBody}>{content.subtitle}</p>
           </div>
