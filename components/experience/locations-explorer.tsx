@@ -59,11 +59,13 @@ function mapDayLabel(day: BookingDay, locale: BookingLocale) {
 function LocationImage({
   item,
   mobile = false,
+  showImage = true,
 }: {
   item: LocationCenter;
   mobile?: boolean;
+  showImage?: boolean;
 }) {
-  if (item.id === "houston") {
+  if (item.id === "houston" && !showImage) {
     return null;
   }
 
@@ -128,7 +130,7 @@ function ExpandedLocationPanel({
 
   return (
     <ScientificCard className="min-w-0 w-full max-w-full overflow-hidden p-0">
-      <LocationImage item={item} />
+      <LocationImage item={item} showImage={false} />
 
       <div id={`location-panel-${item.id}`} className="space-y-5 p-6 sm:p-7">
         <div className="flex items-start justify-between gap-4">
