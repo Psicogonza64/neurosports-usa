@@ -248,7 +248,7 @@ function MobileDiagram({
                   node={node}
                   isActive={isActive}
                   panelId={`scientific-mobile-panel-${node.id}`}
-                  onClick={() => setActiveNodeId((current) => (current === node.id ? null : node.id))}
+                  onClick={() => setActiveNodeId(node.id)}
                   onActivate={() => setActiveNodeId(node.id)}
                   className="w-full rounded-[0.95rem] border-0 text-left text-[12px]"
                 />
@@ -438,7 +438,15 @@ export function ScientificJourneyDiagram({
           classes.frame,
         )}
       >
-        <div className="relative flex items-center justify-center">
+        <div
+          className={cn(
+            "relative",
+            mode === "compact"
+              ? ""
+              : "lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(15rem,0.72fr)] lg:items-start lg:gap-4",
+          )}
+        >
+          <div className="relative flex items-center justify-center">
           <div
             className="pointer-events-none absolute inset-0 rounded-[1.35rem] bg-[radial-gradient(circle_at_24%_30%,color-mix(in_srgb,var(--ns-sage)_22%,transparent),transparent_44%),radial-gradient(circle_at_76%_66%,color-mix(in_srgb,var(--ns-gold-soft)_20%,transparent),transparent_48%)] transition-transform duration-500 ease-out motion-reduce:transition-none"
             style={motionEnabled ? {
@@ -476,16 +484,16 @@ export function ScientificJourneyDiagram({
                   node={node}
                   isActive={activeNodeId === node.id}
                   panelId={`scientific-panel-${node.id}`}
-                  onClick={() => setActiveNodeId((current) => (current === node.id ? null : node.id))}
+                  onClick={() => setActiveNodeId(node.id)}
                   onActivate={() => setActiveNodeId(node.id)}
                   className={cn("absolute", classes.node, desktopNodePositions[node.id])}
                 />
               ))}
             </div>
           </div>
-        </div>
+          </div>
 
-        <div className={classes.detail}>
+        <div className={cn(classes.detail, mode === "compact" ? "" : "lg:mt-0")}>
           {activeNode ? (
             <div className="animate-[ns-fade-in_180ms_ease-out] motion-reduce:animate-none">
               <DetailPanel
@@ -503,6 +511,7 @@ export function ScientificJourneyDiagram({
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 }
