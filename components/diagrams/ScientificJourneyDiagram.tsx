@@ -8,6 +8,7 @@ import {
   type HeroInteractiveNode,
   type HeroInteractiveNodeId,
 } from "@/lib/neurosports-hero-interactive-content";
+import { InteractiveBrain3D } from "@/components/diagrams/InteractiveBrain3D";
 import { cn } from "@/utils/cn";
 
 type ScientificJourneyMode = "hero" | "section" | "compact";
@@ -69,29 +70,6 @@ const relatedPaths: Record<HeroInteractiveNodeId, JourneyPathId[]> = {
   neuroperformance: ["path-mnsi-performance", "path-performance-outcomes"],
   "functional-outcomes": ["path-clinical-outcomes", "path-performance-outcomes"],
 };
-
-function BrainSilhouette() {
-  return (
-    <svg
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0 z-[4] h-full w-full opacity-[0.08]"
-      viewBox="0 0 120 120"
-      fill="none"
-      preserveAspectRatio="xMidYMid meet"
-    >
-      <path
-        d="M60 18c-10 0-18 7-20 16-9 0-16 7-16 16 0 6 3 11 8 14-1 2-2 5-2 8 0 9 7 16 16 16h28c10 0 18-8 18-18 0-3-1-6-2-8 5-3 8-8 8-14 0-9-7-16-16-16-2-9-10-14-22-14z"
-        stroke="var(--ns-sage-dark)"
-        strokeWidth="1.6"
-      />
-      <path d="M60 30v56" stroke="var(--ns-sage-dark)" strokeWidth="1.2" />
-      <path d="M42 44c5 0 9 4 9 9" stroke="var(--ns-sage-dark)" strokeWidth="1.2" />
-      <path d="M78 44c-5 0-9 4-9 9" stroke="var(--ns-sage-dark)" strokeWidth="1.2" />
-      <path d="M43 62c4 0 7 3 7 7" stroke="var(--ns-sage-dark)" strokeWidth="1.2" />
-      <path d="M77 62c-4 0-7 3-7 7" stroke="var(--ns-sage-dark)" strokeWidth="1.2" />
-    </svg>
-  );
-}
 
 function ConnectorPaths({ activeNodeId }: { activeNodeId: HeroInteractiveNodeId | null }) {
   const activePathIds = activeNodeId ? relatedPaths[activeNodeId] : [];
@@ -290,6 +268,7 @@ export function ScientificJourneyDiagram({
   const [motionEnabled, setMotionEnabled] = useState(false);
   const [pointerMotionEnabled, setPointerMotionEnabled] = useState(false);
   const [wideLayout, setWideLayout] = useState(false);
+  const [wideViewport, setWideViewport] = useState<boolean | null>(null);
 
   const rootRef = useRef<HTMLDivElement | null>(null);
 
@@ -351,13 +330,20 @@ export function ScientificJourneyDiagram({
   }, []);
 
   useEffect(() => {
+    const query = window.matchMedia("(min-width: 1200px)");
+    const update = () => setWideViewport(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
     if (!motionEnabled || !rootRef.current) {
       return;
     }
 
     const root = rootRef.current;
     let frame = 0;
-
     const updateScrollVariable = () => {
       const offset = Math.max(-20, Math.min(20, window.scrollY * 0.035));
       root.style.setProperty("--rsfn-scroll", `${offset.toFixed(2)}px`);
@@ -447,7 +433,10 @@ export function ScientificJourneyDiagram({
         <p className="mt-1.5 text-sm leading-6 text-[var(--ns-muted-text)]">From functional evaluation to measurable outcomes.</p>
       </div>
 
-      <div>
+      {wideViewport !== true ? <div>
+        <div className="relative mb-4 h-56 overflow-hidden rounded-[1rem] border border-[var(--ns-border)] bg-[radial-gradient(circle_at_50%_45%,color-mix(in_srgb,var(--ns-sage)_20%,transparent),transparent_60%),color-mix(in_srgb,var(--ns-ivory)_78%,white)] sm:h-64 md:h-72">
+          <InteractiveBrain3D activeNodeId={activeNodeId} className="absolute inset-0" />
+        </div>
         <MobileDiagram
           nodes={content.nodes}
           activeNodeId={activeNodeId}
@@ -455,9 +444,9 @@ export function ScientificJourneyDiagram({
           closeLabel={content.closeLabel}
           learnMoreLabel={content.learnMoreLabel}
         />
-      </div>
+      </div> : null}
 
-      <div
+      {wideViewport === true ? <div
         className={cn(
           "ns-hero-enter hidden min-[1200px]:block border-[var(--ns-border)] bg-[linear-gradient(160deg,color-mix(in_srgb,var(--ns-ivory)_82%,white),color-mix(in_srgb,var(--ns-bone)_86%,white))]",
           classes.frame,
@@ -485,15 +474,7 @@ export function ScientificJourneyDiagram({
               transform: "translate3d(calc(var(--rsfn-cursor-x) * 0.07), calc((var(--rsfn-cursor-y) + var(--rsfn-scroll)) * 0.05), 0)",
             } : undefined}
           >
-            <div
-              className="absolute inset-0"
-              style={motionEnabled ? {
-                transform: "translate3d(calc(var(--rsfn-cursor-x) * -0.04), calc(var(--rsfn-cursor-y) * -0.03), 0)",
-              } : undefined}
-            >
-              <BrainSilhouette />
-            </div>
-            {/* TODO: Replace SVG brain with final transparent anatomical asset during visual phase. */}
+            <InteractiveBrain3D activeNodeId={activeNodeId} className="pointer-events-auto absolute inset-0 z-[4]" />
             <div
               style={motionEnabled ? {
                 transform: "translate3d(calc(var(--rsfn-cursor-x) * 0.03), calc((var(--rsfn-cursor-y) + var(--rsfn-scroll)) * 0.03), 0)",
@@ -536,7 +517,7 @@ export function ScientificJourneyDiagram({
           )}
         </div>
       </div>
-    </div>
+      </div> : null}
     </div>
   );
 }
