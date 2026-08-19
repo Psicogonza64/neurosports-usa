@@ -10,3 +10,4 @@ service-account*.json
 *.pem
 *.p12
 *.key
+.env*
