@@ -100,8 +100,8 @@ function ConnectorPaths({ activeNodeId }: { activeNodeId: HeroInteractiveNodeId 
     cn(
       "ns-journey-path transition-[stroke,opacity] duration-220 ease-out motion-reduce:transition-none",
       activePathIds.includes(pathId)
-        ? "stroke-[color:color-mix(in_srgb,var(--ns-sage-dark)_72%,var(--ns-gold))] opacity-100"
-        : "stroke-[color:color-mix(in_srgb,var(--ns-sand)_48%,var(--ns-charcoal))] opacity-85",
+        ? "stroke-[color:color-mix(in_srgb,var(--ns-sage-dark)_78%,var(--ns-gold))] stroke-[1.35] opacity-100"
+        : "stroke-[color:color-mix(in_srgb,var(--ns-sage-dark)_58%,var(--ns-charcoal))] stroke-[1.15] opacity-90",
     );
 
   return (
@@ -442,6 +442,11 @@ export function ScientificJourneyDiagram({
         ["--rsfn-scroll" as string]: "0px",
       }}
     >
+      <div className="mb-5 px-1 sm:mb-6">
+        <h2 className="text-lg leading-tight text-[var(--ns-charcoal)] sm:text-xl">NeuroSports Scientific Journey</h2>
+        <p className="mt-1.5 text-sm leading-6 text-[var(--ns-muted-text)]">From functional evaluation to measurable outcomes.</p>
+      </div>
+
       <div>
         <MobileDiagram
           nodes={content.nodes}
