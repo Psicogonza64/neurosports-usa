@@ -159,7 +159,14 @@ function NodeButton({
         className,
       )}
     >
-      {node.title}
+      {node.id === "rsfn" ? (
+        <>
+          <span className="block">{node.title.replace(" (RSFN)", "")}</span>
+          <span className="block">(RSFN)</span>
+        </>
+      ) : (
+        node.title
+      )}
     </button>
   );
 }
@@ -232,14 +239,9 @@ function MobileDiagram({
   const activeNode = nodes.find((node) => node.id === activeNodeId) ?? null;
 
   return (
-    <div className="md:hidden">
+    <div className="min-[1200px]:hidden">
       <div className="ns-hero-enter rounded-[1.15rem] border border-[var(--ns-border)] bg-[color:color-mix(in_srgb,var(--ns-ivory)_82%,white)] p-3">
-        <div className="relative mb-3 aspect-[6/5] overflow-hidden rounded-[0.9rem] border border-[var(--ns-border)] bg-[radial-gradient(circle_at_50%_45%,color-mix(in_srgb,var(--ns-sage)_26%,transparent),transparent_55%),linear-gradient(160deg,color-mix(in_srgb,var(--ns-ivory)_80%,white),color-mix(in_srgb,var(--ns-bone)_84%,white))]">
-          <BrainSilhouette />
-          {/* TODO: Replace SVG brain with final transparent anatomical asset during visual phase. */}
-        </div>
-
-        <div className="space-y-2">
+        <div className="mx-auto w-full max-w-[34rem] space-y-2">
           {nodes.map((node, index) => {
             const isActive = activeNodeId === node.id;
             return (
@@ -253,14 +255,14 @@ function MobileDiagram({
                   className="w-full rounded-[0.95rem] border-0 text-left text-[12px]"
                 />
                 {index < nodes.length - 1 ? (
-                  <p className="pb-2 text-center text-xs text-[var(--ns-sage-dark)]" aria-hidden="true">↓</p>
+                  <p className="py-2 text-center text-sm leading-none text-[var(--ns-sage-dark)]" aria-hidden="true">↓</p>
                 ) : null}
               </div>
             );
           })}
         </div>
 
-        <div className="mt-3">
+        <div className="mx-auto mt-4 w-full max-w-[34rem]">
           {activeNode ? (
             <DetailPanel
               node={activeNode}
@@ -287,6 +289,7 @@ export function ScientificJourneyDiagram({
   const [activeNodeId, setActiveNodeId] = useState<HeroInteractiveNodeId | null>(null);
   const [motionEnabled, setMotionEnabled] = useState(false);
   const [pointerMotionEnabled, setPointerMotionEnabled] = useState(false);
+  const [wideLayout, setWideLayout] = useState(false);
 
   const rootRef = useRef<HTMLDivElement | null>(null);
 
@@ -328,6 +331,23 @@ export function ScientificJourneyDiagram({
       reduceMotionQuery.removeEventListener("change", update);
       pointerQuery.removeEventListener("change", update);
     };
+  }, []);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root || typeof ResizeObserver === "undefined") {
+      return;
+    }
+
+    const updateLayout = () => {
+      setWideLayout(root.clientWidth >= 760);
+    };
+
+    updateLayout();
+    const observer = new ResizeObserver(updateLayout);
+    observer.observe(root);
+
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -415,14 +435,14 @@ export function ScientificJourneyDiagram({
   return (
     <div
       ref={rootRef}
-      className={cn("w-full", className)}
+      className={cn("w-full min-w-0", className)}
       style={{
         ["--rsfn-cursor-x" as string]: "0px",
         ["--rsfn-cursor-y" as string]: "0px",
         ["--rsfn-scroll" as string]: "0px",
       }}
     >
-      <div className={cn("md:hidden", mode === "compact" ? "block" : "block")}>
+      <div>
         <MobileDiagram
           nodes={content.nodes}
           activeNodeId={activeNodeId}
@@ -434,16 +454,16 @@ export function ScientificJourneyDiagram({
 
       <div
         className={cn(
-          "ns-hero-enter hidden border-[var(--ns-border)] bg-[linear-gradient(160deg,color-mix(in_srgb,var(--ns-ivory)_82%,white),color-mix(in_srgb,var(--ns-bone)_86%,white))] md:block",
+          "ns-hero-enter hidden min-[1200px]:block border-[var(--ns-border)] bg-[linear-gradient(160deg,color-mix(in_srgb,var(--ns-ivory)_82%,white),color-mix(in_srgb,var(--ns-bone)_86%,white))]",
           classes.frame,
         )}
       >
         <div
           className={cn(
             "relative",
-            mode === "compact"
+            mode === "compact" || !wideLayout
               ? ""
-              : "lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(15rem,0.72fr)] lg:items-start lg:gap-4",
+              : "min-[1200px]:grid min-[1200px]:grid-cols-[minmax(0,1fr)_minmax(15rem,0.72fr)] min-[1200px]:items-start min-[1200px]:gap-4",
           )}
         >
           <div className="relative flex items-center justify-center">
@@ -493,7 +513,7 @@ export function ScientificJourneyDiagram({
           </div>
           </div>
 
-        <div className={cn(classes.detail, mode === "compact" ? "" : "lg:mt-0")}>
+        <div className={cn(classes.detail, mode === "compact" || !wideLayout ? "" : "min-[1200px]:mt-0")}>
           {activeNode ? (
             <div className="animate-[ns-fade-in_180ms_ease-out] motion-reduce:animate-none">
               <DetailPanel
