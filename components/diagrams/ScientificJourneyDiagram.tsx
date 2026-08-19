@@ -127,12 +127,14 @@ function NodeButton({
   isActive,
   panelId,
   onClick,
+  onActivate,
   className,
 }: {
   node: HeroInteractiveNode;
   isActive: boolean;
   panelId: string;
   onClick: () => void;
+  onActivate: () => void;
   className?: string;
 }) {
   return (
@@ -143,6 +145,8 @@ function NodeButton({
       aria-expanded={isActive}
       aria-controls={panelId}
       aria-label={`${isActive ? "Collapse" : "Open"} details for ${node.title}`}
+      onMouseEnter={onActivate}
+      onFocus={onActivate}
       className={cn(
         "min-h-11 rounded-[1rem] border px-4 py-2.5 text-center font-medium leading-tight text-[var(--ns-charcoal)]",
         "bg-[color:color-mix(in_srgb,var(--ns-bone)_90%,white)] shadow-[0_16px_34px_-28px_rgba(43,42,40,0.72)]",
@@ -192,6 +196,14 @@ function DetailPanel({
           <span aria-hidden="true">×</span>
         </button>
       </div>
+      <ul className="mt-4 grid gap-2 border-t border-[var(--ns-border)] pt-4 text-sm leading-6 text-[var(--ns-charcoal)] sm:grid-cols-2">
+        {node.details.map((detail) => (
+          <li key={detail} className="flex gap-2">
+            <span aria-hidden="true" className="mt-[0.65rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--ns-gold)]" />
+            <span>{detail}</span>
+          </li>
+        ))}
+      </ul>
       <div className="mt-4">
         <a
           href={node.learnMoreHref}
@@ -237,6 +249,7 @@ function MobileDiagram({
                   isActive={isActive}
                   panelId={`scientific-mobile-panel-${node.id}`}
                   onClick={() => setActiveNodeId((current) => (current === node.id ? null : node.id))}
+                  onActivate={() => setActiveNodeId(node.id)}
                   className="w-full rounded-[0.95rem] border-0 text-left text-[12px]"
                 />
                 {index < nodes.length - 1 ? (
@@ -464,6 +477,7 @@ export function ScientificJourneyDiagram({
                   isActive={activeNodeId === node.id}
                   panelId={`scientific-panel-${node.id}`}
                   onClick={() => setActiveNodeId((current) => (current === node.id ? null : node.id))}
+                  onActivate={() => setActiveNodeId(node.id)}
                   className={cn("absolute", classes.node, desktopNodePositions[node.id])}
                 />
               ))}

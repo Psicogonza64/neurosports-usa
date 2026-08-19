@@ -12,6 +12,7 @@ export type HeroInteractiveNode = {
   id: HeroInteractiveNodeId;
   title: string;
   shortDescription: string;
+  details: string[];
   learnMoreHref: string;
 };
 
@@ -36,6 +37,7 @@ const heroInteractiveContent: Record<HeroInteractiveLocale, HeroInteractiveConte
         title: "Functional Evaluation",
         shortDescription:
           "Identifies cognitive strengths, functional needs and priorities through an individualized assessment process.",
+        details: ["Neuropsychological assessment", "Cognitive profiling", "Functional metrics"],
         learnMoreHref: "/what-we-do#functional-evaluation",
       },
       {
@@ -43,6 +45,7 @@ const heroInteractiveContent: Record<HeroInteractiveLocale, HeroInteractiveConte
         title: "Functional Brain Networks (RSFN)",
         shortDescription:
           "Connects assessment findings with the functional brain systems involved in cognition, behavior and performance.",
+        details: ["Functional brain networks", "Network-level interpretation", "Neurofunctional integration"],
         learnMoreHref: "/integrated-model#rsfn",
       },
       {
@@ -50,6 +53,7 @@ const heroInteractiveContent: Record<HeroInteractiveLocale, HeroInteractiveConte
         title: "MNSI Core",
         shortDescription:
           "Organizes intervention through a structured sequence of preparation, activation, training, consolidation and functional transfer.",
+        details: ["Structured neurorehabilitation", "Neuromodulation", "Cognitive rehabilitation", "Functional integration"],
         learnMoreHref: "/integrated-model#mnsi",
       },
       {
@@ -57,6 +61,7 @@ const heroInteractiveContent: Record<HeroInteractiveLocale, HeroInteractiveConte
         title: "Clinical Neuroscience",
         shortDescription:
           "Evaluation and rehabilitation pathways for cognitive, developmental, neurological and behavioral needs.",
+        details: ["Pediatric and adult applications", "Neurological and neuropsychiatric conditions", "Functional clinical translation"],
         learnMoreHref: "/what-we-do#clinical-neuroscience",
       },
       {
@@ -64,6 +69,7 @@ const heroInteractiveContent: Record<HeroInteractiveLocale, HeroInteractiveConte
         title: "NeuroPerformance",
         shortDescription:
           "Functional neuroscience applied to attention, decision-making, reaction time and performance environments.",
+        details: ["Sports cognition", "Reaction time", "Decision-making", "Cognitive performance"],
         learnMoreHref: "/what-we-do#neuroperformance",
       },
       {
@@ -71,6 +77,7 @@ const heroInteractiveContent: Record<HeroInteractiveLocale, HeroInteractiveConte
         title: "Functional Outcomes",
         shortDescription:
           "Progress is monitored through cognitive, clinical, academic, daily-life or sport-specific indicators.",
+        details: ["Functional change", "Daily-life performance", "Clinical progression", "Sports performance when applicable"],
         learnMoreHref: "/integrated-model#outcomes",
       },
     ],
@@ -87,6 +94,7 @@ const heroInteractiveContent: Record<HeroInteractiveLocale, HeroInteractiveConte
         title: "Evaluación funcional",
         shortDescription:
           "Identifica fortalezas cognitivas, necesidades funcionales y prioridades mediante un proceso de evaluación individualizado.",
+        details: ["Evaluación neuropsicológica", "Perfil cognitivo", "Métricas funcionales"],
         learnMoreHref: "/what-we-do#functional-evaluation",
       },
       {
@@ -94,6 +102,7 @@ const heroInteractiveContent: Record<HeroInteractiveLocale, HeroInteractiveConte
         title: "Redes cerebrales funcionales (RSFN)",
         shortDescription:
           "Relaciona los hallazgos de la evaluación con los sistemas cerebrales funcionales implicados en la cognición, la conducta y el rendimiento.",
+        details: ["Redes cerebrales funcionales", "Interpretación a nivel de redes", "Integración neurofuncional"],
         learnMoreHref: "/integrated-model#rsfn",
       },
       {
@@ -101,6 +110,7 @@ const heroInteractiveContent: Record<HeroInteractiveLocale, HeroInteractiveConte
         title: "Núcleo MNSI",
         shortDescription:
           "Organiza la intervención mediante una secuencia estructurada de preparación, activación, entrenamiento, consolidación y transferencia funcional.",
+        details: ["Neurorehabilitación estructurada", "Neuromodulación", "Rehabilitación cognitiva", "Integración funcional"],
         learnMoreHref: "/integrated-model#mnsi",
       },
       {
@@ -108,6 +118,7 @@ const heroInteractiveContent: Record<HeroInteractiveLocale, HeroInteractiveConte
         title: "Neurociencia Clínica",
         shortDescription:
           "Rutas de evaluación y rehabilitación para necesidades cognitivas, del desarrollo, neurológicas y conductuales.",
+        details: ["Aplicaciones pediátricas y adultas", "Condiciones neurológicas y neuropsiquiátricas", "Traducción clínica funcional"],
         learnMoreHref: "/what-we-do#clinical-neuroscience",
       },
       {
@@ -115,6 +126,7 @@ const heroInteractiveContent: Record<HeroInteractiveLocale, HeroInteractiveConte
         title: "NeuroPerformance",
         shortDescription:
           "Neurociencia funcional aplicada a la atención, la toma de decisiones, el tiempo de reacción y los entornos de rendimiento.",
+        details: ["Cognición deportiva", "Tiempo de reacción", "Toma de decisiones", "Rendimiento cognitivo"],
         learnMoreHref: "/what-we-do#neuroperformance",
       },
       {
@@ -122,6 +134,7 @@ const heroInteractiveContent: Record<HeroInteractiveLocale, HeroInteractiveConte
         title: "Resultados funcionales",
         shortDescription:
           "El progreso se monitorea mediante indicadores cognitivos, clínicos, académicos, cotidianos o específicos del deporte.",
+        details: ["Cambio funcional", "Rendimiento en la vida diaria", "Progresión clínica", "Rendimiento deportivo cuando corresponde"],
         learnMoreHref: "/integrated-model#outcomes",
       },
     ],
