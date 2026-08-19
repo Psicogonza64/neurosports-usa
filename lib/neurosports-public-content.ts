@@ -208,11 +208,6 @@ const contentByLocale: Record<PublicContentLocale, PublicContent> = {
             "Houston, Texas 77079",
             "United States",
           ],
-          imagePath: "/images/locations/houston/neurosports-houston-team-building.jpg",
-          imageAlt:
-            "NeuroSports USA team outside the Houston center at 11777 Katy Freeway.",
-          imageCaption:
-            "NeuroSports USA clinical and NeuroPerformance team at the Houston center.",
           hasApprovedImage: false,
           viewHref: "#locations",
           directionsHref: "https://maps.google.com/?q=11777+Katy+Freeway+Suite+410S+Houston+Texas+77079",
@@ -285,11 +280,6 @@ const contentByLocale: Record<PublicContentLocale, PublicContent> = {
             "Houston, Texas 77079",
             "United States",
           ],
-          imagePath: "/images/locations/houston/neurosports-houston-team-building.jpg",
-          imageAlt:
-            "NeuroSports USA team outside the Houston center at 11777 Katy Freeway.",
-          imageCaption:
-            "NeuroSports USA clinical and NeuroPerformance team at the Houston center.",
           hasApprovedImage: false,
           viewHref: "#locations",
           directionsHref: "https://maps.google.com/?q=11777+Katy+Freeway+Suite+410S+Houston+Texas+77079",

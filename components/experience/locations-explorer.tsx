@@ -63,6 +63,10 @@ function LocationImage({
   item: LocationCenter;
   mobile?: boolean;
 }) {
+  if (item.id === "houston") {
+    return null;
+  }
+
   if (item.hasApprovedImage && item.imagePath) {
     return (
       <figure className="w-full max-w-full border-b border-[color:color-mix(in_srgb,var(--color-secondary)_12%,var(--color-border))]">
