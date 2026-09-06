@@ -99,8 +99,9 @@ const locationsByLocale: Record<LocationsLocale, LocationsContent> = {
         mapQuery: "Carrera 35A No 48-134 Bucaramanga Santander Colombia",
         mapTitle:
           "Map showing CENPA IPS Bucaramanga Center at Carrera 35A No. 48-134.",
-        imagePath: "/images/locations/bucaramanga/cenpa-bucaramanga-front.jpg",
-        hasApprovedImage: false,
+        imagePath: "/images/locations/bucaramanga/neurosports-bucaramanga-facade.png",
+        imageAlt: "NeuroSports Bucaramanga - Centro de Optimizacion Cerebral.",
+        hasApprovedImage: true,
         viewHref: "#locations",
       },
     ],
@@ -173,8 +174,9 @@ const locationsByLocale: Record<LocationsLocale, LocationsContent> = {
         mapQuery: "Carrera 35A No 48-134 Bucaramanga Santander Colombia",
         mapTitle:
           "Map showing CENPA IPS Bucaramanga Center at Carrera 35A No. 48-134.",
-        imagePath: "/images/locations/bucaramanga/cenpa-bucaramanga-front.jpg",
-        hasApprovedImage: false,
+        imagePath: "/images/locations/bucaramanga/neurosports-bucaramanga-facade.png",
+        imageAlt: "NeuroSports Bucaramanga - Centro de Optimizacion Cerebral.",
+        hasApprovedImage: true,
         viewHref: "#locations",
       },
     ],

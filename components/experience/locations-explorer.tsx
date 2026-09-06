@@ -65,7 +65,7 @@ function LocationImage({
   mobile?: boolean;
   showImage?: boolean;
 }) {
-  if (item.id === "houston" && !showImage) {
+  if (!showImage) {
     return null;
   }
 
