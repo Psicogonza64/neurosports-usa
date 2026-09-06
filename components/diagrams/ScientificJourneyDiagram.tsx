@@ -19,14 +19,6 @@ type ScientificJourneyDiagramProps = {
   className?: string;
 };
 
-type JourneyPathId =
-  | "path-evaluation-rsfn"
-  | "path-rsfn-mnsi"
-  | "path-mnsi-clinical"
-  | "path-mnsi-performance"
-  | "path-clinical-outcomes"
-  | "path-performance-outcomes";
-
 const modeClasses: Record<ScientificJourneyMode, {
   frame: string;
   figure: string;
@@ -34,10 +26,10 @@ const modeClasses: Record<ScientificJourneyMode, {
   node: string;
 }> = {
   hero: {
-    frame: "rounded-[2rem] border p-5 md:p-6 lg:p-7",
-    figure: "aspect-[4/5]",
+    frame: "border p-4 md:p-5 lg:p-6",
+    figure: "aspect-square",
     detail: "mt-4 min-h-[9rem]",
-    node: "w-[9.5rem] text-[11px] lg:w-[11.6rem] lg:text-[11.5px] xl:w-[12.8rem] xl:text-[12px]",
+    node: "w-28 text-[10px] lg:w-32 lg:text-[10.5px]",
   },
   section: {
     frame: "rounded-[1.75rem] border p-4 md:p-5 lg:p-6",
@@ -54,51 +46,13 @@ const modeClasses: Record<ScientificJourneyMode, {
 };
 
 const desktopNodePositions: Record<HeroInteractiveNodeId, string> = {
-  "functional-evaluation": "left-1/2 top-[7%] -translate-x-1/2",
-  rsfn: "left-1/2 top-[24%] -translate-x-1/2",
-  "mnsi-core": "left-1/2 top-[42%] -translate-x-1/2",
-  "clinical-neuroscience": "left-[0.5%] top-[61%]",
-  neuroperformance: "right-[0.5%] top-[61%]",
-  "functional-outcomes": "left-1/2 top-[83%] -translate-x-1/2",
+  "functional-evaluation": "left-[2%] top-[13%]",
+  rsfn: "right-[2%] top-[13%]",
+  "mnsi-core": "left-1/2 top-[1.5%] -translate-x-1/2",
+  "clinical-neuroscience": "left-[2%] bottom-[16%]",
+  neuroperformance: "right-[2%] bottom-[16%]",
+  "functional-outcomes": "bottom-[3%] left-1/2 -translate-x-1/2",
 };
-
-const relatedPaths: Record<HeroInteractiveNodeId, JourneyPathId[]> = {
-  "functional-evaluation": ["path-evaluation-rsfn"],
-  rsfn: ["path-evaluation-rsfn", "path-rsfn-mnsi"],
-  "mnsi-core": ["path-rsfn-mnsi", "path-mnsi-clinical", "path-mnsi-performance"],
-  "clinical-neuroscience": ["path-mnsi-clinical", "path-clinical-outcomes"],
-  neuroperformance: ["path-mnsi-performance", "path-performance-outcomes"],
-  "functional-outcomes": ["path-clinical-outcomes", "path-performance-outcomes"],
-};
-
-function ConnectorPaths({ activeNodeId }: { activeNodeId: HeroInteractiveNodeId | null }) {
-  const activePathIds = activeNodeId ? relatedPaths[activeNodeId] : [];
-
-  const pathClass = (pathId: JourneyPathId) =>
-    cn(
-      "ns-journey-path transition-[stroke,opacity] duration-220 ease-out motion-reduce:transition-none",
-      activePathIds.includes(pathId)
-        ? "stroke-[color:color-mix(in_srgb,var(--ns-sage-dark)_78%,var(--ns-gold))] stroke-[1.35] opacity-100"
-        : "stroke-[color:color-mix(in_srgb,var(--ns-sage-dark)_58%,var(--ns-charcoal))] stroke-[1.15] opacity-90",
-    );
-
-  return (
-    <svg
-      aria-hidden="true"
-      className="absolute inset-0 z-[6] h-full w-full"
-      viewBox="0 0 100 100"
-      fill="none"
-      preserveAspectRatio="none"
-    >
-      <path id="path-evaluation-rsfn" d="M50 12.5V23.3" className={pathClass("path-evaluation-rsfn")} strokeWidth="0.92" strokeLinecap="round" />
-      <path id="path-rsfn-mnsi" d="M50 29.4V40.2" className={pathClass("path-rsfn-mnsi")} strokeWidth="0.92" strokeLinecap="round" />
-      <path id="path-mnsi-clinical" d="M49 47.8C43.8 54.2 38.6 59.3 30.8 65.2" className={pathClass("path-mnsi-clinical")} strokeWidth="0.92" strokeLinecap="round" />
-      <path id="path-mnsi-performance" d="M51 47.8C56.2 54.2 61.4 59.3 69.2 65.2" className={pathClass("path-mnsi-performance")} strokeWidth="0.92" strokeLinecap="round" />
-      <path id="path-clinical-outcomes" d="M30.8 70.8C38.8 78.2 45 82.2 50 84.8" className={pathClass("path-clinical-outcomes")} strokeWidth="0.92" strokeLinecap="round" />
-      <path id="path-performance-outcomes" d="M69.2 70.8C61.2 78.2 55 82.2 50 84.8" className={pathClass("path-performance-outcomes")} strokeWidth="0.92" strokeLinecap="round" />
-    </svg>
-  );
-}
 
 function NodeButton({
   node,
@@ -126,14 +80,14 @@ function NodeButton({
       onMouseEnter={onActivate}
       onFocus={onActivate}
       className={cn(
-        "min-h-11 rounded-[1rem] border px-4 py-2.5 text-center font-medium leading-tight text-[var(--ns-charcoal)]",
-        "bg-[color:color-mix(in_srgb,var(--ns-bone)_90%,white)] shadow-[0_16px_34px_-28px_rgba(43,42,40,0.72)]",
+        "min-h-10 rounded-full border px-3 py-2 text-center font-medium leading-tight text-[var(--ns-charcoal)]",
+        "bg-[color:color-mix(in_srgb,var(--ns-bone)_94%,white)] shadow-[0_12px_24px_-22px_rgba(43,42,40,0.68)]",
         "transition-[border-color,transform,box-shadow,background-color] duration-200 ease-out motion-reduce:transition-none",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_srgb,var(--ns-gold)_52%,white)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ns-ivory)]",
         isActive
           ? "border-[color:color-mix(in_srgb,var(--ns-gold)_74%,var(--ns-sage-dark))] bg-[color:color-mix(in_srgb,var(--ns-gold-soft)_46%,var(--ns-bone))] shadow-[0_18px_36px_-28px_rgba(43,42,40,0.78)]"
           : "border-[color:color-mix(in_srgb,var(--ns-sage-dark)_24%,var(--ns-border))] hover:border-[color:color-mix(in_srgb,var(--ns-sage-dark)_60%,var(--ns-border))] hover:bg-[color:color-mix(in_srgb,var(--ns-sage)_18%,var(--ns-bone))]",
-        "hover:-translate-y-[1px] hover:shadow-[0_18px_36px_-28px_rgba(43,42,40,0.75)]",
+        "hover:-translate-y-[1px] hover:shadow-[0_16px_28px_-22px_rgba(43,42,40,0.72)]",
         className,
       )}
     >
@@ -218,19 +172,19 @@ function MobileDiagram({
 
   return (
     <div className="min-[1200px]:hidden">
-      <div className="ns-hero-enter rounded-[1.15rem] border border-[var(--ns-border)] bg-[color:color-mix(in_srgb,var(--ns-ivory)_82%,white)] p-3">
-        <div className="mx-auto w-full max-w-[34rem] space-y-2">
+      <div className="ns-hero-enter border-t border-[var(--ns-border)] pt-2">
+        <div className="mx-auto w-full max-w-[34rem]">
           {nodes.map((node, index) => {
             const isActive = activeNodeId === node.id;
             return (
-              <div key={node.id} className="rounded-[0.95rem] border border-[var(--ns-border)] bg-[var(--ns-bone)]">
+              <div key={node.id} className="border-b border-[var(--ns-border)]">
                 <NodeButton
                   node={node}
                   isActive={isActive}
                   panelId={`scientific-mobile-panel-${node.id}`}
                   onClick={() => setActiveNodeId(node.id)}
                   onActivate={() => setActiveNodeId(node.id)}
-                  className="w-full rounded-[0.95rem] border-0 text-left text-[12px]"
+                  className="w-full rounded-none border-0 bg-transparent px-3 text-left text-[12px] shadow-none"
                 />
                 {index < nodes.length - 1 ? (
                   <p className="py-2 text-center text-sm leading-none text-[var(--ns-sage-dark)]" aria-hidden="true">↓</p>
@@ -287,6 +241,13 @@ export function ScientificJourneyDiagram({
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
+
+  useEffect(() => {
+    const stageId = new URLSearchParams(window.location.search).get("journeyState") as HeroInteractiveNodeId | null;
+    if (!stageId || !content.nodes.some((node) => node.id === stageId)) return;
+    const timer = window.setTimeout(() => setActiveNodeId(stageId), 0);
+    return () => window.clearTimeout(timer);
+  }, [content.nodes]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -437,6 +398,7 @@ export function ScientificJourneyDiagram({
         <div className="relative mb-4 h-56 overflow-hidden rounded-[1rem] border border-[var(--ns-border)] bg-[radial-gradient(circle_at_50%_45%,color-mix(in_srgb,var(--ns-sage)_20%,transparent),transparent_60%),color-mix(in_srgb,var(--ns-ivory)_78%,white)] sm:h-64 md:h-72">
           <InteractiveBrain3D activeNodeId={activeNodeId} className="absolute inset-0" />
         </div>
+        {activeNodeId === "rsfn" ? <p className="mb-4 break-words text-xs leading-5 text-[var(--ns-muted-text)]">Conceptual functional-network visualization. Not patient-specific neuroimaging.</p> : null}
         <MobileDiagram
           nodes={content.nodes}
           activeNodeId={activeNodeId}
@@ -475,14 +437,6 @@ export function ScientificJourneyDiagram({
             } : undefined}
           >
             <InteractiveBrain3D activeNodeId={activeNodeId} className="pointer-events-auto absolute inset-0 z-[4]" />
-            <div
-              style={motionEnabled ? {
-                transform: "translate3d(calc(var(--rsfn-cursor-x) * 0.03), calc((var(--rsfn-cursor-y) + var(--rsfn-scroll)) * 0.03), 0)",
-              } : undefined}
-            >
-              <ConnectorPaths activeNodeId={activeNodeId} />
-            </div>
-
             <div className="absolute inset-0 z-20">
               {content.nodes.map((node) => (
                 <NodeButton
@@ -500,6 +454,7 @@ export function ScientificJourneyDiagram({
           </div>
 
         <div className={cn(classes.detail, mode === "compact" || !wideLayout ? "" : "min-[1200px]:mt-0")}>
+          {activeNodeId === "rsfn" ? <p className="mb-3 text-xs leading-5 text-[var(--ns-muted-text)]">Conceptual functional-network visualization. Not patient-specific neuroimaging.</p> : null}
           {activeNode ? (
             <div className="animate-[ns-fade-in_180ms_ease-out] motion-reduce:animate-none">
               <DetailPanel

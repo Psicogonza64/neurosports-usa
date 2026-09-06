@@ -3,7 +3,6 @@ export { DualPath } from "@/components/experience/dual-path";
 export type { DualPathBranch } from "@/components/experience/dual-path";
 export { FeatureGrid } from "@/components/experience/feature-grid";
 export type { FeatureGridItem } from "@/components/experience/feature-grid";
-export { HeroObjectPlaceholder } from "@/components/experience/hero-object-placeholder";
 export { JourneyDivider } from "@/components/experience/journey-divider";
 export { JourneyCTA } from "@/components/experience/journey-cta";
 export { MNSIPhaseCard } from "@/components/experience/mnsi-phase-card";

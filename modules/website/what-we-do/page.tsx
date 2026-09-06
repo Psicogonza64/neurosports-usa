@@ -1,6 +1,5 @@
 import {
   FeatureGrid,
-  HeroObjectPlaceholder,
   JourneyCTA,
   JourneyDivider,
   ProprietaryMethodsSection,
@@ -32,7 +31,7 @@ function HeroSection() {
       subtitle="NeuroSports USA applies MNSI to evaluate, rehabilitate and optimize brain function across clinical and athletic contexts."
       ctaLabel="Explore the Integrated Model"
       ctaHref="/integrated-model"
-      illustration={<HeroObjectPlaceholder />}
+      illustration={<ScientificJourneyDiagram mode="section" locale="en" />}
     />
   );
 }
@@ -62,9 +61,6 @@ function DualPathSection() {
             title="Clinical Neuroscience and NeuroPerformance are two applications of the same model."
             subtitle="What We Do is not a list of services. It is the practical application of one neuroscience architecture across clinical and athletic environments."
           />
-          <div className="mt-14">
-            <ScientificJourneyDiagram mode="section" locale="en" />
-          </div>
         </SectionSpacing>
       </Container>
     </section>
@@ -83,9 +79,6 @@ function ClinicalPerformanceSection() {
             title="Two applied worlds, one scientific logic."
             subtitle="Both pathways are organized under MNSI so that care, rehabilitation and performance remain part of one institutional framework."
           />
-          <div className="mt-14">
-            <ScientificJourneyDiagram mode="section" locale="en" />
-          </div>
         </SectionSpacing>
       </Container>
     </section>

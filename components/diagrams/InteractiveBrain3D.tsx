@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type * as THREE from "three";
 import type { HeroInteractiveNodeId } from "@/lib/neurosports-hero-interactive-content";
 
 type InteractiveBrain3DProps = {
@@ -9,45 +10,21 @@ type InteractiveBrain3DProps = {
 };
 
 type BrainState = {
-  networkColor: number;
-  networkOpacity: number;
-  nodeScale: number;
+  nodeIndices: number[];
+  linkIndices: number[];
+  primaryColor: number;
+  secondaryColor?: number;
 };
 
 const brainStates: Record<"neutral" | HeroInteractiveNodeId, BrainState> = {
-  neutral: { networkColor: 0xc89a4b, networkOpacity: 0.38, nodeScale: 0.85 },
-  "functional-evaluation": { networkColor: 0xc89a4b, networkOpacity: 0.48, nodeScale: 0.95 },
-  rsfn: { networkColor: 0x627567, networkOpacity: 0.9, nodeScale: 1.2 },
-  "mnsi-core": { networkColor: 0x9b8450, networkOpacity: 0.68, nodeScale: 1.05 },
-  "clinical-neuroscience": { networkColor: 0x758c7a, networkOpacity: 0.62, nodeScale: 1 },
-  neuroperformance: { networkColor: 0xb58c4a, networkOpacity: 0.64, nodeScale: 1 },
-  "functional-outcomes": { networkColor: 0x6f8172, networkOpacity: 0.72, nodeScale: 1.1 },
+  neutral: { nodeIndices: [], linkIndices: [], primaryColor: 0x627567 },
+  "functional-evaluation": { nodeIndices: [], linkIndices: [], primaryColor: 0x718879 },
+  rsfn: { nodeIndices: [0, 1, 2, 3, 4, 5, 6], linkIndices: [0, 1, 2, 3, 4, 5], primaryColor: 0x627567, secondaryColor: 0xc89a4b },
+  "mnsi-core": { nodeIndices: [1, 2, 3, 4, 5, 6], linkIndices: [0, 2, 3, 4, 5], primaryColor: 0x627567, secondaryColor: 0xc89a4b },
+  "clinical-neuroscience": { nodeIndices: [], linkIndices: [], primaryColor: 0x627567 },
+  neuroperformance: { nodeIndices: [], linkIndices: [], primaryColor: 0xc89a4b },
+  "functional-outcomes": { nodeIndices: [], linkIndices: [], primaryColor: 0x718879 },
 };
-
-function makeGyrusCurve(THREE: typeof import("three"), side: number, row: number, phase: number) {
-  const points = [];
-  for (let index = 0; index < 15; index += 1) {
-    const t = index / 14;
-    const x = side * (0.23 + t * 0.48);
-    const y = -0.52 + row * 0.2 + Math.sin(t * Math.PI * 3 + phase) * 0.075;
-    const z = 0.54 + Math.cos(t * Math.PI * 2 + phase) * 0.045;
-    points.push(new THREE.Vector3(x, y, z));
-  }
-  return new THREE.CatmullRomCurve3(points);
-}
-
-function makeNetworkCurve(THREE: typeof import("three"), from: { x: number; y: number; z: number }, to: { x: number; y: number; z: number }) {
-  const midpoint = new THREE.Vector3(
-    (from.x + to.x) / 2,
-    Math.max(from.y, to.y) + 0.22,
-    (from.z + to.z) / 2 + 0.12,
-  );
-  return new THREE.CatmullRomCurve3([
-    new THREE.Vector3(from.x, from.y, from.z),
-    midpoint,
-    new THREE.Vector3(to.x, to.y, to.z),
-  ]);
-}
 
 export function InteractiveBrain3D({ activeNodeId, className }: InteractiveBrain3DProps) {
   const mountRef = useRef<HTMLDivElement | null>(null);
@@ -56,171 +33,152 @@ export function InteractiveBrain3D({ activeNodeId, className }: InteractiveBrain
 
   useEffect(() => {
     let disposed = false;
-    let renderer: import("three").WebGLRenderer | null = null;
-    let scene: import("three").Scene | null = null;
-    let camera: import("three").PerspectiveCamera | null = null;
-    let controls: import("three/examples/jsm/controls/OrbitControls.js").OrbitControls | null = null;
     let animationFrame = 0;
     let cleanup: (() => void) | undefined;
-
     const mount = mountRef.current;
     if (!mount) return;
 
     const initialize = async () => {
       try {
         const THREE = await import("three");
+        const { GLTFLoader } = await import("three/examples/jsm/loaders/GLTFLoader.js");
         const { OrbitControls } = await import("three/examples/jsm/controls/OrbitControls.js");
         if (disposed || !mount) return;
 
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
-        camera.position.set(0, 0.05, 4.35);
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(28, 1, 0.01, 100);
+        camera.position.set(4.1, 1.1, 4.1);
+        camera.lookAt(0, 0, 0);
 
-        renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+        const renderer = new THREE.WebGLRenderer({ alpha: false, antialias: true, powerPreference: "high-performance" });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.6));
         renderer.outputColorSpace = THREE.SRGBColorSpace;
-        renderer.setClearColor(0x000000, 0);
-        mount.appendChild(renderer.domElement);
-        renderer.domElement.setAttribute("aria-hidden", "true");
+        renderer.toneMapping = THREE.AgXToneMapping;
+        renderer.toneMappingExposure = 1;
+        renderer.setClearColor(0xf6f0e4, 1);
         renderer.domElement.className = "h-full w-full";
+        renderer.domElement.setAttribute("aria-hidden", "true");
+        mount.appendChild(renderer.domElement);
 
-        controls = new OrbitControls(camera, renderer.domElement);
+        const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.enablePan = false;
         controls.enableZoom = false;
-        controls.minAzimuthAngle = -0.75;
-        controls.maxAzimuthAngle = 0.75;
-        controls.minPolarAngle = Math.PI * 0.38;
-        controls.maxPolarAngle = Math.PI * 0.62;
-        controls.rotateSpeed = 0.35;
+        controls.minAzimuthAngle = -Math.PI * 0.8;
+        controls.maxAzimuthAngle = Math.PI * 0.8;
+        controls.minPolarAngle = Math.PI * 0.2;
+        controls.maxPolarAngle = Math.PI * 0.78;
+        controls.rotateSpeed = 0.22;
 
-        scene.add(new THREE.HemisphereLight(0xfdfbf7, 0x627567, 1.8));
-        const keyLight = new THREE.DirectionalLight(0xfff5df, 2.4);
-        keyLight.position.set(-3, 4, 5);
+        scene.add(new THREE.HemisphereLight(0xfffbf3, 0x8f887c, 1.15));
+        const keyLight = new THREE.DirectionalLight(0xfff0d6, 3.8);
+        keyLight.position.set(4.5, 6, 4.5);
         scene.add(keyLight);
-        const rimLight = new THREE.DirectionalLight(0xa8b19c, 1.5);
-        rimLight.position.set(3, 1, -3);
-        scene.add(rimLight);
+        const fillLight = new THREE.DirectionalLight(0xf0e7da, 0.85);
+        fillLight.position.set(-4.5, 1.6, 3);
+        scene.add(fillLight);
+        const contourLight = new THREE.DirectionalLight(0xfff8ee, 1.35);
+        contourLight.position.set(-3, 3.5, -5);
+        scene.add(contourLight);
 
-        const brain = new THREE.Group();
-        brain.rotation.x = -0.08;
-        brain.scale.setScalar(0.72);
-        scene.add(brain);
+        const brainRoot = new THREE.Group();
+        scene.add(brainRoot);
 
-        const hemisphereMaterial = new THREE.MeshPhysicalMaterial({
-          color: 0xc8b79d,
-          roughness: 0.68,
-          metalness: 0,
-          transmission: 0.08,
-          thickness: 0.45,
-          transparent: true,
-          opacity: 0.46,
+        const loader = new GLTFLoader();
+        const gltf = await loader.loadAsync("/models/nih-brain/original/brain-human.glb");
+        if (disposed) return;
+        const anatomicalBrain = gltf.scene;
+        const sourceBounds = new THREE.Box3().setFromObject(anatomicalBrain);
+        const sourceCenter = sourceBounds.getCenter(new THREE.Vector3());
+        const sourceSize = sourceBounds.getSize(new THREE.Vector3());
+        const fitScale = 2.18 / Math.max(sourceSize.x, sourceSize.y, sourceSize.z);
+        anatomicalBrain.scale.setScalar(fitScale);
+        anatomicalBrain.position.copy(sourceCenter).multiplyScalar(-fitScale);
+        anatomicalBrain.traverse((object) => {
+          const mesh = object as THREE.Mesh;
+          if (!mesh.isMesh) return;
+          mesh.castShadow = false;
+          mesh.receiveShadow = false;
+          mesh.material = new THREE.MeshStandardMaterial({ color: 0xeadfc9, roughness: 0.64, metalness: 0 });
         });
-        const grooveMaterial = new THREE.MeshBasicMaterial({
-          color: 0x627567,
-          transparent: true,
-          opacity: 0.52,
-          depthTest: false,
-        });
-
-        for (const side of [-1, 1]) {
-          const hemisphere = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 24), hemisphereMaterial);
-          hemisphere.scale.set(0.93, 1.05, 0.72);
-          hemisphere.position.set(side * 0.45, 0, 0);
-          brain.add(hemisphere);
-
-          for (let row = 0; row < 6; row += 1) {
-            const curve = makeGyrusCurve(THREE, side, row, row * 0.72 + (side === 1 ? 0.16 : 0));
-            const gyrus = new THREE.Mesh(new THREE.TubeGeometry(curve, 24, 0.018, 6, false), grooveMaterial);
-            brain.add(gyrus);
-          }
-        }
-
-        const fissure = new THREE.Mesh(
-          new THREE.BoxGeometry(0.045, 1.75, 0.7),
-          new THREE.MeshBasicMaterial({ color: 0x4c5b50, transparent: true, opacity: 0.34 }),
-        );
-        fissure.position.z = 0.03;
-        brain.add(fissure);
+        brainRoot.add(anatomicalBrain);
 
         const networkGroup = new THREE.Group();
-        brain.add(networkGroup);
-        const networkPoints = [
-          { x: -0.74, y: 0.48, z: 0.52 },
-          { x: 0.72, y: 0.5, z: 0.52 },
-          { x: -0.86, y: -0.05, z: 0.56 },
-          { x: 0.84, y: -0.04, z: 0.56 },
-          { x: -0.56, y: -0.56, z: 0.48 },
-          { x: 0.58, y: -0.56, z: 0.48 },
-          { x: 0, y: 0.12, z: 0.72 },
+        brainRoot.add(networkGroup);
+        const points = [
+          new THREE.Vector3(-0.7, 0.48, 0.68),
+          new THREE.Vector3(0.68, 0.5, 0.68),
+          new THREE.Vector3(-0.78, -0.02, 0.72),
+          new THREE.Vector3(0.78, -0.02, 0.72),
+          new THREE.Vector3(-0.5, -0.48, 0.62),
+          new THREE.Vector3(0.52, -0.48, 0.62),
+          new THREE.Vector3(0, 0.12, 0.82),
         ];
-        const networkNodes = networkPoints.map((point) => {
-          const node = new THREE.Mesh(
-            new THREE.SphereGeometry(0.055, 12, 8),
-            new THREE.MeshBasicMaterial({ color: 0xc89a4b, transparent: true, opacity: 0.5 }),
-          );
-          node.position.set(point.x, point.y, point.z);
+        points.forEach((point, index) => {
+          const node = new THREE.Mesh(new THREE.SphereGeometry(0.033, 12, 8), new THREE.MeshBasicMaterial({ transparent: true }));
+          node.userData.networkIndex = index;
+          node.position.copy(point);
           networkGroup.add(node);
-          return node;
         });
-        const networkLines = [];
-        for (let index = 0; index < networkPoints.length - 1; index += 1) {
-          const line = new THREE.Mesh(
-            new THREE.TubeGeometry(makeNetworkCurve(THREE, networkPoints[index], networkPoints[index + 1]), 16, 0.014, 5, false),
-            new THREE.MeshBasicMaterial({ color: 0xc89a4b, transparent: true, opacity: 0.42 }),
-          );
-          networkGroup.add(line);
-          networkLines.push(line);
+        for (let index = 0; index < points.length - 1; index += 1) {
+          const midpoint = points[index].clone().lerp(points[index + 1], 0.5);
+          const curve = new THREE.CatmullRomCurve3([points[index], midpoint, points[index + 1]]);
+          const connection = new THREE.Mesh(new THREE.TubeGeometry(curve, 16, 0.006, 5, false), new THREE.MeshBasicMaterial({ transparent: true }));
+          connection.userData.networkLinkIndex = index;
+          networkGroup.add(connection);
         }
-        const crossLine = new THREE.Mesh(
-          new THREE.TubeGeometry(makeNetworkCurve(THREE, networkPoints[0], networkPoints[3]), 16, 0.014, 5, false),
-          new THREE.MeshBasicMaterial({ color: 0xc89a4b, transparent: true, opacity: 0.38 }),
-        );
-        networkGroup.add(crossLine);
-        networkLines.push(crossLine);
 
-        const updateSize = () => {
-          if (!renderer || !camera) return;
+        const updateState = () => {
+          const state = brainStates[stateKey];
+          anatomicalBrain.scale.setScalar(fitScale);
+          networkGroup.visible = stateKey === "rsfn" || stateKey === "mnsi-core";
+          networkGroup.traverse((object) => {
+            const mesh = object as THREE.Mesh;
+            if (!mesh.isMesh) return;
+            const material = mesh.material as THREE.MeshBasicMaterial;
+            const nodeIndex = mesh.userData.networkIndex as number | undefined;
+            const linkIndex = mesh.userData.networkLinkIndex as number | undefined;
+            const visible = nodeIndex !== undefined
+              ? state.nodeIndices.includes(nodeIndex)
+              : linkIndex !== undefined && state.linkIndices.includes(linkIndex);
+            mesh.visible = visible;
+            material.color.setHex(state.secondaryColor && (nodeIndex === 3 || nodeIndex === 5 || linkIndex === 4) ? state.secondaryColor : state.primaryColor);
+            material.opacity = linkIndex === undefined ? 0.68 : 0.46;
+          });
+        };
+        updateState();
+
+        const resize = () => {
           const width = Math.max(1, mount.clientWidth);
           const height = Math.max(1, mount.clientHeight);
           renderer.setSize(width, height, false);
           camera.aspect = width / height;
           camera.updateProjectionMatrix();
         };
-        updateSize();
-        const resizeObserver = new ResizeObserver(updateSize);
+        resize();
+        const resizeObserver = new ResizeObserver(resize);
         resizeObserver.observe(mount);
 
         const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const orbitControls = controls;
-        orbitControls.autoRotate = !reducedMotion;
-        orbitControls.autoRotateSpeed = 0.28;
+        controls.autoRotate = !reducedMotion;
+        controls.autoRotateSpeed = 0.06;
+        controls.addEventListener("start", () => { controls.autoRotate = false; });
         const render = () => {
-          if (disposed || !renderer || !scene || !camera || !controls) return;
+          if (disposed) return;
           controls.update();
           renderer.render(scene, camera);
           animationFrame = window.requestAnimationFrame(render);
         };
-        orbitControls.addEventListener("start", () => { orbitControls.autoRotate = false; });
-        const state = brainStates[stateKey];
-        networkGroup.scale.setScalar(state.nodeScale);
-        networkNodes.forEach((node) => {
-          (node.material as import("three").MeshBasicMaterial).color.setHex(state.networkColor);
-          (node.material as import("three").MeshBasicMaterial).opacity = state.networkOpacity;
-        });
-        networkLines.forEach((line) => {
-          (line.material as import("three").MeshBasicMaterial).color.setHex(state.networkColor);
-          (line.material as import("three").MeshBasicMaterial).opacity = state.networkOpacity * 0.62;
-        });
         setStatus("ready");
         render();
+
         cleanup = () => {
           resizeObserver.disconnect();
           window.cancelAnimationFrame(animationFrame);
-          controls?.dispose();
-          renderer?.dispose();
-          scene?.traverse((object) => {
-            const mesh = object as import("three").Mesh;
+          controls.dispose();
+          renderer.dispose();
+          scene.traverse((object) => {
+            const mesh = object as THREE.Mesh;
             if (mesh.geometry) mesh.geometry.dispose();
             if (Array.isArray(mesh.material)) mesh.material.forEach((material) => material.dispose());
             else if (mesh.material) mesh.material.dispose();

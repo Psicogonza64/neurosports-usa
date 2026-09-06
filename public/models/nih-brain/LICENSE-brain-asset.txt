@@ -1,0 +1,21 @@
+NIH 3D Asset Attribution Record
+
+Asset: Detailed Human Brain Model (3D)
+NIH 3D Entry ID: 3DPX-021161
+Version: 1.01
+Original filename: brain human.glb
+Local preserved filename: original/brain-human.glb
+Official entry: https://3d.nih.gov/entries/3DPX-021161
+Official retrieval endpoint: https://3d.nih.gov/api/download?submissionId=27696&fileIds=659758
+Retrieval date: 2026-09-06
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License URL: https://creativecommons.org/licenses/by/4.0/
+
+Embedded source metadata retained in the original GLB:
+Author: dgallichan (https://sketchfab.com/dgallichan)
+Source: https://sketchfab.com/3d-models/brain-cadd2bde67404c43b2359a6a3281d84a
+Embedded license: CC-BY-4.0
+
+Integrity record for the untouched original:
+SHA-256: 5D3BEC401B94EE0E00C207F22E056E9D96F585811B38912F176E748ACD085B2D
+File size: 13,161,040 bytes
