@@ -80,8 +80,9 @@ const locationsByLocale: Record<LocationsLocale, LocationsContent> = {
         mapQuery: "Carrera 23 No 87-10 Bogotá Colombia",
         mapTitle:
           "Map showing CENPA IPS Bogotá Center at Carrera 23 No. 87-10.",
-        imagePath: "/images/locations/bogota/cenpa-bogota-front.jpg",
-        hasApprovedImage: false,
+        imagePath: "/images/locations/bogota/neurosports-bogota-center.png",
+        imageAlt: "Bogotá Center - NeuroSports architectural visualization.",
+        hasApprovedImage: true,
         viewHref: "#locations",
       },
       {
@@ -155,8 +156,9 @@ const locationsByLocale: Record<LocationsLocale, LocationsContent> = {
         mapQuery: "Carrera 23 No 87-10 Bogotá Colombia",
         mapTitle:
           "Map showing CENPA IPS Bogotá Center at Carrera 23 No. 87-10.",
-        imagePath: "/images/locations/bogota/cenpa-bogota-front.jpg",
-        hasApprovedImage: false,
+        imagePath: "/images/locations/bogota/neurosports-bogota-center.png",
+        imageAlt: "Bogotá Center - NeuroSports architectural visualization.",
+        hasApprovedImage: true,
         viewHref: "#locations",
       },
       {
