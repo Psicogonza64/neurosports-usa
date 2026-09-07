@@ -58,9 +58,9 @@ const locationsByLocale: Record<LocationsLocale, LocationsContent> = {
         mapQuery: "11777 Katy Freeway Suite 410S Houston Texas 77079",
         mapTitle:
           "Map showing NeuroSports USA Houston Center at 11777 Katy Freeway.",
-        imagePath: "/images/locations/houston/neurosports-houston-team-building.jpg",
+        imagePath: "/images/locations/houston/neurosports-houston-center.png",
         imageAlt:
-          "NeuroSports USA team outside the Houston center at 11777 Katy Freeway.",
+          "Houston Center — NeuroSports architectural visualization",
         imageCaption:
           "NeuroSports USA clinical and NeuroPerformance team at the Houston center.",
         hasApprovedImage: true,
@@ -134,9 +134,9 @@ const locationsByLocale: Record<LocationsLocale, LocationsContent> = {
         mapQuery: "11777 Katy Freeway Suite 410S Houston Texas 77079",
         mapTitle:
           "Map showing NeuroSports USA Houston Center at 11777 Katy Freeway.",
-        imagePath: "/images/locations/houston/neurosports-houston-team-building.jpg",
+        imagePath: "/images/locations/houston/neurosports-houston-center.png",
         imageAlt:
-          "NeuroSports USA team outside the Houston center at 11777 Katy Freeway.",
+          "Houston Center — NeuroSports architectural visualization",
         imageCaption:
           "NeuroSports USA clinical and NeuroPerformance team at the Houston center.",
         hasApprovedImage: true,
