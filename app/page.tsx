@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { SiteShell } from "@/components/layout/site-shell";
 import { LocationsExplorer } from "@/components/experience/locations-explorer";
 import { ScientificSectionBlock } from "@/components/experience";
@@ -15,6 +17,12 @@ import {
   TechnologySection,
 } from "@/modules/website/home/sections";
 import { getNeuroSportsHomeContent } from "@/lib/neurosports-home-content";
+
+export const metadata: Metadata = {
+  title: "NeuroSports USA | Clinical Neuroscience & NeuroPerformance",
+  description:
+    "Clinical neuroscience, neuropsychological evaluation, neurorehabilitation and NeuroPerformance services through an integrated neuroscience model.",
+};
 
 export default function Home() {
   const content = getNeuroSportsHomeContent("en");

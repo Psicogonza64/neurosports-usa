@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "NeuroSports USA | Digital Platform",
-  description: "Production-ready frontend architecture for the NeuroSports USA platform.",
+  title: "NeuroSports USA | Clinical Neuroscience & NeuroPerformance",
+  description:
+    "Clinical neuroscience, neuropsychological evaluation, neurorehabilitation and NeuroPerformance services through an integrated neuroscience model.",
 };
 
 export default function RootLayout({
