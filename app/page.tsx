@@ -22,6 +22,24 @@ export const metadata: Metadata = {
   title: "NeuroSports USA | Clinical Neuroscience & NeuroPerformance",
   description:
     "Clinical neuroscience, neuropsychological evaluation, neurorehabilitation and NeuroPerformance services through an integrated neuroscience model.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "NeuroSports USA",
+    locale: "en_US",
+    title: "NeuroSports USA | Clinical Neuroscience & NeuroPerformance",
+    description:
+      "Clinical neuroscience, neuropsychological evaluation, neurorehabilitation and NeuroPerformance services through an integrated neuroscience model.",
+    url: "https://www.neurosportsusa.com",
+  },
+  twitter: {
+    card: "summary",
+    title: "NeuroSports USA | Clinical Neuroscience & NeuroPerformance",
+    description:
+      "Clinical neuroscience, neuropsychological evaluation, neurorehabilitation and NeuroPerformance services through an integrated neuroscience model.",
+  },
 };
 
 export default function Home() {
