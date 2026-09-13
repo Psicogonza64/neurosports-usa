@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -14,15 +15,17 @@ export function Navbar() {
     <header className="sticky top-0 z-50 border-b nsu-border bg-[color:color-mix(in_srgb,var(--color-background)_90%,white)]/96 shadow-[0_10px_26px_-24px_rgba(43,42,40,0.7)] backdrop-blur-md">
       <Container className="flex items-center justify-between gap-6 py-[23px] lg:py-[25px]">
         <Link
-          className="w-[220px] rounded-md px-1 py-1 text-[var(--color-foreground)] sm:w-[245px] lg:w-[300px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_srgb,var(--color-primary)_42%,white)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
+          className="flex items-center rounded-md px-1 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:color-mix(in_srgb,var(--color-primary)_42%,white)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-background)]"
           href="/"
         >
-          <span className="block text-[25px] font-bold leading-[1.01] tracking-[0.008em] sm:text-[28px] lg:text-[32px]">
-            NeuroSports
-          </span>
-          <span className="block pt-[11px] text-[11px] font-medium leading-none tracking-[0.08em] text-[color:color-mix(in_srgb,var(--color-foreground)_74%,var(--color-muted))] sm:text-[12px] lg:text-[14px]">
-            The Brain Matters
-          </span>
+          <Image
+            src="/logo-header.png"
+            alt="NeuroSports - The Brain Matters"
+            width={1436}
+            height={491}
+            priority
+            className="h-12 w-auto sm:h-[52px] lg:h-14"
+          />
         </Link>
 
         <nav aria-label="Primary" className="ml-2 hidden items-center gap-2 lg:ml-4 lg:flex">
