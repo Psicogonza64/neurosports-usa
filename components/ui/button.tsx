@@ -14,6 +14,7 @@ type ButtonProps = {
   rel?: string;
   dataCta?: string;
   dataLocation?: string;
+  dataPathway?: string;
   type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
   onClick?: ButtonHTMLAttributes<HTMLButtonElement>["onClick"];
   disabled?: boolean;
@@ -39,6 +40,7 @@ export function Button({
   rel,
   dataCta,
   dataLocation,
+  dataPathway,
   type = "button",
   onClick,
   disabled,
@@ -61,6 +63,7 @@ export function Button({
           rel={rel}
           data-cta={dataCta}
           data-location={dataLocation}
+          data-pathway={dataPathway}
         >
           {children}
         </Link>
@@ -75,6 +78,7 @@ export function Button({
         rel={rel}
         data-cta={dataCta}
         data-location={dataLocation}
+        data-pathway={dataPathway}
       >
         {children}
       </a>
@@ -89,6 +93,7 @@ export function Button({
       disabled={disabled}
       data-cta={dataCta}
       data-location={dataLocation}
+      data-pathway={dataPathway}
     >
       {children}
     </button>

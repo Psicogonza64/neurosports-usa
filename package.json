@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:calendar": "node --experimental-strip-types --experimental-specifier-resolution=node --test tests/google-calendar.test.ts"
+    "test:calendar": "node --experimental-strip-types --experimental-specifier-resolution=node --test tests/google-calendar.test.ts",
+    "test:analytics": "node --experimental-strip-types --experimental-specifier-resolution=node --test tests/analytics.test.ts",
+    "test": "node --experimental-strip-types --experimental-specifier-resolution=node --test tests/google-calendar.test.ts tests/analytics.test.ts"
   },
   "dependencies": {
     "@types/three": "^0.185.4",

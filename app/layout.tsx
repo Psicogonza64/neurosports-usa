@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
 import "@/styles/globals.css";
 
 const jsonLd = {
@@ -46,6 +47,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <AnalyticsProvider />
         {children}
       </body>
     </html>
