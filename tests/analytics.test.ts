@@ -56,13 +56,13 @@ test("sanitizeEventPayload enforces strict whitelist for each canonical event", 
     cta_name: "schedule-initial-evaluation",
     cta_location: "hero",
     destination_type: "internal",
-    pathway: "performance",
+    pathway: "home",
   });
   assert.deepEqual(ctaPayload, {
     cta_name: "schedule-initial-evaluation",
     cta_location: "hero",
     destination_type: "internal",
-    pathway: "performance",
+    pathway: "home",
   });
 
   // form_start
@@ -105,6 +105,63 @@ test("trackEvent does not throw in SSR / server environments without window", ()
       service_type: "initial_evaluation",
     });
   });
+});
+
+test("all canonical events accept only approved attribution fields", () => {
+  const attribution = {
+    utm_source: "google",
+    utm_medium: "paid_search",
+    utm_campaign: "fall-2026",
+    utm_content: "hero",
+    utm_term: "neurosports",
+    referring_domain: "search.example",
+    landing_path: "/schedule?email=sensitive@example.com",
+    pathway: "home" as const,
+  };
+
+  const payloads = [
+    sanitizeEventPayload("view_path", { page_path: "/schedule", ...attribution }),
+    sanitizeEventPayload("cta_click", {
+      cta_name: "schedule-initial-evaluation",
+      destination_type: "internal",
+      ...attribution,
+    }),
+    sanitizeEventPayload("form_start", { form_name: "schedule_initial_evaluation", ...attribution }),
+    sanitizeEventPayload("form_submit", { form_name: "schedule_initial_evaluation", ...attribution }),
+    sanitizeEventPayload("assessment_booked", {
+      form_name: "schedule_initial_evaluation",
+      center: "houston",
+      service_type: "initial_evaluation",
+      ...attribution,
+    }),
+  ];
+
+  for (const payload of payloads) {
+    assert.equal(payload.utm_source, "google");
+    assert.equal(payload.referring_domain, "search.example");
+    assert.equal(payload.landing_path, "/schedule");
+    assert.equal(payload.pathway, "home");
+  }
+});
+
+test("arbitrary pathway values and unapproved payload fields cannot enter analytics", () => {
+  const unsafePayload = {
+    cta_name: "schedule-initial-evaluation",
+    destination_type: "internal" as const,
+    pathway: "clinical-intake",
+    email: "patient@example.com",
+    bookingReference: "booking-123",
+    symptoms: "free text",
+  };
+  const sanitized = sanitizeEventPayload(
+    "cta_click",
+    unsafePayload as unknown as Parameters<typeof sanitizeEventPayload<"cta_click">>[1],
+  );
+
+  assert.equal(Object.prototype.hasOwnProperty.call(sanitized, "pathway"), false);
+  assert.equal(Object.prototype.hasOwnProperty.call(sanitized, "email"), false);
+  assert.equal(Object.prototype.hasOwnProperty.call(sanitized, "bookingReference"), false);
+  assert.equal(Object.prototype.hasOwnProperty.call(sanitized, "symptoms"), false);
 });
 
 test("assessment_booked excludes all PII, patient info, clinical data, and booking reference", () => {

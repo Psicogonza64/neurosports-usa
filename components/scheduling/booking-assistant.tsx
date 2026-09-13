@@ -7,6 +7,7 @@ import { BookingReview } from "@/components/scheduling/booking-review";
 import { IntakeForm } from "@/components/scheduling/intake-form";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { getBrowserSessionAttribution } from "@/lib/attribution";
 import { trackEvent } from "@/lib/analytics";
 import { bookingAssistantContent } from "@/lib/neurosports-booking-content";
 import type {
@@ -235,7 +236,10 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
       if (path === "appointmentFor") {
         if (!formStartedRef.current) {
           formStartedRef.current = true;
-          trackEvent("form_start", { form_name: "schedule_initial_evaluation" });
+          trackEvent("form_start", {
+            form_name: "schedule_initial_evaluation",
+            ...getBrowserSessionAttribution(),
+          });
         }
 
         draft.appointmentFor = value as BookingFormState["appointmentFor"];
@@ -308,7 +312,10 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
 
     setSubmitError("");
     setIsSubmitting(true);
-    trackEvent("form_submit", { form_name: "schedule_initial_evaluation" });
+    trackEvent("form_submit", {
+      form_name: "schedule_initial_evaluation",
+      ...getBrowserSessionAttribution(),
+    });
 
     try {
       const contactEmail = state.appointmentFor === "family-member" ? state.responsibleAdult.email : state.patient.email;
@@ -372,6 +379,7 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
         form_name: "schedule_initial_evaluation",
         center: "houston",
         service_type: "initial_evaluation",
+        ...getBrowserSessionAttribution(),
       });
 
       setState(INITIAL_STATE);

@@ -3,6 +3,11 @@
 import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
+import {
+  getBrowserSessionAttribution,
+  getPathwayForCta,
+  updateBrowserSessionPathway,
+} from "@/lib/attribution";
 import { getDestinationType, trackEvent } from "@/lib/analytics";
 
 function AnalyticsListener() {
@@ -12,7 +17,10 @@ function AnalyticsListener() {
   useEffect(() => {
     if (pathname && pathname !== lastTrackedPath.current) {
       lastTrackedPath.current = pathname;
-      trackEvent("view_path", { page_path: pathname });
+      trackEvent("view_path", {
+        page_path: pathname,
+        ...getBrowserSessionAttribution(),
+      });
     }
   }, [pathname]);
 
@@ -34,19 +42,19 @@ function AnalyticsListener() {
       }
 
       const ctaLocation = ctaElement.getAttribute("data-location") || undefined;
-      const pathway = ctaElement.getAttribute("data-pathway") || undefined;
       const href =
         ctaElement.getAttribute("href") ||
         (ctaElement as HTMLAnchorElement).href ||
         undefined;
 
       const destinationType = getDestinationType(href);
+      const attribution = updateBrowserSessionPathway(getPathwayForCta(ctaLocation, href));
 
       trackEvent("cta_click", {
         cta_name: ctaName,
         cta_location: ctaLocation,
         destination_type: destinationType,
-        pathway,
+        ...attribution,
       });
     };
 

@@ -1,20 +1,42 @@
+type AttributionPathway = "home" | "houston" | "site_navigation" | "schedule_direct" | "unknown";
+
+type AnalyticsAttribution = {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+  utm_term?: string;
+  referring_domain?: string;
+  landing_path?: string;
+  pathway?: AttributionPathway;
+};
+
+const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
+const UTM_TOKEN_PATTERN = /^[a-z0-9][a-z0-9._~-]{0,79}$/;
+const ATTRIBUTION_PATHWAYS: readonly AttributionPathway[] = [
+  "home",
+  "houston",
+  "site_navigation",
+  "schedule_direct",
+  "unknown",
+];
+
 export type AnalyticsEventMap = {
-  view_path: {
+  view_path: AnalyticsAttribution & {
     page_path: string;
   };
-  cta_click: {
+  cta_click: AnalyticsAttribution & {
     cta_name: string;
     cta_location?: string;
     destination_type: "internal" | "whatsapp" | "external";
-    pathway?: string;
   };
-  form_start: {
+  form_start: AnalyticsAttribution & {
     form_name: "schedule_initial_evaluation";
   };
-  form_submit: {
+  form_submit: AnalyticsAttribution & {
     form_name: "schedule_initial_evaluation";
   };
-  assessment_booked: {
+  assessment_booked: AnalyticsAttribution & {
     form_name: "schedule_initial_evaluation";
     center: "houston";
     service_type: "initial_evaluation";
@@ -36,6 +58,39 @@ export function sanitizePagePath(pathname: string): string {
   }
   const clean = pathname.split("?")[0].split("#")[0].trim();
   return clean || "/";
+}
+
+function sanitizeAttribution(value: AnalyticsAttribution): AnalyticsAttribution {
+  const result: AnalyticsAttribution = {};
+
+  for (const key of UTM_KEYS) {
+    const candidate = value[key];
+    const normalized = typeof candidate === "string" ? candidate.trim().toLowerCase() : "";
+    if (normalized.length <= 80 && UTM_TOKEN_PATTERN.test(normalized)) {
+      result[key] = normalized;
+    }
+  }
+
+  if (typeof value.referring_domain === "string") {
+    try {
+      const domain = new URL(`https://${value.referring_domain}`).hostname.toLowerCase();
+      if (domain) {
+        result.referring_domain = domain;
+      }
+    } catch {
+      // Invalid attribution is discarded at the analytics boundary.
+    }
+  }
+
+  if (typeof value.landing_path === "string") {
+    result.landing_path = sanitizePagePath(value.landing_path);
+  }
+
+  if (ATTRIBUTION_PATHWAYS.includes(value.pathway as AttributionPathway)) {
+    result.pathway = value.pathway;
+  }
+
+  return result;
 }
 
 export function getDestinationType(
@@ -83,7 +138,6 @@ export function sanitizeEventPayload<E extends AnalyticsEventName>(
   if (eventName === "view_path") {
     const p = payload as AnalyticsEventMap["view_path"];
     result.page_path = sanitizePagePath(p.page_path);
-    return result;
   }
 
   if (eventName === "cta_click") {
@@ -93,16 +147,11 @@ export function sanitizeEventPayload<E extends AnalyticsEventName>(
       result.cta_location = String(p.cta_location);
     }
     result.destination_type = p.destination_type;
-    if (p.pathway) {
-      result.pathway = String(p.pathway);
-    }
-    return result;
   }
 
   if (eventName === "form_start" || eventName === "form_submit") {
     const p = payload as AnalyticsEventMap["form_start"];
     result.form_name = p.form_name;
-    return result;
   }
 
   if (eventName === "assessment_booked") {
@@ -110,10 +159,9 @@ export function sanitizeEventPayload<E extends AnalyticsEventName>(
     result.form_name = p.form_name;
     result.center = p.center;
     result.service_type = p.service_type;
-    return result;
   }
 
-  return result;
+  return { ...result, ...sanitizeAttribution(payload) };
 }
 
 export function trackEvent<E extends AnalyticsEventName>(
