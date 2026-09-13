@@ -62,7 +62,6 @@ export type BookingAssistantContent = {
     2: string;
     3: string;
     4: string;
-    5: string;
   };
   stepHeadings: {
     appointment: string;
@@ -150,11 +149,11 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
     emergencyNotice:
       "This scheduling form is not monitored for emergencies. If immediate medical assistance is required, contact local emergency services.",
     privacyNotice:
-      "Please provide only the information needed to request the appointment. Do not submit emergency information or extensive medical records through this form.",
+      "Your privacy is important to us. Information provided here is used for appointment scheduling and contact coordination.",
     privacyLinksLabel: "Policy references",
     privacyPolicyLabel: "Privacy Policy",
     termsOfUseLabel: "Terms of Use",
-    progressLabel: "of 5",
+    progressLabel: "of 4",
     requestedTimeLabel: "Requested appointment time",
     timezoneLabel: "Timezone",
     timezoneValue: "Central Time - Houston",
@@ -204,17 +203,16 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
     invalidPhone: "Please enter a valid phone number.",
     stepTitles: {
       1: "Appointment For",
-      2: "Open Availability",
-      3: "Prepare for Evaluation",
-      4: "Previous Studies",
-      5: "Confirmation and Next Steps",
+      2: "Date & Time",
+      3: "Contact Information",
+      4: "Review & Confirm",
     },
     stepHeadings: {
       appointment: "Who is the appointment for?",
-      dateTime: "Select a real available appointment.",
-      patientInfo: "Prepare for your Initial Evaluation",
-      objective: "Previous studies checklist",
-      review: "Confirmation and next steps",
+      dateTime: "Select an available date and time",
+      patientInfo: "Contact information",
+      objective: "Review & confirm",
+      review: "Review and confirm your request",
     },
     appointmentFor: {
       label: "Appointment for",
@@ -342,11 +340,11 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
     emergencyNotice:
       "Este formulario de agenda no se monitorea para emergencias. Si requiere asistencia medica inmediata, contacte servicios de emergencia locales.",
     privacyNotice:
-      "Proporcione unicamente la informacion necesaria para solicitar la cita. No envie informacion de emergencia ni historias clinicas extensas mediante este formulario.",
+      "Su privacidad es importante para nosotros. La información proporcionada aquí se utiliza para la programación de la cita y la coordinación del contacto.",
     privacyLinksLabel: "Referencias de politica",
     privacyPolicyLabel: "Politica de Privacidad",
     termsOfUseLabel: "Terminos de Uso",
-    progressLabel: "de 5",
+    progressLabel: "de 4",
     requestedTimeLabel: "Horario de cita solicitado",
     timezoneLabel: "Zona horaria",
     timezoneValue: "Hora Central - Houston",
@@ -396,17 +394,16 @@ export const bookingAssistantContent: Record<BookingAssistantLocale, BookingAssi
     invalidPhone: "Ingrese un numero de telefono valido.",
     stepTitles: {
       1: "Para quien",
-      2: "Abrir disponibilidad",
-      3: "Preparacion",
-      4: "Estudios previos",
-      5: "Confirmacion y siguientes pasos",
+      2: "Fecha y hora",
+      3: "Informacion de contacto",
+      4: "Revision y confirmacion",
     },
     stepHeadings: {
       appointment: "Para quien es la cita?",
-      dateTime: "Seleccione una cita realmente disponible.",
-      patientInfo: "Preparese para su Evaluacion Inicial",
-      objective: "Checklist de estudios previos",
-      review: "Confirmacion y siguientes pasos",
+      dateTime: "Seleccione fecha y hora disponible",
+      patientInfo: "Informacion de contacto",
+      objective: "Revision y confirmacion",
+      review: "Revise y confirme su solicitud",
     },
     appointmentFor: {
       label: "Cita para",

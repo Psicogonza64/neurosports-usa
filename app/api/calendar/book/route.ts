@@ -27,9 +27,6 @@ type BookingRequestBody = {
   timezone?: string;
   consentAccepted?: boolean;
   preferredContactMethod?: "email" | "phone" | "text";
-  reasonCategories?: string[];
-  previousStudiesStatus?: "no" | "yes" | "not-sure";
-  previousStudyTypes?: string[];
   website?: string;
 };
 
@@ -173,6 +170,17 @@ export async function POST(request: Request) {
       selectedEnd,
       location: config.location,
       appointmentFor: body.appointmentFor,
+      patientFirstName: body.patientFirstName!.trim(),
+      patientLastName: body.patientLastName!.trim(),
+      contactPhone: body.contactPhone!.trim(),
+      responsibleAdultName:
+        body.appointmentFor === "family-member"
+          ? body.responsibleAdultName?.trim()
+          : undefined,
+      relationship:
+        body.appointmentFor === "family-member"
+          ? body.relationship?.trim()
+          : undefined,
       preferredContactMethod: body.preferredContactMethod,
       contactEmail: body.contactEmail?.trim() ?? "",
     });
