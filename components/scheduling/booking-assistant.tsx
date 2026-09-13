@@ -7,6 +7,7 @@ import { BookingReview } from "@/components/scheduling/booking-review";
 import { IntakeForm } from "@/components/scheduling/intake-form";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { trackEvent } from "@/lib/analytics";
 import { bookingAssistantContent } from "@/lib/neurosports-booking-content";
 import type {
   BookingAssistantLocale,
@@ -195,6 +196,7 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
   const [successState, setSuccessState] = useState<SuccessState | null>(null);
 
   const stepHeadingRef = useRef<HTMLHeadingElement | null>(null);
+  const formStartedRef = useRef(false);
 
   useEffect(() => {
     stepHeadingRef.current?.focus();
@@ -231,6 +233,11 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
       }
 
       if (path === "appointmentFor") {
+        if (!formStartedRef.current) {
+          formStartedRef.current = true;
+          trackEvent("form_start", { form_name: "schedule_initial_evaluation" });
+        }
+
         draft.appointmentFor = value as BookingFormState["appointmentFor"];
 
         if (value === "self") {
@@ -301,6 +308,7 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
 
     setSubmitError("");
     setIsSubmitting(true);
+    trackEvent("form_submit", { form_name: "schedule_initial_evaluation" });
 
     try {
       const contactEmail = state.appointmentFor === "family-member" ? state.responsibleAdult.email : state.patient.email;
@@ -358,6 +366,12 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
           "United States",
         ],
         inviteNotice: data.inviteNotice || "Please check your email for the calendar invitation.",
+      });
+
+      trackEvent("assessment_booked", {
+        form_name: "schedule_initial_evaluation",
+        center: "houston",
+        service_type: "initial_evaluation",
       });
 
       setState(INITIAL_STATE);
