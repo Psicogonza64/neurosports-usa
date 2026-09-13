@@ -109,13 +109,10 @@ test("trackEvent does not throw in SSR / server environments without window", ()
 
 test("all canonical events accept only approved attribution fields", () => {
   const attribution = {
-    utm_source: "google",
-    utm_medium: "paid_search",
-    utm_campaign: "fall-2026",
-    utm_content: "hero",
-    utm_term: "neurosports",
-    referring_domain: "search.example",
-    landing_path: "/schedule?email=sensitive@example.com",
+    utm_source: "google" as const,
+    utm_medium: "paid_social" as const,
+    referring_domain: "google" as const,
+    landing_path: "/schedule" as const,
     pathway: "home" as const,
   };
 
@@ -138,7 +135,7 @@ test("all canonical events accept only approved attribution fields", () => {
 
   for (const payload of payloads) {
     assert.equal(payload.utm_source, "google");
-    assert.equal(payload.referring_domain, "search.example");
+    assert.equal(payload.referring_domain, "google");
     assert.equal(payload.landing_path, "/schedule");
     assert.equal(payload.pathway, "home");
   }
@@ -152,6 +149,13 @@ test("arbitrary pathway values and unapproved payload fields cannot enter analyt
     email: "patient@example.com",
     bookingReference: "booking-123",
     symptoms: "free text",
+    utm_source: "john-smith",
+    utm_medium: "patient-123",
+    utm_campaign: "john@example.com",
+    utm_content: "+15551234567",
+    utm_term: "unregistered-term",
+    referring_domain: "referral.example.com",
+    landing_path: "/user-controlled-path",
   };
   const sanitized = sanitizeEventPayload(
     "cta_click",
@@ -162,6 +166,13 @@ test("arbitrary pathway values and unapproved payload fields cannot enter analyt
   assert.equal(Object.prototype.hasOwnProperty.call(sanitized, "email"), false);
   assert.equal(Object.prototype.hasOwnProperty.call(sanitized, "bookingReference"), false);
   assert.equal(Object.prototype.hasOwnProperty.call(sanitized, "symptoms"), false);
+  assert.equal(Object.prototype.hasOwnProperty.call(sanitized, "utm_source"), false);
+  assert.equal(Object.prototype.hasOwnProperty.call(sanitized, "utm_medium"), false);
+  assert.equal(Object.prototype.hasOwnProperty.call(sanitized, "utm_campaign"), false);
+  assert.equal(Object.prototype.hasOwnProperty.call(sanitized, "utm_content"), false);
+  assert.equal(Object.prototype.hasOwnProperty.call(sanitized, "utm_term"), false);
+  assert.equal(Object.prototype.hasOwnProperty.call(sanitized, "referring_domain"), false);
+  assert.equal(Object.prototype.hasOwnProperty.call(sanitized, "landing_path"), false);
 });
 
 test("assessment_booked excludes all PII, patient info, clinical data, and booking reference", () => {

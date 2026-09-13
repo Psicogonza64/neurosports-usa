@@ -1,18 +1,16 @@
 type AttributionPathway = "home" | "houston" | "site_navigation" | "schedule_direct" | "unknown";
 
 type AnalyticsAttribution = {
-  utm_source?: string;
-  utm_medium?: string;
-  utm_campaign?: string;
-  utm_content?: string;
-  utm_term?: string;
-  referring_domain?: string;
-  landing_path?: string;
+  utm_source?: "google" | "bing" | "facebook" | "instagram" | "linkedin" | "youtube" | "email" | "referral" | "partner";
+  utm_medium?: "organic" | "cpc" | "paid_social" | "social" | "email" | "referral" | "display" | "video" | "partner";
+  utm_campaign?: never;
+  utm_content?: never;
+  utm_term?: never;
+  referring_domain?: "google" | "bing" | "facebook" | "instagram" | "linkedin" | "youtube" | "other_referral";
+  landing_path?: "/" | "/what-we-do" | "/integrated-model" | "/technology" | "/research" | "/schedule" | "unknown";
   pathway?: AttributionPathway;
 };
 
-const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
-const UTM_TOKEN_PATTERN = /^[a-z0-9][a-z0-9._~-]{0,79}$/;
 const ATTRIBUTION_PATHWAYS: readonly AttributionPathway[] = [
   "home",
   "houston",
@@ -20,6 +18,10 @@ const ATTRIBUTION_PATHWAYS: readonly AttributionPathway[] = [
   "schedule_direct",
   "unknown",
 ];
+const UTM_SOURCES: readonly AnalyticsAttribution["utm_source"][] = ["google", "bing", "facebook", "instagram", "linkedin", "youtube", "email", "referral", "partner"];
+const UTM_MEDIA: readonly AnalyticsAttribution["utm_medium"][] = ["organic", "cpc", "paid_social", "social", "email", "referral", "display", "video", "partner"];
+const REFERRING_DOMAINS: readonly AnalyticsAttribution["referring_domain"][] = ["google", "bing", "facebook", "instagram", "linkedin", "youtube", "other_referral"];
+const LANDING_PATHS: readonly AnalyticsAttribution["landing_path"][] = ["/", "/what-we-do", "/integrated-model", "/technology", "/research", "/schedule", "unknown"];
 
 export type AnalyticsEventMap = {
   view_path: AnalyticsAttribution & {
@@ -63,27 +65,19 @@ export function sanitizePagePath(pathname: string): string {
 function sanitizeAttribution(value: AnalyticsAttribution): AnalyticsAttribution {
   const result: AnalyticsAttribution = {};
 
-  for (const key of UTM_KEYS) {
-    const candidate = value[key];
-    const normalized = typeof candidate === "string" ? candidate.trim().toLowerCase() : "";
-    if (normalized.length <= 80 && UTM_TOKEN_PATTERN.test(normalized)) {
-      result[key] = normalized;
-    }
+  if (UTM_SOURCES.includes(value.utm_source)) {
+    result.utm_source = value.utm_source;
+  }
+  if (UTM_MEDIA.includes(value.utm_medium)) {
+    result.utm_medium = value.utm_medium;
   }
 
-  if (typeof value.referring_domain === "string") {
-    try {
-      const domain = new URL(`https://${value.referring_domain}`).hostname.toLowerCase();
-      if (domain) {
-        result.referring_domain = domain;
-      }
-    } catch {
-      // Invalid attribution is discarded at the analytics boundary.
-    }
+  if (REFERRING_DOMAINS.includes(value.referring_domain)) {
+    result.referring_domain = value.referring_domain;
   }
 
-  if (typeof value.landing_path === "string") {
-    result.landing_path = sanitizePagePath(value.landing_path);
+  if (LANDING_PATHS.includes(value.landing_path)) {
+    result.landing_path = value.landing_path;
   }
 
   if (ATTRIBUTION_PATHWAYS.includes(value.pathway as AttributionPathway)) {

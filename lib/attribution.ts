@@ -1,5 +1,53 @@
 export const ATTRIBUTION_STORAGE_KEY = "neurosports_attribution_v1";
-export const UTM_MAX_LENGTH = 80;
+
+export const UTM_SOURCES = [
+  "google",
+  "bing",
+  "facebook",
+  "instagram",
+  "linkedin",
+  "youtube",
+  "email",
+  "referral",
+  "partner",
+] as const;
+
+export const UTM_MEDIA = [
+  "organic",
+  "cpc",
+  "paid_social",
+  "social",
+  "email",
+  "referral",
+  "display",
+  "video",
+  "partner",
+] as const;
+
+// Add approved production campaign tokens here before they can be emitted to GA4.
+export const UTM_CAMPAIGNS = [] as const;
+export const UTM_CONTENTS = [] as const;
+export const UTM_TERMS = [] as const;
+
+export const REFERRING_DOMAINS = [
+  "google",
+  "bing",
+  "facebook",
+  "instagram",
+  "linkedin",
+  "youtube",
+  "other_referral",
+] as const;
+
+export const PUBLIC_LANDING_PATHS = [
+  "/",
+  "/what-we-do",
+  "/integrated-model",
+  "/technology",
+  "/research",
+  "/schedule",
+  "unknown",
+] as const;
 
 export const ATTRIBUTION_PATHWAYS = [
   "home",
@@ -10,15 +58,19 @@ export const ATTRIBUTION_PATHWAYS = [
 ] as const;
 
 export type AttributionPathway = (typeof ATTRIBUTION_PATHWAYS)[number];
+type UtmSource = (typeof UTM_SOURCES)[number];
+type UtmMedium = (typeof UTM_MEDIA)[number];
+type ReferringDomain = (typeof REFERRING_DOMAINS)[number];
+type LandingPath = (typeof PUBLIC_LANDING_PATHS)[number];
 
 export type AttributionRecord = {
-  utm_source?: string;
-  utm_medium?: string;
-  utm_campaign?: string;
-  utm_content?: string;
-  utm_term?: string;
-  referring_domain?: string;
-  landing_path: string;
+  utm_source?: UtmSource;
+  utm_medium?: UtmMedium;
+  utm_campaign?: (typeof UTM_CAMPAIGNS)[number];
+  utm_content?: (typeof UTM_CONTENTS)[number];
+  utm_term?: (typeof UTM_TERMS)[number];
+  referring_domain?: ReferringDomain;
+  landing_path: LandingPath;
   pathway: AttributionPathway;
 };
 
@@ -30,11 +82,6 @@ type AttributionInput = {
 
 type StorageLike = Pick<Storage, "getItem" | "setItem">;
 
-const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
-
-// Marketing tokens are lowercase URL-safe identifiers, capped to prevent arbitrary query values.
-const UTM_TOKEN_PATTERN = /^[a-z0-9][a-z0-9._~-]{0,79}$/;
-
 export function sanitizePagePath(pathname: string): string {
   if (!pathname) {
     return "/";
@@ -44,20 +91,36 @@ export function sanitizePagePath(pathname: string): string {
   return clean || "/";
 }
 
-export function normalizeUtmToken(value: string | null | undefined): string | undefined {
+function normalizeControlledValue<T extends string>(value: string | null | undefined, allowed: readonly T[]): T | undefined {
   if (!value) {
     return undefined;
   }
 
   const normalized = value.trim().toLowerCase();
-  if (normalized.length > UTM_MAX_LENGTH || !UTM_TOKEN_PATTERN.test(normalized)) {
-    return undefined;
-  }
-
-  return normalized;
+  return allowed.includes(normalized as T) ? (normalized as T) : undefined;
 }
 
-export function normalizeReferringDomain(referrer: string | undefined): string | undefined {
+export function normalizeUtmSource(value: string | null | undefined): UtmSource | undefined {
+  return normalizeControlledValue(value, UTM_SOURCES);
+}
+
+export function normalizeUtmMedium(value: string | null | undefined): UtmMedium | undefined {
+  return normalizeControlledValue(value, UTM_MEDIA);
+}
+
+function normalizeCampaign(value: string | null | undefined): (typeof UTM_CAMPAIGNS)[number] | undefined {
+  return normalizeControlledValue(value, UTM_CAMPAIGNS);
+}
+
+function normalizeContent(value: string | null | undefined): (typeof UTM_CONTENTS)[number] | undefined {
+  return normalizeControlledValue(value, UTM_CONTENTS);
+}
+
+function normalizeTerm(value: string | null | undefined): (typeof UTM_TERMS)[number] | undefined {
+  return normalizeControlledValue(value, UTM_TERMS);
+}
+
+export function normalizeReferringDomain(referrer: string | undefined): ReferringDomain | undefined {
   if (!referrer) {
     return undefined;
   }
@@ -68,7 +131,19 @@ export function normalizeReferringDomain(referrer: string | undefined): string |
       return undefined;
     }
 
-    return url.hostname.toLowerCase() || undefined;
+    const hostname = url.hostname.toLowerCase();
+    if (hostname === "neurosportsusa.com" || hostname.endsWith(".neurosportsusa.com")) {
+      return undefined;
+    }
+    if (hostname === "bing.com" || hostname.endsWith(".bing.com")) {
+      return "bing";
+    }
+    for (const source of ["google", "facebook", "instagram", "linkedin", "youtube"] as const) {
+      if (hostname === `${source}.com` || hostname.endsWith(`.${source}.com`)) {
+        return source;
+      }
+    }
+    return "other_referral";
   } catch {
     return undefined;
   }
@@ -78,25 +153,44 @@ export function isAttributionPathway(value: unknown): value is AttributionPathwa
   return typeof value === "string" && (ATTRIBUTION_PATHWAYS as readonly string[]).includes(value);
 }
 
+export function normalizeLandingPath(pathname: string): LandingPath {
+  const path = sanitizePagePath(pathname);
+  return (PUBLIC_LANDING_PATHS as readonly string[]).includes(path) ? (path as LandingPath) : "unknown";
+}
+
 export function sanitizeAttribution(value: Partial<AttributionRecord>): Partial<AttributionRecord> {
   const result: Partial<AttributionRecord> = {};
 
-  for (const key of UTM_KEYS) {
-    const token = normalizeUtmToken(value[key]);
-    if (token) {
-      result[key] = token;
-    }
+  const source = normalizeUtmSource(value.utm_source);
+  if (source) {
+    result.utm_source = source;
+  }
+  const medium = normalizeUtmMedium(value.utm_medium);
+  if (medium) {
+    result.utm_medium = medium;
+  }
+  const campaign = normalizeCampaign(value.utm_campaign);
+  if (campaign) {
+    result.utm_campaign = campaign;
+  }
+  const content = normalizeContent(value.utm_content);
+  if (content) {
+    result.utm_content = content;
+  }
+  const term = normalizeTerm(value.utm_term);
+  if (term) {
+    result.utm_term = term;
   }
 
   if (typeof value.referring_domain === "string") {
-    const domain = normalizeReferringDomain(`https://${value.referring_domain}`);
+    const domain = normalizeControlledValue(value.referring_domain, REFERRING_DOMAINS);
     if (domain) {
       result.referring_domain = domain;
     }
   }
 
   if (typeof value.landing_path === "string") {
-    result.landing_path = sanitizePagePath(value.landing_path);
+    result.landing_path = normalizeLandingPath(value.landing_path);
   }
 
   if (isAttributionPathway(value.pathway)) {
@@ -109,15 +203,29 @@ export function sanitizeAttribution(value: Partial<AttributionRecord>): Partial<
 function createAttribution(input: AttributionInput): AttributionRecord {
   const searchParams = new URLSearchParams(input.search ?? "");
   const record: AttributionRecord = {
-    landing_path: sanitizePagePath(input.pathname),
+    landing_path: normalizeLandingPath(input.pathname),
     pathway: sanitizePagePath(input.pathname) === "/schedule" ? "schedule_direct" : "unknown",
   };
 
-  for (const key of UTM_KEYS) {
-    const token = normalizeUtmToken(searchParams.get(key));
-    if (token) {
-      record[key] = token;
-    }
+  const source = normalizeUtmSource(searchParams.get("utm_source"));
+  if (source) {
+    record.utm_source = source;
+  }
+  const medium = normalizeUtmMedium(searchParams.get("utm_medium"));
+  if (medium) {
+    record.utm_medium = medium;
+  }
+  const campaign = normalizeCampaign(searchParams.get("utm_campaign"));
+  if (campaign) {
+    record.utm_campaign = campaign;
+  }
+  const content = normalizeContent(searchParams.get("utm_content"));
+  if (content) {
+    record.utm_content = content;
+  }
+  const term = normalizeTerm(searchParams.get("utm_term"));
+  if (term) {
+    record.utm_term = term;
   }
 
   const referringDomain = normalizeReferringDomain(input.referrer);
