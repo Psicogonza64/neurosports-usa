@@ -20,7 +20,8 @@ const OBJECTIVE_MAX = 300;
 
 const WHATSAPP_PHONE_NUMBER = "18324579238";
 const WHATSAPP_SCHEDULE_MESSAGE =
-  "Hola, quisiera obtener información sobre disponibilidad para una evaluación inicial en NeuroSports USA - Houston.";
+  "Hola, quisiera obtener información sobre disponibilidad para una evaluación inicial en NeuroSports USA - Houston. / " +
+  "Hello, I would like information about availability for an initial evaluation at NeuroSports USA - Houston.";
 const WHATSAPP_SCHEDULE_URL = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodeURIComponent(WHATSAPP_SCHEDULE_MESSAGE)}`;
 
 const INITIAL_STATE: BookingFormState = {
