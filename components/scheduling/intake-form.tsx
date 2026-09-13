@@ -59,58 +59,39 @@ export function IntakeForm({ content, state, errors, onFieldChange }: IntakeForm
         </label>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <label className="text-sm text-[var(--color-foreground)]" htmlFor="patient-dob">
-          {content.patientInfo.dob}
-          <input
-            id="patient-dob"
-            name="patient-dob"
-            type="date"
-            autoComplete="bday"
-            value={state.patient.dateOfBirth}
-            onChange={(event) => onFieldChange("patient.dateOfBirth", event.target.value)}
-            aria-invalid={Boolean(errors["patient.dateOfBirth"])}
-            className="mt-1 min-h-11 w-full rounded-lg border px-3 py-2"
-          />
-          <FieldError id="patient-dob-error" error={errors["patient.dateOfBirth"]} />
-        </label>
-
-        {!isFamilyFlow ? (
-          <label className="text-sm text-[var(--color-foreground)]" htmlFor="patient-email">
-            {content.patientInfo.email}
-            <input
-              id="patient-email"
-              name="patient-email"
-              type="email"
-              autoComplete="email"
-              value={state.patient.email}
-              onChange={(event) => onFieldChange("patient.email", event.target.value)}
-              aria-invalid={Boolean(errors["patient.email"])}
-              className="mt-1 min-h-11 w-full rounded-lg border px-3 py-2"
-            />
-            <FieldError id="patient-email-error" error={errors["patient.email"]} />
-          </label>
-        ) : (
-          <div className="hidden sm:block" aria-hidden="true" />
-        )}
-      </div>
-
       {!isFamilyFlow ? (
-        <div className="grid gap-4 sm:grid-cols-2">
-          <label className="text-sm text-[var(--color-foreground)]" htmlFor="patient-phone">
-            {content.patientInfo.mobilePhone}
-            <input
-              id="patient-phone"
-              name="patient-phone"
-              type="tel"
-              autoComplete="tel"
-              value={state.patient.mobilePhone}
-              onChange={(event) => onFieldChange("patient.mobilePhone", event.target.value)}
-              aria-invalid={Boolean(errors["patient.mobilePhone"])}
-              className="mt-1 min-h-11 w-full rounded-lg border px-3 py-2"
-            />
-            <FieldError id="patient-phone-error" error={errors["patient.mobilePhone"]} />
-          </label>
+        <>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="text-sm text-[var(--color-foreground)]" htmlFor="patient-email">
+              {content.patientInfo.email}
+              <input
+                id="patient-email"
+                name="patient-email"
+                type="email"
+                autoComplete="email"
+                value={state.patient.email}
+                onChange={(event) => onFieldChange("patient.email", event.target.value)}
+                aria-invalid={Boolean(errors["patient.email"])}
+                className="mt-1 min-h-11 w-full rounded-lg border px-3 py-2"
+              />
+              <FieldError id="patient-email-error" error={errors["patient.email"]} />
+            </label>
+
+            <label className="text-sm text-[var(--color-foreground)]" htmlFor="patient-phone">
+              {content.patientInfo.mobilePhone}
+              <input
+                id="patient-phone"
+                name="patient-phone"
+                type="tel"
+                autoComplete="tel"
+                value={state.patient.mobilePhone}
+                onChange={(event) => onFieldChange("patient.mobilePhone", event.target.value)}
+                aria-invalid={Boolean(errors["patient.mobilePhone"])}
+                className="mt-1 min-h-11 w-full rounded-lg border px-3 py-2"
+              />
+              <FieldError id="patient-phone-error" error={errors["patient.mobilePhone"]} />
+            </label>
+          </div>
 
           <fieldset className="min-w-0 rounded-lg border p-3">
             <legend className="px-1 text-sm text-[var(--color-foreground)]">{content.patientInfo.preferredContactMethod}</legend>
@@ -130,7 +111,7 @@ export function IntakeForm({ content, state, errors, onFieldChange }: IntakeForm
             </div>
             <FieldError id="contact-method-error" error={errors.contactPreference} />
           </fieldset>
-        </div>
+        </>
       ) : null}
 
       {isFamilyFlow ? (
