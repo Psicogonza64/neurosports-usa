@@ -407,10 +407,34 @@ export async function createInitialEvaluationEvent(input: {
   selectedEnd: Date;
   location: string;
   appointmentFor: "self" | "family-member";
+  patientFirstName: string;
+  patientLastName: string;
+  contactPhone: string;
+  responsibleAdultName?: string;
+  relationship?: string;
   preferredContactMethod?: "email" | "phone" | "text";
   contactEmail: string;
 }) {
   const bookingReference = buildBookingReference();
+
+  const descriptionLines = [
+    `Booking reference: ${bookingReference}`,
+    `Patient: ${input.patientFirstName} ${input.patientLastName}`.trim(),
+    `Appointment for: ${input.appointmentFor}`,
+    `Contact phone: ${input.contactPhone}`,
+    `Preferred contact method: ${input.preferredContactMethod ?? "not-provided"}`,
+  ];
+
+  if (input.appointmentFor === "family-member" && input.responsibleAdultName) {
+    descriptionLines.push(`Responsible adult: ${input.responsibleAdultName}`);
+    if (input.relationship) {
+      descriptionLines.push(`Relationship: ${input.relationship}`);
+    }
+  }
+
+  descriptionLines.push(
+    "Clinical intake, when required, is handled separately from appointment scheduling.",
+  );
 
   const response = await input.calendar.events.insert({
     calendarId: input.calendarId,
@@ -418,12 +442,7 @@ export async function createInitialEvaluationEvent(input: {
     requestBody: {
       summary: "Initial Evaluation — NeuroSports USA Houston",
       location: `${input.location}, United States`,
-      description: [
-        `Booking reference: ${bookingReference}`,
-        `Appointment for: ${input.appointmentFor}`,
-        `Preferred contact method: ${input.preferredContactMethod ?? "not-provided"}`,
-        "Detailed intake is handled in a separate secure workflow.",
-      ].join("\n"),
+      description: descriptionLines.join("\n"),
       start: {
         dateTime: input.selectedStart.toISOString(),
         timeZone: input.timezone,

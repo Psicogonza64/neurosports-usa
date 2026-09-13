@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { AppointmentCalendar } from "@/components/scheduling/appointment-calendar";
+import { BookingReview } from "@/components/scheduling/booking-review";
 import { IntakeForm } from "@/components/scheduling/intake-form";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -12,17 +13,22 @@ import type {
   BookingFormErrors,
   BookingFormState,
   BookingStep,
-  PreviousStudyType,
-  ReasonCategory,
 } from "@/types/booking";
-
-const OBJECTIVE_MAX = 300;
 
 const WHATSAPP_PHONE_NUMBER = "18324579238";
 const WHATSAPP_SCHEDULE_MESSAGE =
   "Hola, quisiera obtener información sobre disponibilidad para una evaluación inicial en NeuroSports USA - Houston. / " +
   "Hello, I would like information about availability for an initial evaluation at NeuroSports USA - Houston.";
 const WHATSAPP_SCHEDULE_URL = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodeURIComponent(WHATSAPP_SCHEDULE_MESSAGE)}`;
+
+function WhatsAppIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.198.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.173.198-.297.298-.496.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.876 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.413-.074-.124-.272-.198-.57-.347z" />
+      <path d="M12.001 2c-5.517 0-9.998 4.48-9.998 9.998 0 1.763.464 3.484 1.346 4.997L2 22l5.164-1.354a9.983 9.983 0 004.836 1.232h.004c5.517 0 9.997-4.48 9.997-9.998 0-2.671-1.04-5.181-2.929-7.069A9.933 9.933 0 0012.001 2zm5.798 15.804a8.283 8.283 0 01-5.798 2.398h-.003a8.29 8.29 0 01-4.213-1.157l-.302-.18-3.126.82.834-3.047-.196-.312a8.283 8.283 0 01-1.276-4.421c0-4.588 3.735-8.32 8.325-8.32a8.276 8.276 0 015.895 2.44 8.276 8.276 0 012.436 5.885c0 4.588-3.734 8.322-8.322 8.322z" />
+    </svg>
+  );
+}
 
 const INITIAL_STATE: BookingFormState = {
   appointmentType: "initial-evaluation",
@@ -32,7 +38,6 @@ const INITIAL_STATE: BookingFormState = {
   patient: {
     firstName: "",
     lastName: "",
-    dateOfBirth: "",
     email: "",
     mobilePhone: "",
   },
@@ -44,12 +49,6 @@ const INITIAL_STATE: BookingFormState = {
     email: "",
     mobilePhone: "",
   },
-  appointmentObjective: "",
-  reasonCategories: [],
-  previousStudiesStatus: "",
-  previousStudyTypes: [],
-  referralSource: "",
-  additionalNote: "",
   consentAccepted: false,
   googleBookingStatus: "",
 };
@@ -132,9 +131,6 @@ function validateStep(step: BookingStep, state: BookingFormState, content: Retur
     if (!state.patient.lastName.trim()) {
       errors["patient.lastName"] = content.validationRequired;
     }
-    if (!state.patient.dateOfBirth) {
-      errors["patient.dateOfBirth"] = content.validationRequired;
-    }
 
     if (state.appointmentFor === "self") {
       if (!state.patient.email.trim()) {
@@ -175,34 +171,13 @@ function validateStep(step: BookingStep, state: BookingFormState, content: Retur
     if (!state.contactPreference) {
       errors.contactPreference = content.validationSelectOne;
     }
-
-    if (!state.appointmentObjective.trim()) {
-      errors.appointmentObjective = content.validationRequired;
-    }
-
-    if (state.appointmentObjective.length > OBJECTIVE_MAX) {
-      errors.appointmentObjective = content.objectiveMaxError;
-    }
   }
 
-  if (step === 4 && !state.previousStudiesStatus) {
-    errors.previousStudiesStatus = content.validationSelectOne;
-  }
-
-  if (step === 5 && !state.consentAccepted) {
+  if (step === 4 && !state.consentAccepted) {
     errors.consentAccepted = content.validationConsent;
   }
 
   return errors;
-}
-
-function WhatsAppIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.198.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.173.198-.297.298-.496.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.876 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.413-.074-.124-.272-.198-.57-.347z" />
-      <path d="M12.001 2c-5.517 0-9.998 4.48-9.998 9.998 0 1.763.464 3.484 1.346 4.997L2 22l5.164-1.354a9.983 9.983 0 004.836 1.232h.004c5.517 0 9.997-4.48 9.997-9.998 0-2.671-1.04-5.181-2.929-7.069A9.933 9.933 0 0012.001 2zm5.798 15.804a8.283 8.283 0 01-5.798 2.398h-.003a8.29 8.29 0 01-4.213-1.157l-.302-.18-3.126.82.834-3.047-.196-.312a8.283 8.283 0 01-1.276-4.421c0-4.588 3.735-8.32 8.325-8.32a8.276 8.276 0 015.895 2.44 8.276 8.276 0 012.436 5.885c0 4.588-3.734 8.322-8.322 8.322z" />
-    </svg>
-  );
 }
 
 function getContent(locale: BookingAssistantLocale) {
@@ -291,44 +266,7 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
         return draft;
       }
 
-      if (path === "appointmentObjective") {
-        draft.appointmentObjective = value.slice(0, OBJECTIVE_MAX);
-        return draft;
-      }
-
-      if (path === "previousStudiesStatus") {
-        draft.previousStudiesStatus = value as BookingFormState["previousStudiesStatus"];
-        if (value !== "yes") {
-          draft.previousStudyTypes = [];
-        }
-        return draft;
-      }
-
       return draft;
-    });
-  };
-
-  const toggleReasonCategory = (value: ReasonCategory) => {
-    setState((current) => {
-      const exists = current.reasonCategories.includes(value);
-      return {
-        ...current,
-        reasonCategories: exists
-          ? current.reasonCategories.filter((item) => item !== value)
-          : [...current.reasonCategories, value],
-      };
-    });
-  };
-
-  const togglePreviousStudyType = (value: PreviousStudyType) => {
-    setState((current) => {
-      const exists = current.previousStudyTypes.includes(value);
-      return {
-        ...current,
-        previousStudyTypes: exists
-          ? current.previousStudyTypes.filter((item) => item !== value)
-          : [...current.previousStudyTypes, value],
-      };
     });
   };
 
@@ -341,7 +279,7 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
     }
 
     setSubmitError("");
-    setStep((current) => (current < 5 ? ((current + 1) as BookingStep) : current));
+    setStep((current) => (current < 4 ? ((current + 1) as BookingStep) : current));
   };
 
   const goBack = () => {
@@ -355,7 +293,7 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
       return;
     }
 
-    const stepErrors = validateStep(5, state, content);
+    const stepErrors = validateStep(4, state, content);
     setErrors(stepErrors);
     if (Object.keys(stepErrors).length > 0) {
       return;
@@ -391,9 +329,6 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
           timezone: "America/Chicago",
           consentAccepted: state.consentAccepted,
           preferredContactMethod: state.contactPreference || undefined,
-          reasonCategories: state.reasonCategories,
-          previousStudiesStatus: state.previousStudiesStatus || undefined,
-          previousStudyTypes: state.previousStudyTypes,
           website: "",
         }),
       });
@@ -473,8 +408,7 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
               {step === 1 && content.stepHeadings.appointment}
               {step === 2 && content.stepHeadings.dateTime}
               {step === 3 && content.stepHeadings.patientInfo}
-              {step === 4 && content.stepHeadings.objective}
-              {step === 5 && content.stepHeadings.review}
+              {step === 4 && content.stepHeadings.review}
             </h2>
 
             <div className="mt-5 space-y-6">
@@ -557,100 +491,20 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
               ) : null}
 
               {step === 3 ? (
-                <div className="space-y-5">
-                  <IntakeForm content={content} state={state} errors={errors} onFieldChange={updateField} />
-
-                  <label htmlFor="appointment-objective" className="block text-sm text-[var(--color-foreground)]">
-                    {content.objective.label}
-                    <textarea
-                      id="appointment-objective"
-                      rows={4}
-                      maxLength={OBJECTIVE_MAX}
-                      value={state.appointmentObjective}
-                      onChange={(event) => updateField("appointmentObjective", event.target.value)}
-                      aria-invalid={Boolean(errors.appointmentObjective)}
-                      className="mt-1 w-full rounded-lg border px-3 py-2"
-                    />
-                  </label>
-
-                  <p className="text-sm text-[var(--color-muted)]">{content.objective.helper}</p>
-                  <p className="text-xs text-[var(--color-muted)]">{state.appointmentObjective.length}/{OBJECTIVE_MAX}</p>
-                  {errors.appointmentObjective ? <p className="text-sm text-[var(--color-danger)]">{errors.appointmentObjective}</p> : null}
-
-                  <fieldset className="rounded-lg border p-4">
-                    <legend className="px-1 text-sm text-[var(--color-foreground)]">{content.objective.categoriesLabel}</legend>
-                    <div className="grid gap-2 sm:grid-cols-2">
-                      {content.objective.categories.map((option) => {
-                        const checked = state.reasonCategories.includes(option.value);
-                        return (
-                          <label key={option.value} className="flex min-h-11 items-center gap-2 text-sm">
-                            <input type="checkbox" checked={checked} onChange={() => toggleReasonCategory(option.value)} />
-                            <span>{option.label}</span>
-                          </label>
-                        );
-                      })}
-                    </div>
-                  </fieldset>
-                </div>
+                <IntakeForm content={content} state={state} errors={errors} onFieldChange={updateField} />
               ) : null}
 
               {step === 4 ? (
-                <fieldset className="rounded-lg border p-4">
-                  <legend className="px-1 text-sm text-[var(--color-foreground)]">{content.objective.studiesQuestion}</legend>
-                  <div className="grid gap-2 sm:grid-cols-3">
-                    {content.objective.studiesStatus.map((statusOption) => (
-                      <label key={statusOption.value} className="flex min-h-11 items-center gap-2 text-sm">
-                        <input
-                          type="radio"
-                          name="previous-studies-status"
-                          value={statusOption.value}
-                          checked={state.previousStudiesStatus === statusOption.value}
-                          onChange={(event) => updateField("previousStudiesStatus", event.target.value)}
-                        />
-                        <span>{statusOption.label}</span>
-                      </label>
-                    ))}
-                  </div>
-                  {errors.previousStudiesStatus ? <p className="text-sm text-[var(--color-danger)]">{errors.previousStudiesStatus}</p> : null}
-
-                  {state.previousStudiesStatus === "yes" ? (
-                    <div className="mt-4 space-y-2">
-                      <p className="text-sm text-[var(--color-foreground)]">{content.objective.studiesTypesLabel}</p>
-                      <div className="grid gap-2 sm:grid-cols-2">
-                        {content.objective.studiesTypes.map((study) => {
-                          const checked = state.previousStudyTypes.includes(study.value);
-                          return (
-                            <label key={study.value} className="flex min-h-11 items-center gap-2 text-sm">
-                              <input type="checkbox" checked={checked} onChange={() => togglePreviousStudyType(study.value)} />
-                              <span>{study.label}</span>
-                            </label>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ) : null}
-                </fieldset>
-              ) : null}
-
-              {step === 5 ? (
                 <div className="space-y-5">
-                  <Card className="p-4">
-                    <p className="text-sm text-[var(--color-foreground)]">{content.review.title}</p>
-                    <dl className="mt-3 grid gap-2 text-sm text-[var(--color-muted)]">
-                      <div>
-                        <dt className="font-medium text-[var(--color-foreground)]">{content.review.requestedDate}</dt>
-                        <dd>{formatDateForDisplay(state.requestedDate)}</dd>
-                      </div>
-                      <div>
-                        <dt className="font-medium text-[var(--color-foreground)]">{content.review.requestedTime}</dt>
-                        <dd>{formatTimeForDisplay(state.requestedTime)}</dd>
-                      </div>
-                      <div>
-                        <dt className="font-medium text-[var(--color-foreground)]">{content.timezoneLabel}</dt>
-                        <dd>{content.timezoneValue}</dd>
-                      </div>
-                    </dl>
-                  </Card>
+                  <BookingReview
+                    content={content}
+                    state={state}
+                    onJumpToStep={(targetStep) => {
+                      setErrors({});
+                      setSubmitError("");
+                      setStep(targetStep);
+                    }}
+                  />
 
                   <label className="flex min-h-11 items-start gap-2 text-sm">
                     <input
@@ -719,7 +573,7 @@ export function BookingAssistant({ locale = "en" }: { locale?: BookingAssistantL
                 </Button>
               ) : null}
 
-              {step < 5 ? (
+              {step < 4 ? (
                 <Button type="button" onClick={goNext} disabled={disableNextOnStepTwo}>
                   {content.nextLabel}
                 </Button>

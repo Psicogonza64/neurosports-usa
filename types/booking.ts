@@ -41,12 +41,11 @@ export type ReasonCategory =
   | "sport-or-neuroperformance"
   | "other";
 
-export type BookingStep = 1 | 2 | 3 | 4 | 5;
+export type BookingStep = 1 | 2 | 3 | 4;
 
 export type BookingPatient = {
   firstName: string;
   lastName: string;
-  dateOfBirth: string;
   email: string;
   mobilePhone: string;
 };
@@ -69,12 +68,6 @@ export type BookingFormState = {
   patient: BookingPatient;
   contactPreference: ContactMethod | "";
   responsibleAdult: ResponsibleAdult;
-  appointmentObjective: string;
-  reasonCategories: ReasonCategory[];
-  previousStudiesStatus: PreviousStudiesStatus | "";
-  previousStudyTypes: PreviousStudyType[];
-  referralSource: ReferralSource | "";
-  additionalNote: string;
   consentAccepted: boolean;
   googleBookingStatus: GoogleBookingStatus | "";
 };
@@ -82,18 +75,16 @@ export type BookingFormState = {
 export type BookingSubmissionPayload = {
   appointmentType: AppointmentType;
   appointmentFor: AppointmentFor;
-  patient: BookingPatient;
-  responsibleAdult: ResponsibleAdult | null;
+  patientFirstName: string;
+  patientLastName: string;
+  contactEmail: string;
+  contactPhone: string;
+  responsibleAdultName?: string;
+  relationship?: FamilyRelationship;
   requestedDate: string;
   requestedTime: string;
   timezone: string;
   contactPreference: ContactMethod;
-  reasonCategories: ReasonCategory[];
-  appointmentObjective: string;
-  previousStudiesStatus: PreviousStudiesStatus;
-  previousStudyTypes: PreviousStudyType[];
-  referralSource: ReferralSource | null;
-  additionalNote: string;
   consentAccepted: boolean;
   submittedAt: string;
 };

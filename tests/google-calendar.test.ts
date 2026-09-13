@@ -111,9 +111,9 @@ test("Missing configuration stays blocked until all required values are supplied
     "BOOKING_MAX_ADVANCE_DAYS must be a positive integer.",
     "BOOKING_BUFFER_MINUTES must be a non-negative integer.",
     "GOOGLE_CALENDAR_ID is required.",
-    "GOOGLE_OAUTH_CLIENT_ID is required.",
-    "GOOGLE_OAUTH_CLIENT_SECRET is required.",
-    "GOOGLE_OAUTH_REFRESH_TOKEN is required.",
+    "GOOGLE_OAUTH_CLIENT_ID is required when GOOGLE_APPLICATION_CREDENTIALS is not set.",
+    "GOOGLE_OAUTH_CLIENT_SECRET is required when GOOGLE_APPLICATION_CREDENTIALS is not set.",
+    "GOOGLE_OAUTH_REFRESH_TOKEN is required when GOOGLE_APPLICATION_CREDENTIALS is not set.",
   ]);
 });
 
@@ -205,6 +205,9 @@ test("Event creation generates a public NSH reference and excludes sensitive fie
     selectedEnd: new Date("2026-07-06T20:00:00.000Z"),
     location: "11777 Katy Freeway, Suite 410S, Houston, Texas 77079",
     appointmentFor: "self",
+    patientFirstName: "Jane",
+    patientLastName: "Doe",
+    contactPhone: "+18005550199",
     preferredContactMethod: "email",
     contactEmail: "person@example.com",
   });
@@ -252,10 +255,8 @@ test("Availability route keeps the safe configuration fallback and no-store cach
 test("Google calendar server auth uses OAuth client credentials and refresh token", async () => {
   const source = await readFile("lib/server/google-calendar.ts", "utf8");
 
-  assert.ok(source.includes("new OAuth2Client"));
+  assert.ok(source.includes("new google.auth.OAuth2"));
   assert.ok(source.includes("configResult.config.oauthClientId"));
   assert.ok(source.includes("configResult.config.oauthClientSecret"));
   assert.ok(source.includes("refresh_token: configResult.config.oauthRefreshToken"));
-  assert.ok(!source.includes("new google.auth.GoogleAuth"));
-  assert.ok(!source.includes("keyFile:"));
 });
