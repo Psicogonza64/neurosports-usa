@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { ScientificJourneyDiagram } from "@/components/diagrams/ScientificJourneyDiagram";
+import { InteractiveBrain3D } from "@/components/diagrams/InteractiveBrain3D";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { twoPathsHeroContent } from "@/lib/neurosports-two-paths-content";
@@ -83,9 +83,20 @@ export function HeroSection() {
           </div>
         </div>
 
-        <div className="nsu-panel min-w-0 rounded-[2rem] border p-3 sm:p-5">
-          <ScientificJourneyDiagram locale="en" mode="hero" />
-        </div>
+        <figure aria-labelledby="home-science-title" className="m-0 min-w-0 xl:self-center">
+          <div className="mb-5 space-y-2">
+            <h2 id="home-science-title" className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--ns-charcoal)]">
+              Functional Brain Science
+            </h2>
+            <p className="text-sm font-medium tracking-[0.08em] text-[var(--ns-charcoal)]">RSFN + MNSI</p>
+          </div>
+          <div className="relative h-56 overflow-hidden rounded-[1.4rem] bg-[#f6f0e4] sm:h-80 md:h-96 xl:aspect-square xl:h-auto">
+            <InteractiveBrain3D activeNodeId={null} className="absolute inset-0" />
+          </div>
+          <figcaption className="mt-5 max-w-lg text-sm leading-6 text-[var(--ns-muted-text)]">
+            One integrated scientific framework supporting clinical understanding and human performance.
+          </figcaption>
+        </figure>
       </Container>
     </section>
   );

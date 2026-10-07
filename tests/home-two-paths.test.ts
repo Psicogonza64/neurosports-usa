@@ -24,12 +24,16 @@ test("hero paths retain the established destinations and distinct controlled CTA
   }
 });
 
-test("Home keeps one shared brain composition and moves scientific process directly after Hero", () => {
+test("Home reuses one neutral brain without Journey UI and keeps scientific process after Hero", () => {
   const home = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
   const hero = readFileSync(new URL("../modules/website/home/sections/hero-section.tsx", import.meta.url), "utf8");
   assert.match(home, /<HeroSection \/>\s*<PublicProcessesSection \/>/);
   assert.doesNotMatch(home, /ApplicationsSection/);
-  assert.equal((hero.match(/<ScientificJourneyDiagram\b/g) ?? []).length, 1);
-  assert.doesNotMatch(hero, /<InteractiveBrain3D\b|order-[12]/);
-  assert.ok(hero.indexOf('id="home-hero-title"') < hero.indexOf("<ScientificJourneyDiagram"));
+  assert.equal((hero.match(/<InteractiveBrain3D\b/g) ?? []).length, 1);
+  assert.match(hero, /<InteractiveBrain3D activeNodeId=\{null\}/);
+  assert.doesNotMatch(hero, /ScientificJourneyDiagram|order-[12]/);
+  assert.ok(hero.indexOf('id="home-hero-title"') < hero.indexOf("<InteractiveBrain3D"));
+  assert.match(hero, /<figure aria-labelledby="home-science-title"/);
+  assert.match(hero, /Functional Brain Science/);
+  assert.doesNotMatch(hero, /Learn more|DetailPanel|NodeButton/);
 });
