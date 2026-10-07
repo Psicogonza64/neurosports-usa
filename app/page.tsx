@@ -4,7 +4,6 @@ import { SiteShell } from "@/components/layout/site-shell";
 import { LocationsExplorer } from "@/components/experience/locations-explorer";
 import { ScientificSectionBlock } from "@/components/experience";
 import {
-  ApplicationsSection,
   ContactSection,
   HomeCtaSection,
   HeroSection,
@@ -45,7 +44,6 @@ export default function Home() {
   return (
     <SiteShell>
       <HeroSection />
-      <ApplicationsSection />
       <PublicProcessesSection />
       <ProprietaryMethodsHomeSection />
       <TechnologySection />
