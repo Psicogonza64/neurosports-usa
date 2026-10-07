@@ -23,6 +23,7 @@ import { cn } from "@/utils/cn";
 type LocationsExplorerProps = {
   locale?: LocationsLocale;
   className?: string;
+  showGalleryNotice?: boolean;
 };
 
 function formatWindow(value: string, locale: BookingLocale) {
@@ -118,10 +119,12 @@ function ExpandedLocationPanel({
   item,
   locale,
   onClose,
+  showGalleryNotice,
 }: {
   item: LocationCenter;
   locale: LocationsLocale;
   onClose: () => void;
+  showGalleryNotice: boolean;
 }) {
   const content = getNeuroSportsLocationsContent(locale);
   const bookingContent = bookingPageContent[locale] ?? bookingPageContent.en;
@@ -213,16 +216,22 @@ function ExpandedLocationPanel({
           </div>
         ) : null}
 
-        <div className="rounded-[1rem] border border-[color:color-mix(in_srgb,var(--color-secondary)_12%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-background)_66%,white)] p-4">
-          <p className="text-xs uppercase tracking-[0.16em] text-[var(--color-secondary)]/80">{content.labels.centerGallery}</p>
-          <p className="mt-2 text-sm leading-7 text-[var(--color-muted)]">{content.labels.photographyComingSoon}</p>
-        </div>
+        {showGalleryNotice ? (
+          <div className="rounded-[1rem] border border-[color:color-mix(in_srgb,var(--color-secondary)_12%,var(--color-border))] bg-[color:color-mix(in_srgb,var(--color-background)_66%,white)] p-4">
+            <p className="text-xs uppercase tracking-[0.16em] text-[var(--color-secondary)]/80">{content.labels.centerGallery}</p>
+            <p className="mt-2 text-sm leading-7 text-[var(--color-muted)]">{content.labels.photographyComingSoon}</p>
+          </div>
+        ) : null}
       </div>
     </ScientificCard>
   );
 }
 
-export function LocationsExplorer({ locale = "en", className }: LocationsExplorerProps) {
+export function LocationsExplorer({
+  locale = "en",
+  className,
+  showGalleryNotice = true,
+}: LocationsExplorerProps) {
   const content = getNeuroSportsLocationsContent(locale);
   const centers = content.centers;
   const [activeId, setActiveId] = useState<LocationCenter["id"] | "">(
@@ -289,6 +298,7 @@ export function LocationsExplorer({ locale = "en", className }: LocationsExplore
             <ExpandedLocationPanel
               item={activeCenter}
               locale={locale}
+              showGalleryNotice={showGalleryNotice}
               onClose={() => setActiveId("")}
             />
           </div>
@@ -338,6 +348,7 @@ export function LocationsExplorer({ locale = "en", className }: LocationsExplore
                   <ExpandedLocationPanel
                     item={item}
                     locale={locale}
+                    showGalleryNotice={showGalleryNotice}
                     onClose={() => setActiveId("")}
                   />
                 </div>

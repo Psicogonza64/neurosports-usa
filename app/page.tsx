@@ -8,12 +8,9 @@ import {
   ContactSection,
   HomeCtaSection,
   HeroSection,
-  MnsiJourneySection,
   ProprietaryMethodsHomeSection,
   PublicProcessesSection,
   ResearchSection,
-  ScientificEcosystemHomeSection,
-  ScientificKnowledgeHubHomeSection,
   TechnologySection,
 } from "@/modules/website/home/sections";
 import { getNeuroSportsHomeContent } from "@/lib/neurosports-home-content";
@@ -48,12 +45,9 @@ export default function Home() {
   return (
     <SiteShell>
       <HeroSection />
-      <PublicProcessesSection />
       <ApplicationsSection />
-      <MnsiJourneySection />
+      <PublicProcessesSection />
       <ProprietaryMethodsHomeSection />
-      <ScientificEcosystemHomeSection />
-      <ScientificKnowledgeHubHomeSection />
       <TechnologySection />
       <ResearchSection />
       <ScientificSectionBlock
@@ -61,7 +55,7 @@ export default function Home() {
         label={content.locations.eyebrow}
         title={content.locations.title}
         description={content.locations.intro}
-        content={<LocationsExplorer locale="en" />}
+        content={<LocationsExplorer locale="en" showGalleryNotice={false} />}
       />
       <HomeCtaSection />
       <ContactSection />

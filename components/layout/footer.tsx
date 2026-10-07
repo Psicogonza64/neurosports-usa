@@ -7,7 +7,9 @@ export function Footer() {
         <span className="font-medium uppercase tracking-[0.22em] text-[var(--color-secondary)]">
           NeuroSports USA
         </span>
-        <span>Premium institutional neuropsychology platform in active development.</span>
+        <span>
+          Clinical neuroscience, neuropsychological evaluation, neurorehabilitation and NeuroPerformance services through an integrated neuroscience model.
+        </span>
       </Container>
     </footer>
   );

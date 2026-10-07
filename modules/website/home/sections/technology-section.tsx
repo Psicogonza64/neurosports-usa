@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
   InstitutionalSignalsGrid,
-  ScientificCard,
   ScientificSectionBlock,
 } from "@/components/experience";
 import { getNeuroSportsHomeContent, type HomeLocale } from "@/lib/neurosports-home-content";
@@ -26,11 +25,6 @@ export function TechnologySection({ locale = "en" }: TechnologySectionProps) {
       content={(
         <div className="nsu-section-stack">
           <InstitutionalSignalsGrid items={technologySignals} columns="5" />
-          <ScientificCard className="bg-[color:color-mix(in_srgb,var(--ns-sand)_12%,var(--panel))] p-5 sm:p-6">
-            <p className="text-sm leading-7 text-[var(--color-muted)] sm:text-base">
-              Placeholder framework reserved for approved technology photography and device imagery.
-            </p>
-          </ScientificCard>
         </div>
       )}
       cta={(
