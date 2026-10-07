@@ -1,0 +1,19 @@
+.eyebrow,
+.guidance {
+  color: var(--ns-charcoal);
+}
+
+.path:focus-visible {
+  outline: 2px solid var(--ns-sage-dark);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero a {
+    transition: none;
+  }
+
+  :global(html):has(.hero) {
+    scroll-behavior: auto;
+  }
+}
