@@ -291,7 +291,7 @@ const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       primaryLabel: "Schedule Evaluation",
       primaryHref: "/schedule",
       secondaryLabel: "Contact NeuroSports USA",
-      secondaryHref: "/contact",
+      secondaryHref: "/#home-contact",
     },
   },
   es: {
@@ -394,7 +394,7 @@ const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       primaryLabel: "Agendar evaluacion",
       primaryHref: "/schedule",
       secondaryLabel: "Contactar NeuroSports USA",
-      secondaryHref: "/contact",
+      secondaryHref: "/#home-contact",
     },
   },
 };

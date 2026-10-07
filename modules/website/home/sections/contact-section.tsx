@@ -4,7 +4,7 @@ import { Container } from "@/components/ui/container";
 
 export function ContactSection() {
   return (
-    <section className="border-b nsu-border scroll-mt-28" id="contact">
+    <section className="border-b nsu-border scroll-mt-28" id="home-contact">
       <Container className="py-16 lg:py-20">
         <Card className="border-[color:color-mix(in_srgb,var(--color-secondary)_18%,var(--color-border))] bg-[linear-gradient(148deg,color-mix(in_srgb,var(--color-background)_86%,white),color-mix(in_srgb,var(--ns-sand)_22%,white))] p-6 sm:p-8 lg:p-10">
           <div className="max-w-3xl space-y-5">
